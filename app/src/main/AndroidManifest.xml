@@ -28,6 +28,10 @@
             android:name=".ui.MainActivityFixed"
             android:label="@string/title_activity_main_activity_fixed" >
         </activity>
+        <activity
+            android:name=".ui.RegistBrandActivity"
+            android:label="@string/title_activity_regist_brand" >
+        </activity>
     </application>
 
 </manifest>

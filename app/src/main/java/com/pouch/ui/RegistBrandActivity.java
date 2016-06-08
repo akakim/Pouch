@@ -1,9 +1,8 @@
 package com.pouch.ui;
 
 import android.content.Context;
-import android.content.Intent;
+import android.hardware.display.DisplayManager;
 import android.support.v7.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -14,62 +13,57 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pouch.R;
 import com.pouch.customView.AnimatedExpandableListView;
-import com.pouch.customView.AnimatedExpandableListView.*;
 
+import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SettingActivity extends AppCompatActivity {
-    private static final String TAG="SettingActivity";
-    private boolean isTest=  true;
+
+public class RegistBrandActivity extends AppCompatActivity {
+    private static final String TAG = RegistBrandActivity.class.getSimpleName();
     private AnimatedExpandableListView listView;
-    private SettingAdapter adapter;
+    private RegistAdapter adapter;
     DisplayMetrics metrics;
     int width;
+    List<GroupItem> items;
+    String initBrandlst [] = {
+      "이니스프리", "더페이스샵", "스킨푸드",
+            "토니모리", "SK-Ⅱ" ,"MISSHA"
+    };
+    private void initItems(){
 
+
+        for (int i =0;i <initBrandlst.length;i++){
+            GroupItem group = new GroupItem(initBrandlst[i]);
+            ChildItem child = new ChildItem();
+            child.title = initBrandlst[i];
+            group.items.add(child);
+            items.add(group);
+
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
+        setContentView(R.layout.activity_regist);
 
-        List<GroupItem> items = new ArrayList<GroupItem>();
+        items = new ArrayList<GroupItem>();
 
-        GroupItem ID_item = new GroupItem();
-        GroupItem Brand_item = new GroupItem();
-        GroupItem Favoriate_item = new GroupItem();
-        GroupItem push_Alarm = new GroupItem();
 
-        ID_item.title="ID"; // TODO: 나중에 사용자가 로그인시 처리해야됨.
-        Brand_item.title="브랜드 등록";
-        Favoriate_item.title="관심 상품 항목";
-        push_Alarm.title = "푸쉬알람설정";
 
-        ChildItem id_child = new ChildItem();
-        id_child.title = "닉네임 변경";
-        ChildItem id_logOut = new ChildItem();
-        id_logOut.title = "로그아웃";
-        ChildItem push_setting = new ChildItem();
-        push_setting.title = "토글버튼생성";
+        initItems();
+        Log.v(TAG, "group Item Title : " + items.get(0).items.get(0).title);
 
-        ID_item.items.add(id_child);
-        ID_item.items.add(id_logOut);
-        push_Alarm.items.add(push_setting);
 
-        items.add(ID_item);
-        items.add(Brand_item);
-        items.add(Favoriate_item);
-        items.add(push_Alarm);
 
-        adapter = new SettingAdapter(this);
-
+        adapter = new RegistAdapter(this);
         adapter.setData(items);
-
-        listView = (AnimatedExpandableListView) findViewById(R.id.listView);
+        listView = (AnimatedExpandableListView) findViewById(R.id.RegistView);
         listView.setAdapter(adapter);
+
 
 
         metrics = new DisplayMetrics();
@@ -83,56 +77,12 @@ public class SettingActivity extends AppCompatActivity {
                 // We call collapseGroupWithAnimation(int) and
                 // expandGroupWithAnimation(int) to animate group
                 // expansion/collapse.
-                Toast.makeText(getApplicationContext(),"get groupPosition : "+groupPosition,Toast.LENGTH_SHORT).show();
 
-
-                switch (groupPosition){
-                    // 자식이 있는 ID와 푸쉬알람설정만을 애니매이션 설정한다.
-
-                    case 0:
-                    case 3:
-                        if (listView.isGroupExpanded(groupPosition)) {
-                            listView.collapseGroupWithAnimation(groupPosition);
-                        } else {
-                            listView.expandGroupWithAnimation(groupPosition);
-                        }
-                        break;
-                    // 브랜드 등록
-                    case 1:
-                        Intent i = new Intent(getApplicationContext(),RegistBrandActivity.class);
-                        startActivity(i);
-                        break;
-                    //관심상품 등록
-                    case 2:
-
-                        break;
-                }
-
-                return true;
-            }
-        });
-
-        listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener(){
-
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                //Toast.makeText(getApplicationContext(),"groupPosition : "+groupPosition + " childPosition : "+childPosition,Toast.LENGTH_SHORT).show();
-                    if(isTest){
-                        Log.v(TAG,"groupPosition : "+groupPosition + " childPosition : "+childPosition);
-                    }
-                switch (groupPosition){
-                    // 자식이 있는 ID와 푸쉬알람설정만을 애니매이션 설정한다.
-                    case 0:
-                        // 닉네임 변경.
-                        if(childPosition == 0){
-                            Toast.makeText(getApplicationContext(),"닉네임을 변경합니다",Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Toast.makeText(getApplicationContext(),"로그아웃합니다. ",Toast.LENGTH_SHORT).show();
-                        }
-                    case 3:
-                        Toast.makeText(getApplicationContext(),"토글버튼을 생성. ",Toast.LENGTH_SHORT).show();
-                        break;
+                if (listView.isGroupExpanded(groupPosition)) {
+                    listView.collapseGroupWithAnimation(groupPosition);
+                } else {
+                    Log.v(TAG, "getChildCount :" + listView.getChildCount());
+                    listView.expandGroupWithAnimation(groupPosition);
                 }
                 return true;
             }
@@ -142,7 +92,7 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_setting, menu);
+        getMenuInflater().inflate(R.menu.menu_regist_brand, menu);
         return true;
     }
 
@@ -161,6 +111,7 @@ public class SettingActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     private int GetDipsFromPixel(float pixels)
     {
         // Get the screen's density scale
@@ -172,12 +123,39 @@ public class SettingActivity extends AppCompatActivity {
     private static class GroupItem {
         String title;
         List<ChildItem> items = new ArrayList<ChildItem>();
+
+        public GroupItem(){
+            title = null;
+        }
+        public GroupItem(GroupItem group){
+            this.title = group.title;
+            this.items = group.items;
+        }
+
+        public GroupItem(String title){
+            this.title = title;
+        }
+        public GroupItem(String title,ChildItem child){
+            this.title = title;
+            items.add(child);
+        }
+
+
     }
 
     //
     private static class ChildItem {
         String title;
-        String hint;
+
+        public ChildItem(){
+            title = null;
+        }
+        public ChildItem(String child) {
+            this.title = title;
+        }
+        public ChildItem(ChildItem i){
+            this.title = i.title;
+        }
     }
 
     // 왜 홀더를 만들어야만하는가.
@@ -191,13 +169,13 @@ public class SettingActivity extends AppCompatActivity {
         TextView title;
     }
 
-    private class SettingAdapter extends AnimatedExpandableListView.AnimatedExpandableListAdapter {
-        private static final String TAG = "SettingAdapter";
+    private class RegistAdapter extends AnimatedExpandableListView.AnimatedExpandableListAdapter {
+        private final String TAG = RegistAdapter.class.getSimpleName();
         private LayoutInflater inflater;
 
         private List<GroupItem> items;
 
-        public SettingAdapter(Context context) {
+        public RegistAdapter(Context context) {
             inflater = LayoutInflater.from(context);
         }
 
@@ -231,12 +209,14 @@ public class SettingActivity extends AppCompatActivity {
         public View getRealChildView(int groupPosition,int childPosition,boolean isLastChild, View convertView, ViewGroup parent){
             ChildHolder holder;
             ChildItem item = getChild(groupPosition,childPosition);
-            Log.v(TAG, "getRealChildView()");
+            Log.v(TAG, "getRealChildView() item.title : " + item.title);
             if(convertView ==null){
                 Log.v(TAG,"makeConvertView");
                 holder = new ChildHolder();
-                convertView = inflater.inflate(R.layout.activity_setting_item,parent,false);
-                holder.title = (TextView) convertView.findViewById(R.id.textTitle);
+
+                convertView = inflater.inflate(R.layout.activity_regist_item,parent,false);
+                holder.title = (TextView) convertView.findViewById(R.id.RegistChild);
+
                 convertView.setTag(holder);
             }else {
                 Log.v(TAG,"not make" );
@@ -274,13 +254,15 @@ public class SettingActivity extends AppCompatActivity {
             GroupHolder holder;
             GroupItem item = getGroup(groupPosition);
 
-            Log.v(TAG,"getGroupView()" );
+            Log.v(TAG,"getGroupView()" + getGroup(groupPosition));
             if(convertView == null){
+                Log.v(TAG,"convertView=null");
                 holder = new GroupHolder();
-                convertView = inflater.inflate(R.layout.activity_setting_group_item,parent,false);
-                holder.title = (TextView)convertView.findViewById(R.id.textTitle);
+                convertView = inflater.inflate(R.layout.activity_regist_group_item,parent,false);
+                holder.title = (TextView)convertView.findViewById(R.id.RegistTitle);
                 convertView.setTag(holder);
             }else{
+                Log.v(TAG,"convertView not null");
                 holder = (GroupHolder)convertView.getTag();
             }
 
