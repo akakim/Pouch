@@ -104,7 +104,7 @@ public class SettingActivity extends AppCompatActivity {
                         break;
                     //관심상품 등록
                     case 2:
-
+                        Log.i(TAG,"관심상품등록");
                         break;
                 }
 
