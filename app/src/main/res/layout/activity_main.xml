@@ -12,7 +12,6 @@
      tools:openDrawer="start"
      tools:context=".MainActivity">
 
-
         <!-- toDo :
          화면구성에 따라 layout을 더 추가하거나, fragment가 더 추가될 수 있다.
         -->
@@ -23,16 +22,41 @@
             >
 
 
-           <android.support.v7.widget.Toolbar
-               android:id="@+id/m_bottomtoolbar"
+           <android.support.design.widget.TabLayout
+               android:id="@+id/m_bottomTabBar"
                android:layout_height="wrap_content"
                android:layout_width="match_parent"
-               android:minHeight="?attr/actionBarSize"
                android:layout_alignParentBottom="true"
-               android:background="#00FF00"
+               app:tabMode="fixed"
+               app:tabGravity="fill"
+               app:tabIndicatorHeight="0dp"
+               app:tabTextColor="@color/primary"
+               android:elevation="3dp"
                >
 
-           </android.support.v7.widget.Toolbar>
+               <android.support.design.widget.TabItem
+                   android:icon="@drawable/app_icon"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   />
+               <android.support.design.widget.TabItem
+                   android:icon="@drawable/facebook_icon"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   />
+               <android.support.design.widget.TabItem
+                   android:icon="@drawable/google_icon"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   />
+               <android.support.design.widget.TabItem
+                   android:icon="@drawable/twitter_icon"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   />
+
+
+           </android.support.design.widget.TabLayout>
            <FrameLayout
                android:id="@+id/content_frame"
                android:layout_width="wrap_content"

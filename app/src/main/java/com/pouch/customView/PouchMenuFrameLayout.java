@@ -58,7 +58,7 @@ public class PouchMenuFrameLayout extends FrameLayout {
             return;
         }
 
-        mForeground = a.getDrawable(R.styleable.PouchMenuView_insetForeground);
+        mForeground = a.getDrawable(R.styleable.PouchMenuView_MenuForeground);
         a.recycle();
         setWillNotDraw(true);
     }

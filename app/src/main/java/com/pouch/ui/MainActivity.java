@@ -2,6 +2,8 @@ package com.pouch.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,16 +21,16 @@ import com.pouch.ui.adapter.DataAdapter;
 public class MainActivity extends AppCompatActivity implements MenuAdapter.OnItemClickListener {
 
     private static final String TAG = "MainActivity";
-    private DrawerLayout mDrawerLayout;
-    private RecyclerView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private GridView brandList;
-    private DataAdapter brandListAdapater;
-    Toolbar toolbar;
+    private DrawerLayout                 mDrawerLayout;
+    private TabLayout                    BottomTabLayout;
 
-    private CharSequence mTitle;
-    private CharSequence mDrawerTitle;
-    private String[]     menuList; // 필요한 catagory들이 들어간다.
+
+    private GridView                     brandList;
+    private DataAdapter                  brandListAdapater;
+
+    private CharSequence                 mTitle;
+    private CharSequence                 mDrawerTitle;
+    private String[]                     menuList; // 필요한 catagory들이 들어간다.
     private boolean isTest=true;
 
     @Override
@@ -43,47 +45,27 @@ public class MainActivity extends AppCompatActivity implements MenuAdapter.OnIte
         menuList = getResources().getStringArray(R.array.menu_array);
 
         mDrawerLayout = (DrawerLayout)findViewById(R.id.main_drawer_layout);
-/*
-        brandList     = (GridView)findViewById(R.id.gridView);
 
-        brandListAdapater = new DataAdapter("TONIMORI","BLANK","BLANK","0");
-
-//        brandList.setNumColumns(this.);
-        brandList.setAdapter(brandListAdapater);
-        brandList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        BottomTabLayout = (TabLayout)findViewById(R.id.m_bottomTabBar);
+        BottomTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                Log.d(TAG, "selected : " + position);
 
             }
-        });*/
 
-        /*
-        mDrawerList =(RecyclerView)findViewById(R.id.left_drawer);
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                Log.d(TAG, "unseleted : " + position);
+            }
 
-        //set a customshadow that overlays the main content when drawer open
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        //improve performance by indicating the list if fixed size.
-        mDrawerList.setHasFixedSize(true);
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
 
-        mDrawerList.setAdapter(new MenuAdapter(menuList, this));
-
-        toolbar = (Toolbar)findViewById(R.id.m_toolbar);// lollipop부터는
-
-       // toolbar.inflateMenu(R.menu.menu_main);
-
-        //setSupportActionBar(toolbar);
-        //toolbar.inflateMenu(R.menu.menu_main);
-
-        //enable ActionBar app icon to behave as action to toggle new drawer ??
-      //  getActionBar().setDisplayHomeAsUpEnabled(true);
-      //  getActionBar().setHomeButtonEnabled(true);
-
-        //ActionBarDrawerToggle ties together the proper interactions
-        //between the sliding drawer and the action bar app icon
-
-        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.drawer_open,R.string.drawer_close);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-*/
+            }
+        });
     }
 
 
@@ -109,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements MenuAdapter.OnIte
         if(isTest)   {
             Log.v(TAG,"onClick v.getID()"+v.getId());
         }
+
         Intent i = null;
         switch(menu){
             case R.id.navigation_drawer_items_textView_setting:
