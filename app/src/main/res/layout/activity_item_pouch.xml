@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.pouch.ui.ItemPouchActivity">
+
+    <android.support.design.widget.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:id="@+id/pouchTabLayout"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabTextColor="@color/Item_pouch_tab_textcolor"
+        app:tabSelectedTextColor="@color/Item_pouch_tab_accent"
+        >
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="MY POUCH"
+            />
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WISH POUCH"
+            />
+
+    </android.support.design.widget.TabLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pouchTabLayout"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/item_pouch_container"
+        >
+
+    </FrameLayout>
+</RelativeLayout>
