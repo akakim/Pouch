@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:divider="@android:color/darker_gray"
+    android:dividerPadding="10dp"
+    android:background="@android:color/holo_red_light">
+    <!--Grid view로 구성된 나의 품목관리 -->
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView" >
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:useDefaultMargins="true"
+            android:nestedScrollingEnabled="true">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="120dp"
+                android:minHeight="120dp"
+                android:orientation="horizontal">
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:minWidth="120dp"
+                    android:minHeight="120dp"
+                    >
+                    <ImageView android:src="@drawable/skin"
+                        android:id="@+id/skin"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/app_icon"
+                        android:layout_gravity="right"
+                        />
+                </FrameLayout>
+            </LinearLayout>
+            <ImageView android:src="@drawable/skin"
+                android:id="@+id/Toner"
+                android:minWidth="120dp"
+                android:nestedScrollingEnabled="true"
+                android:minHeight="120dp" />
+            <ImageView android:src="@drawable/cream"
+                android:id="@+id/cream"
+                android:minHeight="120dp"
+                android:minWidth="120dp" />
+            <ImageView android:src="@drawable/makeupbase"
+                android:id="@+id/makeupBase"
+                android:minHeight="120dp"
+                android:minWidth="120dp" />
+            <ImageView android:src="@drawable/fact"
+                android:id="@+id/foundation"
+                android:minHeight="120dp"
+                android:minWidth="120dp" />
+            <ImageView android:src="@drawable/stickcover"
+                android:id="@+id/stickcover"
+                android:minHeight="120dp"
+                android:minWidth="120dp" />
+            <ImageView android:src="@drawable/concealer"
+                android:id="@+id/concealer"
+                android:minHeight="120dp"
+                android:minWidth="120dp" />
+            <ImageView android:src="@drawable/fact"
+                android:id="@+id/pouder"
+                android:minHeight="120dp"
+                android:minWidth="120dp" />
+            <ImageView android:src="@drawable/fact"
+                android:id="@+id/fact"
+                android:minHeight="120dp"
+                android:minWidth="120dp" />
+            <ImageView android:src="@drawable/eyeshadow"
+                android:id="@+id/eyeshadow"
+                android:minHeight="120dp"
+                android:minWidth="120dp" />
+            <ImageView android:src="@drawable/blush"
+                android:id="@+id/blush"
+                android:minHeight="120dp"
+                android:minWidth="120dp" />
+
+            <ImageView android:src="@drawable/ripclouse"
+            android:id="@+id/ripclouse"
+            android:minHeight="120dp"
+            android:minWidth="120dp" />
+
+            <ImageView android:src="@drawable/lip_tint_1"
+                android:id="@+id/lip_tint"
+                android:minHeight="120dp"
+                android:minWidth="120dp" />
+        </GridLayout>
+    </ScrollView>
+
+    <!--<string-array name="cosmetic_list">
+        <item>스킨</item>
+        <item>토너</item>
+        <item>크림</item>
+        <item>메이크업베이스</item>
+        <item>파운데이션</item>
+        <item>스틱커버</item>
+        <item>컨실러</item>
+        <item>파우더 </item>
+        <item>팩트</item>
+
+        <item>아이새도우</item>
+        <item>블러셔</item>
+
+        <item>립글로스</item>
+        <item>틴트</item>
+        <item>아이라이너</item>
+        <item>마스카라</item>
+        <item>폼클랜징</item>
+        <item>마스크팩</item>
+    </string-array>-->
+</LinearLayout>
