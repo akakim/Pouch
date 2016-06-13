@@ -175,13 +175,15 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:id ="@+id/Review"
+                    android:onClick="onClick"
                     />
                 <ImageButton
-                    android:src="@drawable/facebook_icon"
+                    android:src="@drawable/instagram_button"
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:id ="@+id/Instagram"
+                    android:onClick="onClick"
                     />
                 <ImageButton
                     android:src="@drawable/google_icon"
@@ -189,6 +191,7 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:id ="@+id/Search"
+                    android:onClick="onClick"
                     />
                 <ImageButton
                     android:src="@drawable/twitter_icon"
@@ -196,16 +199,17 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:id ="@+id/Pouch"
+                    android:onClick="onClick"
                     />
             </android.support.v7.widget.Toolbar>
             </RelativeLayout>
         </FrameLayout>
 
-<!--
+
 
         <include
             layout="@layout/navigation_drawer"
-            ></include>-->
+            ></include>
 
 
     <!-- layout_gravity 설정 없으면 에러낭! -->

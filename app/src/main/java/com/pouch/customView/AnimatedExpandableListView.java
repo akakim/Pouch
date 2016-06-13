@@ -132,6 +132,8 @@ public class AnimatedExpandableListView extends ExpandableListView {
     private static final int ANIMATION_DURATION = 300;
 
     private AnimatedExpandableListAdapter adapter;
+    private boolean isTest= true;
+
 
     public AnimatedExpandableListView(Context context) {
         super(context);
@@ -147,7 +149,6 @@ public class AnimatedExpandableListView extends ExpandableListView {
 
     public void setAdapter(ExpandableListAdapter adapter) {
         super.setAdapter(adapter);
-        Log.v(TAG, "setAdapter()");
         // Make sure that the adapter extends AnimatedExpandableListAdapter
         if (adapter instanceof AnimatedExpandableListAdapter) {
             this.adapter = (AnimatedExpandableListAdapter) adapter;
@@ -384,9 +385,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
 
             Log.i(TAG, "getChildView");
             if (info.animating) {
-                if (convertView instanceof DummyView == false) {
-
-                    Log.i(TAG, "animationg.. make Dummyview");
+                if (convertView instanceof DummyView == false) {;
                     convertView = new DummyView(parent.getContext());
                     convertView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0));
                 }
@@ -620,13 +619,24 @@ public class AnimatedExpandableListView extends ExpandableListView {
         private int delta;
         private View view;
         private GroupInfo groupInfo;
+        private final String TAG= ExpandAnimation.class.getSimpleName();
+        private boolean isTest = true;
 
         private ExpandAnimation(View v, int startHeight, int endHeight, GroupInfo info) {
+
+
             baseHeight = startHeight;
             delta = endHeight - startHeight;
             view = v;
             groupInfo = info;
 
+            if(isTest){
+                Log.v(TAG,"ExpandAnimation Constructor()");
+                Log.v(TAG,"baseHeight : "+String.valueOf(baseHeight));
+                Log.v(TAG,"delta : "+String.valueOf(delta));
+                Log.v(TAG,"view's name : "+String.valueOf(view.getId()));
+                Log.v(TAG,"groupInfo : "+info.toString());
+            }
             view.getLayoutParams().height = startHeight;
             view.requestLayout(); // ?? parentlayout ø‰√ª ?
         }

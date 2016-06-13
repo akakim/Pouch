@@ -6,13 +6,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
 
 import com.pouch.R;
 import com.pouch.ui.adapter.DataAdapter;
-public class MainActivity extends AppCompatActivity implements MenuAdapter.OnItemClickListener {
+public class MainActivity extends AppCompatActivity  {
 
     private static final String TAG = "MainActivity";
     private DrawerLayout                 mDrawerLayout;
@@ -41,31 +42,6 @@ public class MainActivity extends AppCompatActivity implements MenuAdapter.OnIte
         mDrawerLayout = (DrawerLayout)findViewById(R.id.main_drawer_layout);
 
         BottomToolbar = (Toolbar)findViewById(R.id.m_bottomTabBar);
-        BottomToolbar.setOnClickListener(new View.OnClickListener() {
-            private final int REVIEW = 0;
-            private final int INSTAGRAM = 1;
-            private final int SEARCH_SHOP = 2;
-            private final int MYPOUCH = 3;
-
-            @Override
-            public void onClick(View v) {
-                int id = v.getId();
-                Intent i;
-                switch (id) {
-                    case REVIEW:
-                        break;
-                    case INSTAGRAM:
-                        break;
-                    case SEARCH_SHOP:
-                        break;
-                    case MYPOUCH:
-                        i = new Intent(getApplicationContext(), ItemPouchActivity.class);
-                        startActivity(i);
-                        break;
-
-                }
-            }
-        });
     }
 
 
@@ -94,6 +70,21 @@ public class MainActivity extends AppCompatActivity implements MenuAdapter.OnIte
 
         Intent i = null;
         switch(menu){
+            case R.id.Review:
+                break;
+            case R.id.Search:
+                i = new Intent(this,SearchActivity.class);
+                startActivity(i);
+                break;
+            case R.id.Instagram:
+                break;
+            case R.id.Pouch:
+                if (isTest){
+                    Log.v(TAG,"Pouch clicked");
+                }
+                i  =new Intent(this,ItemPouchActivity.class);
+                startActivity(i);
+                break;
             case R.id.navigation_drawer_items_textView_setting:
                 if (isTest){
                     Log.v(TAG,"setting menu clicked");
@@ -102,20 +93,5 @@ public class MainActivity extends AppCompatActivity implements MenuAdapter.OnIte
                 startActivity(i);
                 break;
         }
-    }
-    @Override
-    public void onClick(View view, int position) {
-        selectItem(position);
-    }
-
-    private void selectItem(int position){
-
-        Log.v(TAG, "selected " + position);
-  //      mDrawerLayout.closeDrawer(mDrawerList);
-    }
-
-    public void onClickSetting(View v){
-       Intent i = new Intent(MainActivity.this,SettingActivity.class);
-        startActivity(i);
     }
 }
