@@ -1,36 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-   <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.pouch.ui.EventInfoActivity">
+    tools:context="com.pouch.ui.EventInfoActivity"
+    android:windowActionBar="false"
+    android:windowNoTitle="true"
+    >
 
-    <android.support.design.widget.TabLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true"
-        android:id="@+id/pouchTabLayout"
-        app:tabMode="fixed"
-        app:tabGravity="fill"
-        app:tabTextColor="@color/Item_pouch_tab_accent"
-        app:tabSelectedTextColor="@color/Item_pouch_tab_accent"
-        app:tabIndicatorHeight="0dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-        >
-        <android.support.design.widget.TabItem
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways" />
+
+        <android.support.design.widget.TabLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="세일정보"
+            android:fillViewport="true"
+            android:id="@+id/eventInfoTabLayout"
+            app:tabMode="fixed"
+            app:tabGravity="fill"
+            app:tabTextColor="@color/Item_pouch_tab_accent"
+            app:tabSelectedTextColor="@color/Item_pouch_tab_accent"
+            app:tabIndicatorHeight="0dp"
 
-            />
-        <android.support.design.widget.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="이벤트"
-            />
+            >
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="세일정보"
 
-    </android.support.design.widget.TabLayout>
+                />
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="이벤트"
+                />
+        </android.support.design.widget.TabLayout>
+    </android.support.design.widget.AppBarLayout>
+
+
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -39,44 +57,5 @@
         >
 
     </FrameLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:id="@+id/linearLayout4">
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            >
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/app_icon"
-                />
 
-        </FrameLayout>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="뒤로"
-            android:layout_weight="1" />
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/app_icon"
-            android:layout_weight="1"
-            />
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/app_icon"
-            android:layout_weight="1"
-            />
-
-    </LinearLayout>
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

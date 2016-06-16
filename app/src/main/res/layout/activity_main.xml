@@ -10,7 +10,8 @@
      android:layout_width="match_parent"
      android:layout_height="match_parent"
      tools:openDrawer="start"
-     tools:context=".MainActivity">
+     tools:context=".MainActivity"
+        android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
 
         <!-- toDo :
          화면구성에 따라 layout을 더 추가하거나, fragment가 더 추가될 수 있다.

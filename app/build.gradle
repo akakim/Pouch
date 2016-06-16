@@ -4,7 +4,10 @@ android {
     compileSdkVersion 23
     buildToolsVersion '23.0.1'
 
-    
+    //UTF-8 문자열 처리에 특효약.
+    compileOptions {
+        encoding "UTF-8"
+    }
     defaultConfig {
         applicationId "com.pouch"
         minSdkVersion 19
