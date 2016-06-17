@@ -9,8 +9,19 @@
         <item>스킨푸드</item>
         <item>미샤</item>
         <item>에뛰드하우스</item>
-
     </string-array>
+
+    <string-array name="instagram-url">
+        <item>https://www.instagram.com/innisfreeofficial/</item>
+        <item>https://www.instagram.com/tonymoly.official/</item>
+        <item>https://www.instagram.com/naturerepublic_kr/</item>
+        <item>https://www.instagram.com/thefaceshop.official/</item>
+        <item>https://www.instagram.com/itsskin_power_sale/</item>
+        <item>https://www.instagram.com/skinfood1957/</item>
+        <item>https://www.instagram.com/missha.official/</item>
+        <item>https://www.instagram.com/etude_official/</item>
+    </string-array>
+
 
     <string-array name="cosmetic_list">
         <item>스킨</item>
@@ -31,5 +42,4 @@
         <item>폼클랜징</item>
         <item>마스크팩</item>
     </string-array>
-
 </resources>

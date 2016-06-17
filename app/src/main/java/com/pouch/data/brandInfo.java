@@ -1,32 +1,30 @@
 package com.pouch.data;
 
+import java.net.URL;
+
 /**
  * Created by Ala on 2016-05-30.
  */
 public class brandInfo {
     private String brandName;
-    private String InstagramURL;
-    private String bargain;
-    private String position;
+    private URL InstagramURL;
+    private int brandImageRes;
 
-    public brandInfo(String brandName, String instagramURL, String bargain, String position) {
+
+    public brandInfo(String brandName, URL instagramURL,int brandImageRes) {
         this.brandName = brandName;
         InstagramURL = instagramURL;
-        this.bargain = bargain;
-        this.position = position;
+        this.brandImageRes = brandImageRes;
     }
 
-    public String getInstagramURL() {
+    public URL getInstagramURL() {
         return InstagramURL;
     }
 
-    public String getBargain() {
-        return bargain;
+    public int getBrandImageRes() {
+        return brandImageRes;
     }
 
-    public String getPosition() {
-        return position;
-    }
 
     public String getBrandName() {
 
@@ -37,15 +35,12 @@ public class brandInfo {
         this.brandName = brandName;
     }
 
-    public void setInstagramURL(String instagramURL) {
+    public void setInstagramURL(URL instagramURL) {
         InstagramURL = instagramURL;
     }
 
-    public void setBargain(String bargain) {
-        this.bargain = bargain;
+    public void setBrandImageRes(int brandImageRes) {
+        this.brandImageRes = brandImageRes;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
-    }
 }

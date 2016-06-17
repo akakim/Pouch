@@ -6,19 +6,23 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
 
 import com.pouch.R;
-import com.pouch.ui.adapter.DataAdapter;
+import com.pouch.adapter.DataAdapter;
+import com.pouch.data.brandInfo;
+
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity  {
 
     private static final String TAG = "MainActivity";
     private DrawerLayout                 mDrawerLayout;
     private Toolbar BottomToolbar;
 
+    private HashMap<String,brandInfo>    BrandList;
 
     private GridView                     brandList;
     private DataAdapter                  brandListAdapater;
@@ -42,6 +46,9 @@ public class MainActivity extends AppCompatActivity  {
         mDrawerLayout = (DrawerLayout)findViewById(R.id.main_drawer_layout);
 
         BottomToolbar = (Toolbar)findViewById(R.id.m_bottomTabBar);
+
+        BrandList = new HashMap<String,brandInfo>();
+
     }
 
 
