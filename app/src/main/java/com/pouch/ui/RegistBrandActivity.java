@@ -1,7 +1,6 @@
 package com.pouch.ui;
 
 import android.content.Context;
-import android.hardware.display.DisplayManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import com.pouch.R;
 import com.pouch.customView.AnimatedExpandableListView;
 
-import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -215,7 +213,7 @@ public class RegistBrandActivity extends AppCompatActivity {
                 holder = new ChildHolder();
 
                 convertView = inflater.inflate(R.layout.activity_regist_item,parent,false);
-                holder.title = (TextView) convertView.findViewById(R.id.RegistChild);
+                holder.title = (TextView) convertView.findViewById(R.id.getWishItem);
 
                 convertView.setTag(holder);
             }else {

@@ -18,17 +18,17 @@
         </activity>
         <activity
             android:name=".ui.MainActivity"
-            android:label="@string/title_activity_main"></activity>
+            android:label="@string/title_activity_main" />
         <activity
             android:name=".ui.SettingActivity"
-            android:label="@string/title_activity_setting"></activity>
-        <activity
-            android:name=".ui.MainActivityFixed"
-            android:label="@string/title_activity_main_activity_fixed"></activity>
+            android:label="@string/title_activity_setting" />
         <activity
             android:name=".ui.RegistBrandActivity"
-            android:label="@string/title_activity_regist_brand"></activity>
-        <activity android:name=".ui.ItemPouchActivity"></activity>
+            android:label="@string/title_activity_regist_brand" />
+        <activity android:name=".ui.ItemPouchActivity" />
+        <activity android:name=".ui.ColorPalatteActivity" />
+        <activity android:name=".ui.EventInfoActivity" />
+        <activity android:name=".ui.SearchActivity"></activity>
     </application>
 
 </manifest>

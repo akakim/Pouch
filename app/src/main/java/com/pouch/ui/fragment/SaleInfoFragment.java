@@ -5,20 +5,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridLayout;
 
 import com.pouch.R;
 
 /**
- * Created by USER on 2016-06-10.
+ * Created by USER on 2016-06-15.
  */
-public class MyPouchFragment extends Fragment {
+public class SaleInfoFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.activity_item_mypouch, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.sale_info_fragment, container, false);
 
         return rootView;
     }
-
 }
