@@ -27,6 +27,7 @@
                    android:layout_height="wrap_content"
                    android:id="@+id/scrollView" >
                    <GridLayout
+                       android:id="@+id/main_brandlist"
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
                        android:columnCount="2"
