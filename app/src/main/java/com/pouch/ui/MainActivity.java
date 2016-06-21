@@ -2,20 +2,26 @@ package com.pouch.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pouch.R;
@@ -42,11 +48,18 @@ public class MainActivity extends AppCompatActivity  {
     private String[] brandName;
 
     private GridLayout                   GridBrand;
+
+    private LinearLayout [] testLinearLayout;
+    private FrameLayout []testBack;
+    private ImageView[] testArr;
+    private TextView[] testArr2;
     private MainAdapter                  brandListAdapater;
 
     private CharSequence                 mTitle;
     private CharSequence                 mDrawerTitle;
 
+    private LinearLayout layout;
+    private ImageView img;
 
     private String[]                     menuList; // 필요한 catagory들이 들어간다.
     private boolean isTest=true;
@@ -62,16 +75,65 @@ public class MainActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_main);
 
         int imgID = R.id.cream;
-        brandName = getResources().getStringArray(R.array.menu_array);
+        brandName = getResources().getStringArray(R.array.brandlist);
         brandURL = getResources().getStringArray(R.array.instagram_url);
+        brandInstagramURL = new URL[brandName.length];
+
+
+        testArr = new ImageView[brandName.length];
+        testArr2 = new TextView[brandName.length];
+        testBack = new FrameLayout[brandName.length];
+        testLinearLayout = new LinearLayout[brandName.length];
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels/2,
+                getResources().getDisplayMetrics().heightPixels/2);
+        params.weight= 1.0f;
+//        params.gravity = Gravity.RIGHT;
+        params.setLayoutDirection(LinearLayout.HORIZONTAL);
+
+        LinearLayout.LayoutParams CancelableParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+
         for(int i =0;i<brandURL.length;i++){
             try {
+                Log.v("URL : ",brandURL[i]);
+
                 brandInstagramURL[i] = new URL(brandURL[i]);
+
+                testLinearLayout[i]  = new LinearLayout(this);
+                testLinearLayout[i].setLayoutParams(params);
+
+                testBack[i] = new FrameLayout(this);
+                testBack[i].setLayoutParams(params);
+                testBack[i].setBackgroundColor(Color.GREEN);
+
+                testArr [i] = new ImageView(this);
+                testArr[i].setImageResource(R.drawable.concealer);
+                CancelableParams.gravity=Gravity.CENTER;
+                testArr[i].setLayoutParams(CancelableParams);
+
+
+                testArr[i].setOnClickListener(new View.OnClickListener(){
+                    int selected = mRowSelected;
+
+
+                    @Override
+                    public void onClick(View v) {
+                        mRowSelected = selected;
+                        mQuickAction.show(v);
+                    }
+                });
+                mRowSelected++;
+
+                testBack[i].addView(testLinearLayout[i]);
+                testLinearLayout[i].addView(testArr[i]);
+
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
         }
 
+        mRowSelected = 0;
         //initialize
         // activity의 타이틀값을 받아온다.
         mTitle = mDrawerTitle = getTitle();
@@ -90,9 +152,9 @@ public class MainActivity extends AppCompatActivity  {
 
         GridBrand = (GridLayout)findViewById(R.id.main_brandlist);
 
-
-        brandListAdapater = new MainAdapter(this,BrandList);
-
+        for(int i =0;i<testArr.length;i++){
+            GridBrand.addView(testBack[i]);
+        }
 
 
         ActionItem addItem 		= new ActionItem(ID_ADD, "Add", getResources().getDrawable(R.drawable.ic_add));
@@ -125,7 +187,9 @@ public class MainActivity extends AppCompatActivity  {
         });
     }
 
+    private void InitGridLayout(){
 
+    }
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -218,6 +282,7 @@ public class MainActivity extends AppCompatActivity  {
                 listImageHolder = new ViewHolder();
                 convertView = layoutInflater.inflate(R.layout.activity_main_item,parent,false);
                 listImageHolder.imageListView = (ImageView)convertView.findViewById(R.id.Main_ImageItem);
+                Log.v(TAG,""+listStorage.get(position).getBrandImageRes());
                 listImageHolder.imageListView.setImageResource(listStorage.get(position).getBrandImageRes());
                 listImageHolder.imageListView.setOnClickListener(new View.OnClickListener() {
                                                                      @Override

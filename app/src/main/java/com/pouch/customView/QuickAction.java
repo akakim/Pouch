@@ -176,7 +176,7 @@ private ImageView mArrowUp;
         container.setFocusable(true);
         container.setClickable(true);
 
-        mTrack.addView(container, mChildPos + 1);
+        mTrack.addView(container, mChildPos);
         mChildPos++;
     }
 
