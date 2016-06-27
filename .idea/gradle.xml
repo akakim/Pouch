@@ -11,6 +11,16 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/auth" />
+            <option value="$PROJECT_DIR$/friends" />
+            <option value="$PROJECT_DIR$/kakaolink" />
+            <option value="$PROJECT_DIR$/kakaostory" />
+            <option value="$PROJECT_DIR$/kakaotalk" />
+            <option value="$PROJECT_DIR$/network" />
+            <option value="$PROJECT_DIR$/push" />
+            <option value="$PROJECT_DIR$/storage" />
+            <option value="$PROJECT_DIR$/usermgmt" />
+            <option value="$PROJECT_DIR$/util" />
           </set>
         </option>
       </GradleProjectSettings>

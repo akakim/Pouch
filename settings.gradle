@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':network', ':push', ':kakaostory', ':friends', ':util', ':storage', ':kakaotalk', ':kakaolink', ':usermgmt', ':auth'

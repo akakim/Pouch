@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "C:\\Users\\USER\\Downloads\\kakao-android-sdk-project-1.1.16-full (1)\\auth\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\kakao_internal_login_activity.xml",
+        "source": "C:\\Users\\USER\\Downloads\\kakao-android-sdk-project-1.1.16-full (1)\\auth\\build\\intermediates\\exploded-aar\\kakao-android-sdk-project-1.1.16-full (1)\\util\\1.1.16\\debug\\res\\layout\\kakao_internal_login_activity.xml"
+    },
+    {
+        "merged": "C:\\Users\\USER\\Downloads\\kakao-android-sdk-project-1.1.16-full (1)\\auth\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\kakao_login_layout.xml",
+        "source": "C:\\Users\\USER\\Downloads\\kakao-android-sdk-project-1.1.16-full (1)\\auth\\build\\intermediates\\exploded-aar\\kakao-android-sdk-project-1.1.16-full (1)\\util\\1.1.16\\debug\\res\\layout\\kakao_login_layout.xml"
+    }
+]
