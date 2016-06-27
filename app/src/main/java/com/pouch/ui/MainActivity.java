@@ -1,6 +1,5 @@
 package com.pouch.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -36,6 +35,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+
 public class MainActivity extends AppCompatActivity  {
 
     private static final String TAG = "MainActivity";
@@ -53,7 +63,6 @@ public class MainActivity extends AppCompatActivity  {
     private FrameLayout []testBack;
     private ImageView[] testArr;
     private TextView[] testArr2;
-    private MainAdapter                  brandListAdapater;
 
     private CharSequence                 mTitle;
     private CharSequence                 mDrawerTitle;
@@ -240,71 +249,4 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
-    private class MainAdapter extends BaseAdapter {
-
-        private brandInfo mBrand;
-        private Context mContext;
-        private final String TAG = this.getClass().getSimpleName();
-        private LayoutInflater layoutInflater;
-        private List<brandInfo> listStorage;
-        private boolean IsTest = true;
-        public MainAdapter(Context context,List<brandInfo> customizedListView){
-            mContext = context;
-            layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            listStorage = customizedListView;
-        }
-
-        @Override
-        public int getCount() {
-            return listStorage.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder listImageHolder;
-
-            mRowSelected = position;
-            if(IsTest) {
-                Log.v(TAG, "getView()");
-            }
-
-            if (convertView == null){
-                listImageHolder = new ViewHolder();
-                convertView = layoutInflater.inflate(R.layout.activity_main_item,parent,false);
-                listImageHolder.imageListView = (ImageView)convertView.findViewById(R.id.Main_ImageItem);
-                Log.v(TAG,""+listStorage.get(position).getBrandImageRes());
-                listImageHolder.imageListView.setImageResource(listStorage.get(position).getBrandImageRes());
-                listImageHolder.imageListView.setOnClickListener(new View.OnClickListener() {
-                                                                     @Override
-                                                                     public void onClick(View v) {
-                                                                         mQuickAction.show(v);
-                                                                     }
-                                                                 }
-                );
-                convertView.setTag(listImageHolder);
-            }
-            else {
-                // findViewById로 호출을 자꾸 하게되면 성능이 느려진다.
-                //조금이나마 빨리하기위해 이렇게함.
-                listImageHolder =  (ViewHolder)convertView.getTag();
-            }
-
-            return convertView;
-        }
-
-
-    }
-    static class ViewHolder{
-        ImageView imageListView;
-    }
 }
