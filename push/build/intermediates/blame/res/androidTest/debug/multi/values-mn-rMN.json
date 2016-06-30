@@ -611,6 +611,7 @@
                 }
             }
         ]
+<<<<<<< HEAD
     },
     {
         "outputFile": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\push\\build\\intermediates\\res\\merged\\androidTest\\debug\\values-mn-rMN\\values-mn-rMN.xml",
@@ -1224,5 +1225,7 @@
                 }
             }
         ]
+=======
+>>>>>>> origin/master
     }
 ]
