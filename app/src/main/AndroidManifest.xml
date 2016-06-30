@@ -2,13 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pouch">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
+
     <application
+
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".common.GlobalApplication"
+        >
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
+
         <activity
-            android:name=".ui.IntroActivity"
+            android:name=".ui.SplashActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,7 +38,10 @@
         <activity android:name=".ui.ItemPouchActivity" />
         <activity android:name=".ui.ColorPalatteActivity" />
         <activity android:name=".ui.EventInfoActivity" />
-        <activity android:name=".ui.SearchActivity"></activity>
+        <activity android:name=".ui.SearchActivity" />
+        <activity android:name=".common.LoginActivity"></activity>
+        <activity android:name=".common.SignUpActivity"/>
+
     </application>
 
 </manifest>

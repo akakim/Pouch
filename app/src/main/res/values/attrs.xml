@@ -5,5 +5,13 @@
         <attr name="MenuForeground" format="reference|color" />
     </declare-styleable>
 
+    <declare-styleable name="KakaoDialogSpinner">
+        <attr name="kakao_prompt" format="string"/>
+        <attr name="kakao_entries" format="reference"/>
+        <attr name="kakao_icon" format="reference"/>
+        <attr name="kakao_dialogTitle" format="reference"/>
+        <attr name="kakao_showTitleDivider" format="boolean"/>
+        <attr name="kakao_titleTextColor" format="reference"/>
+    </declare-styleable>
 
 </resources>

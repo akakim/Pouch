@@ -23,6 +23,12 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kakao.auth.ISessionCallback;
+import com.kakao.network.ErrorResult;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.MeResponseCallback;
+import com.kakao.usermgmt.response.model.UserProfile;
+import com.kakao.util.exception.KakaoException;
 import com.pouch.R;
 import com.pouch.adapter.DataAdapter;
 import com.pouch.customView.QuickAction;
@@ -57,12 +63,10 @@ public class MainActivity extends AppCompatActivity  {
     private String[] brandURL;
     private String[] brandName;
 
+    // 상품에 대한 정보를 담는 Layout.
     private GridLayout                   GridBrand;
 
-    private LinearLayout [] testLinearLayout;
-    private FrameLayout []testBack;
-    private ImageView[] testArr;
-    private TextView[] testArr2;
+
 
     private CharSequence                 mTitle;
     private CharSequence                 mDrawerTitle;
@@ -72,12 +76,18 @@ public class MainActivity extends AppCompatActivity  {
 
     private String[]                     menuList; // 필요한 catagory들이 들어간다.
     private boolean isTest=true;
+
+    /* QuickAction을 위한 변수. */
     private static final int ID_ADD = 1;
     private static final int ID_ACCEPT = 2;
     private static final int ID_UPLOAD = 3;
 
     private static int mRowSelected = 0;
     private QuickAction mQuickAction;
+
+    /*카카오와 연동을 위한 추가적인 변수들.*/
+    private SessionCallback Callback;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,62 +98,8 @@ public class MainActivity extends AppCompatActivity  {
         brandURL = getResources().getStringArray(R.array.instagram_url);
         brandInstagramURL = new URL[brandName.length];
 
+        InitGridLayout();
 
-        testArr = new ImageView[brandName.length];
-        testArr2 = new TextView[brandName.length];
-        testBack = new FrameLayout[brandName.length];
-        testLinearLayout = new LinearLayout[brandName.length];
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels/2,
-                getResources().getDisplayMetrics().heightPixels/2);
-        params.weight= 1.0f;
-//        params.gravity = Gravity.RIGHT;
-        params.setLayoutDirection(LinearLayout.HORIZONTAL);
-
-        LinearLayout.LayoutParams CancelableParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-
-        for(int i =0;i<brandURL.length;i++){
-            try {
-                Log.v("URL : ",brandURL[i]);
-
-                brandInstagramURL[i] = new URL(brandURL[i]);
-
-                testLinearLayout[i]  = new LinearLayout(this);
-                testLinearLayout[i].setLayoutParams(params);
-
-                testBack[i] = new FrameLayout(this);
-                testBack[i].setLayoutParams(params);
-                testBack[i].setBackgroundColor(Color.GREEN);
-
-                testArr [i] = new ImageView(this);
-                testArr[i].setImageResource(R.drawable.concealer);
-                CancelableParams.gravity=Gravity.CENTER;
-                testArr[i].setLayoutParams(CancelableParams);
-
-
-                testArr[i].setOnClickListener(new View.OnClickListener(){
-                    int selected = mRowSelected;
-
-
-                    @Override
-                    public void onClick(View v) {
-                        mRowSelected = selected;
-                        mQuickAction.show(v);
-                    }
-                });
-                mRowSelected++;
-
-                testBack[i].addView(testLinearLayout[i]);
-                testLinearLayout[i].addView(testArr[i]);
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        mRowSelected = 0;
-        //initialize
         // activity의 타이틀값을 받아온다.
         mTitle = mDrawerTitle = getTitle();
 
@@ -159,11 +115,6 @@ public class MainActivity extends AppCompatActivity  {
             BrandList.add(tmp);
         }
 
-        GridBrand = (GridLayout)findViewById(R.id.main_brandlist);
-
-        for(int i =0;i<testArr.length;i++){
-            GridBrand.addView(testBack[i]);
-        }
 
 
         ActionItem addItem 		= new ActionItem(ID_ADD, "Add", getResources().getDrawable(R.drawable.ic_add));
@@ -198,7 +149,69 @@ public class MainActivity extends AppCompatActivity  {
 
     private void InitGridLayout(){
 
+        LinearLayout [] testLinearLayout;
+        FrameLayout []testBack;
+        ImageView[] testArr;
+        testArr = new ImageView[brandName.length];
+
+        testBack = new FrameLayout[brandName.length];
+        testLinearLayout = new LinearLayout[brandName.length];
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels/2,
+                getResources().getDisplayMetrics().heightPixels/2);
+        params.weight= 1.0f;
+        params.setLayoutDirection(LinearLayout.HORIZONTAL);
+
+        LinearLayout.LayoutParams CancelableParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+
+        for(int i =0;i<brandURL.length;i++){
+            try {
+                Log.v("URL : ",brandURL[i]);
+
+                brandInstagramURL[i] = new URL(brandURL[i]);
+
+                testLinearLayout[i]  = new LinearLayout(this);
+                testLinearLayout[i].setLayoutParams(params);
+
+                testBack[i] = new FrameLayout(this);
+                testBack[i].setLayoutParams(params);
+                testBack[i].setBackgroundColor(Color.GREEN);
+
+                testArr [i] = new ImageView(this);
+                testArr[i].setImageResource(R.drawable.concealer);
+                CancelableParams.gravity=Gravity.CENTER;
+                testArr[i].setLayoutParams(CancelableParams);
+                testArr[i].setOnClickListener(new View.OnClickListener(){
+                    int selected = mRowSelected;
+
+                    @Override
+                    public void onClick(View v) {
+                        mRowSelected = selected;
+                        mQuickAction.show(v);
+                    }
+                });
+                mRowSelected++;
+
+                testBack[i].addView(testLinearLayout[i]);
+                testLinearLayout[i].addView(testArr[i]);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // 나중에 선택된 것의 index를 알기 위해 초기화를했다.
+        mRowSelected = 0;
+
+        GridBrand = (GridLayout)findViewById(R.id.main_brandlist);
+
+        for(int i =0;i<testArr.length;i++){
+            GridBrand.addView(testBack[i]);
+        }
     }
+
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -249,4 +262,54 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
+    /* 사용자 정보를 위해 추가 되는 부분. */
+    private class SessionCallback implements ISessionCallback {
+        @Override
+        public void onSessionOpened() {
+            Log.d("TAG", "세션 오픈됨");
+            // 사용자 정보를 가져옴, 회원가입 미가입시 자동가입 시킴
+            KakaorequestMe();
+        }
+
+        @Override
+        public void onSessionOpenFailed(KakaoException exception) {
+            if(exception != null) {
+                Log.d("TAG" , exception.getMessage());
+            }
+        }
+    }
+
+    protected void KakaorequestMe() {
+        UserManagement.requestMe(new MeResponseCallback() {
+            @Override
+            public void onFailure(ErrorResult errorResult) {
+                int ErrorCode = errorResult.getErrorCode();
+                int ClientErrorCode = -777;
+
+                if (ErrorCode == ClientErrorCode) {
+                    Toast.makeText(getApplicationContext(), "카카오톡 서버의 네트워크가 불안정합니다. 잠시 후 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("TAG", "오류로 카카오로그인 실패 ");
+                }
+            }
+
+            public void onSessionClosed(ErrorResult errorResult) {
+                Log.d("TAG", "오류로 카카오로그인 실패 ");
+            }
+
+            @Override
+            public void onSuccess(UserProfile userProfile) {
+                profileUrl = userProfile.getProfileImagePath();
+                userId = String.valueOf(userProfile.getId());
+                userName = userProfile.getNickname();
+
+                setLayoutText();
+            }
+
+            @Override
+            public void onNotSignedUp() {
+                // 자동가입이 아닐경우 동의창
+            }
+        });
+    }
 }

@@ -1,5 +1,13 @@
 [
     {
+        "merged": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\kakaostory\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\kakaoaccount_icon.png",
+        "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\kakaostory\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable-xhdpi-v4\\kakaoaccount_icon.png"
+    },
+    {
+        "merged": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\kakaostory\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\kakaotalk_icon.png",
+        "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\kakaostory\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable-xhdpi-v4\\kakaotalk_icon.png"
+    },
+    {
         "merged": "C:\\Users\\USER\\Downloads\\kakao-android-sdk-project-1.1.16-full (1)\\kakaostory\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\kakaostory_icon.png",
         "source": "C:\\Users\\USER\\Downloads\\kakao-android-sdk-project-1.1.16-full (1)\\kakaostory\\build\\intermediates\\exploded-aar\\kakao-android-sdk-project-1.1.16-full (1)\\util\\1.1.16\\debug\\res\\drawable-xhdpi-v4\\kakaostory_icon.png"
     },
@@ -10,5 +18,9 @@
     {
         "merged": "C:\\Users\\USER\\Downloads\\kakao-android-sdk-project-1.1.16-full (1)\\kakaostory\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\kakaotalk_icon.png",
         "source": "C:\\Users\\USER\\Downloads\\kakao-android-sdk-project-1.1.16-full (1)\\kakaostory\\build\\intermediates\\exploded-aar\\kakao-android-sdk-project-1.1.16-full (1)\\util\\1.1.16\\debug\\res\\drawable-xhdpi-v4\\kakaotalk_icon.png"
+    },
+    {
+        "merged": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\kakaostory\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\kakaostory_icon.png",
+        "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\kakaostory\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable-xhdpi-v4\\kakaostory_icon.png"
     }
 ]

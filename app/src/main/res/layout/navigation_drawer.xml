@@ -26,21 +26,27 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.gms.common.SignInButton
-                android:id="@+id/sign_in_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal" />
 
-            <com.android.volley.toolbox.NetworkImageView
-                android:id="@+id/profileImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"
+                    android:src="@drawable/cancel_img"
+                    />
+                <Button
+                    android:id="@+id/navigation_drawer_items_textView_NICKNAME"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/nav_drawer_row_item_background"
+                    android:clickable="true"
+                    android:paddingLeft="60dp"
+                    android:textColor="@color/nav_drawer_item_text_selected"
+                    android:text="NICKNAME" />
+            </LinearLayout>
 
-            <Button
-                android:id="@+id/navigation_drawer_items_textView_NICKNAME"
-                style="@style/NavDrawerRowItemText"
-                android:text="NICKNAME" />
 
                 <Button
                     android:id="@+id/navigation_drawer_items_textView_PASS"

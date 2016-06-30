@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="C:\Users\USER\Downloads\kakao-android-sdk-project-1.1.16-full (1)\kakaotalk\src\main\jniLibs"/></dataSet><dataSet config="debug"><source path="C:\Users\USER\Downloads\kakao-android-sdk-project-1.1.16-full (1)\kakaotalk\src\debug\jniLibs"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="C:\Users\USER\AndroidStudioProjects\Pouch\kakaotalk\src\main\jniLibs"/></dataSet><dataSet config="debug"><source path="C:\Users\USER\AndroidStudioProjects\Pouch\kakaotalk\src\debug\jniLibs"/></dataSet></merger>
