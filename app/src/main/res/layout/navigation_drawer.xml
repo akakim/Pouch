@@ -2,7 +2,6 @@
 <!--현재 style적용이 안됬고, toolbar 도 가리고있는문제  -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_activity_navigation_drawer_rootLayout"
     style="@style/pouchMenuLayout"
@@ -32,17 +31,17 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/profileImage"
+                    android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:src="@drawable/cancel_img"
                     />
-                <Button
+                <TextView
                     android:id="@+id/navigation_drawer_items_textView_NICKNAME"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:background="@drawable/nav_drawer_row_item_background"
-                    android:clickable="true"
-                    android:paddingLeft="60dp"
+
                     android:textColor="@color/nav_drawer_item_text_selected"
                     android:text="NICKNAME" />
             </LinearLayout>
@@ -60,7 +59,7 @@
                     android:text="질문"
                     />
 
-
+123123123
                 <Button
                     android:id="@+id/navigation_drawer_items_textView_category2"
                     style="@style/NavDrawerRowItemText"

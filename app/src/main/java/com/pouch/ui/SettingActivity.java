@@ -83,7 +83,7 @@ public class SettingActivity extends AppCompatActivity {
                 // We call collapseGroupWithAnimation(int) and
                 // expandGroupWithAnimation(int) to animate group
                 // expansion/collapse.
-                Toast.makeText(getApplicationContext(),"get groupPosition : "+groupPosition,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"get groupPosition : "+groupPosition,Toast.LENGTH_SHORT).show();
 
 
                 switch (groupPosition){

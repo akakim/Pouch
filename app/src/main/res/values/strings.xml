@@ -49,4 +49,7 @@
     <string name="action_example">Example action</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_regist_brand">브랜드등록</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

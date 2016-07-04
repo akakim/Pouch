@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kakao.auth.ApiResponseCallback;
@@ -17,7 +19,9 @@ import com.kakao.util.helper.log.Logger;
 import com.pouch.R;
 import com.pouch.ui.MainActivity;
 import com.pouch.widget.KakaoToast;
+import com.squareup.picasso.Picasso;
 
+import java.lang.ref.WeakReference;
 import java.util.Map;
 
 /**
@@ -26,6 +30,13 @@ import java.util.Map;
  */
 public class SignUpActivity extends BaseActivity {
     private final String TAG = getClass().getSimpleName();
+
+    public static final int REQUEST_CODE = 1001;
+    private ImageView Profile_img;
+    private TextView userNameTextView;
+
+
+//    private MainActivity activity;
     /**
      * Main으로 넘길지 가입 페이지를 그릴지 판단하기 위해 me를 호출한다.
      * @param savedInstanceState 기존 session 정보가 저장된 객체
@@ -33,8 +44,10 @@ public class SignUpActivity extends BaseActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+  //      activity = getApplication();
         Log.v(TAG, "Hash Key" + getResources().getString(R.string.kakao_app_key));
         requestMe();
+
     }
 
     protected void showSignup() {
@@ -100,9 +113,17 @@ public class SignUpActivity extends BaseActivity {
 
             @Override
             public void onSuccess(UserProfile userProfile) {
-                Log.v("requestMe", "onSuccess");
+                Log.v(TAG, "onSuccess");
                 Logger.d("UserProfile : " + userProfile);
-                redirectMainActivity();
+
+
+              String profileUrl = userProfile.getProfileImagePath();
+              String userName = userProfile.getNickname();
+                long id = userProfile.getId();
+
+
+
+                redirectMainActivity(profileUrl,userName,id);
             }
 
             @Override
@@ -112,9 +133,14 @@ public class SignUpActivity extends BaseActivity {
         });
     }
 
-    private void redirectMainActivity() {
-        Log.v(TAG,"redirectMainActivity() this TO KakaoServiceListActivity");
-        startActivity(new Intent(this, MainActivity.class));
+    private void redirectMainActivity(String url,String username,long id) {
+        Log.v(TAG, "redirectMainActivity() this TO KakaoServiceListActivity");
+        Intent i = new Intent(this,MainActivity.class);
+        i.putExtra("ProfileURL",url);
+        i.putExtra("UserName",username);
+        i.putExtra("ID",id);
+        startActivity(i);
+//        startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 }

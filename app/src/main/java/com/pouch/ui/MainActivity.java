@@ -3,20 +3,16 @@ package com.pouch.ui;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -30,7 +26,6 @@ import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.pouch.R;
-import com.pouch.adapter.DataAdapter;
 import com.pouch.customView.QuickAction;
 import com.pouch.data.ActionItem;
 import com.pouch.data.brandInfo;
@@ -38,18 +33,12 @@ import com.pouch.data.brandInfo;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 
+import com.pouch.util.ImageFetcher;
+import com.squareup.picasso.Picasso;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
+import org.w3c.dom.Text;
 
 
 public class MainActivity extends AppCompatActivity  {
@@ -67,20 +56,23 @@ public class MainActivity extends AppCompatActivity  {
     private GridLayout                   GridBrand;
 
 
+///    private ImageAdapter mAdapter;
+    private ImageFetcher mImageFetcher;
+
 
     private CharSequence                 mTitle;
     private CharSequence                 mDrawerTitle;
 
     private LinearLayout layout;
-    private ImageView img;
+
 
     private String[]                     menuList; // 필요한 catagory들이 들어간다.
     private boolean isTest=true;
 
     /* QuickAction을 위한 변수. */
-    private static final int ID_ADD = 1;
-    private static final int ID_ACCEPT = 2;
-    private static final int ID_UPLOAD = 3;
+    private static final int ID_EVENT = 1;
+    private static final int ID_SEARCH = 2;
+    private static final int ID_SHOW_PRODUCT = 3;
 
     private static int mRowSelected = 0;
     private QuickAction mQuickAction;
@@ -88,12 +80,20 @@ public class MainActivity extends AppCompatActivity  {
     /*카카오와 연동을 위한 추가적인 변수들.*/
     private SessionCallback Callback;
 
+    Intent getUserInformation;
+    private ImageView Profile_img;
+    private TextView userNameTextView;
+    private String profileUrl;
+    private String userName;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        int imgID = R.id.cream;
+        int imgID = R.drawable.cream;
         brandName = getResources().getStringArray(R.array.brandlist);
         brandURL = getResources().getStringArray(R.array.instagram_url);
         brandInstagramURL = new URL[brandName.length];
@@ -117,9 +117,9 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
-        ActionItem addItem 		= new ActionItem(ID_ADD, "Add", getResources().getDrawable(R.drawable.ic_add));
-        ActionItem acceptItem 	= new ActionItem(ID_ACCEPT, "Accept", getResources().getDrawable(R.drawable.ic_accept));
-        ActionItem uploadItem 	= new ActionItem(ID_UPLOAD, "Upload", getResources().getDrawable(R.drawable.ic_up));
+        ActionItem addItem 		= new ActionItem(ID_EVENT, "Event", getResources().getDrawable(R.drawable.ic_add));
+        ActionItem acceptItem 	= new ActionItem(ID_SEARCH, "Accept", getResources().getDrawable(R.drawable.ic_accept));
+        ActionItem uploadItem 	= new ActionItem(ID_SHOW_PRODUCT, "Upload", getResources().getDrawable(R.drawable.ic_up));
 
         mQuickAction 	= new QuickAction(this);
 
@@ -131,11 +131,19 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onItemClick(QuickAction quickAction, int pos, int actionId) {
                 ActionItem actionItem = quickAction.getActionItem(pos);
+                String NextActivity = BrandList.get(mRowSelected).getBrandName();
+                Intent i;
+                switch (actionId){
+                    case ID_EVENT:
 
-                if (actionId == ID_ADD) { //Add item selected
-                   Log.v(TAG,"ID_ADD Clicked");
-                } else {
-                   Log.v(TAG,"NOT ID_ADD Cliked");
+                        break;
+                    case ID_SEARCH:
+                        break;
+                    case ID_SHOW_PRODUCT:
+                        i = new Intent(getApplicationContext(),ShowProductsActivity.class);
+                        i.putExtra("brandName",brandName[mRowSelected]);
+                        startActivity(i);
+                        break;
                 }
             }
         });
@@ -145,8 +153,36 @@ public class MainActivity extends AppCompatActivity  {
             public void onDismiss() {
             }
         });
+
+        /*setting drawerLayout */
+        initDrawLayout();
     }
 
+    private void initDrawLayout(){
+        Profile_img = (ImageView)findViewById(R.id.profileImage);
+        userNameTextView = (TextView)findViewById(R.id.navigation_drawer_items_textView_NICKNAME);
+        getUserInformation = getIntent();
+        profileUrl = getUserInformation.getExtras().getString("ProfileURL");
+        userName = getUserInformation.getExtras().getString("UserName");
+        Log.v("init getUserURL",profileUrl);
+        Log.v("UserName",userName);
+       if (profileUrl != null) {
+           Picasso.with(getApplicationContext()).load(profileUrl).fit().into(Profile_img);
+       }
+
+        if(userName != null){
+            userNameTextView.setText(userName);
+        }
+
+
+        /**
+         * userNameTextView.setText(userName);
+         Picasso.with(getApplicationContext())
+         .load(profileUrl)
+         .fit()
+         .into(Profile_img);
+         */
+    }
     private void InitGridLayout(){
 
         LinearLayout [] testLinearLayout;
@@ -156,6 +192,8 @@ public class MainActivity extends AppCompatActivity  {
 
         testBack = new FrameLayout[brandName.length];
         testLinearLayout = new LinearLayout[brandName.length];
+
+
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels/2,
                 getResources().getDisplayMetrics().heightPixels/2);
@@ -277,7 +315,7 @@ public class MainActivity extends AppCompatActivity  {
                 Log.d("TAG" , exception.getMessage());
             }
         }
-    }
+   }
 
     protected void KakaorequestMe() {
         UserManagement.requestMe(new MeResponseCallback() {
@@ -300,10 +338,12 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onSuccess(UserProfile userProfile) {
                 profileUrl = userProfile.getProfileImagePath();
-                userId = String.valueOf(userProfile.getId());
+           //     userId = String.valueOf(userProfile.getId());
                 userName = userProfile.getNickname();
+//
 
-                setLayoutText();
+            //    setLayoutText();
+
             }
 
             @Override
@@ -311,5 +351,16 @@ public class MainActivity extends AppCompatActivity  {
                 // 자동가입이 아닐경우 동의창
             }
         });
+    }
+
+    private void setLayout(){
+        if (Profile_img != null && userNameTextView!= null){
+            userNameTextView.setText(userName);
+            Picasso.with(getApplicationContext())
+                    .load(profileUrl)
+                    .fit()
+                    .into(Profile_img);
+
+        }
     }
 }

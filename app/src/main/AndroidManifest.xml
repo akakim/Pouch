@@ -4,15 +4,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-
     <application
-
+        android:name=".common.GlobalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:name=".common.GlobalApplication"
-        >
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
@@ -39,9 +36,9 @@
         <activity android:name=".ui.ColorPalatteActivity" />
         <activity android:name=".ui.EventInfoActivity" />
         <activity android:name=".ui.SearchActivity" />
-        <activity android:name=".common.LoginActivity"></activity>
-        <activity android:name=".common.SignUpActivity"/>
-
+        <activity android:name=".common.LoginActivity" />
+        <activity android:name=".common.SignUpActivity" />
+        <activity android:name=".ui.ShowProductsActivity"></activity>
     </application>
 
 </manifest>
