@@ -3,6 +3,7 @@
     package="com.pouch">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".common.GlobalApplication"
@@ -32,13 +33,13 @@
         <activity
             android:name=".ui.RegistBrandActivity"
             android:label="@string/title_activity_regist_brand" />
-        <activity android:name=".ui.ItemPouchActivity" />
+        <activity android:name=".ui.PouchActivity" />
         <activity android:name=".ui.ColorPalatteActivity" />
         <activity android:name=".ui.EventInfoActivity" />
         <activity android:name=".ui.SearchActivity" />
         <activity android:name=".common.LoginActivity" />
         <activity android:name=".common.SignUpActivity" />
-        <activity android:name=".ui.ShowProductsActivity"></activity>
+        <activity android:name=".ui.ProductsActivity"></activity>
     </application>
 
 </manifest>

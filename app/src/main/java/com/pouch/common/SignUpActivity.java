@@ -113,8 +113,8 @@ public class SignUpActivity extends BaseActivity {
 
             @Override
             public void onSuccess(UserProfile userProfile) {
-                Log.v(TAG, "onSuccess");
-                Logger.d("UserProfile : " + userProfile);
+             //   Log.v(TAG, "onSuccess");
+             //   Logger.d("UserProfile : " + userProfile);
 
 
               String profileUrl = userProfile.getProfileImagePath();
@@ -134,7 +134,7 @@ public class SignUpActivity extends BaseActivity {
     }
 
     private void redirectMainActivity(String url,String username,long id) {
-        Log.v(TAG, "redirectMainActivity() this TO KakaoServiceListActivity");
+//        Log.v(TAG, "redirectMainActivity() this TO KakaoServiceListActivity");
         Intent i = new Intent(this,MainActivity.class);
         i.putExtra("ProfileURL",url);
         i.putExtra("UserName",username);

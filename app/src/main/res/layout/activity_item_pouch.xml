@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.pouch.ui.ItemPouchActivity">
+    tools:context=".ui.PouchActivity">
 
     <android.support.design.widget.TabLayout
         android:layout_width="match_parent"

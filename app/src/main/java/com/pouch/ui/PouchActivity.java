@@ -1,17 +1,22 @@
 package com.pouch.ui;
 
 import android.app.Activity;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
+import com.pouch.Logger.Log;
 import com.pouch.R;
 import com.pouch.ui.fragment.MyPouchFragment;
 import com.pouch.ui.fragment.WishPouchFragment;
 
 
-public class ItemPouchActivity extends AppCompatActivity {
+public class PouchActivity extends AppCompatActivity {
+
 
     MyPouchFragment   mMyPouch;
     WishPouchFragment mWishPouch;
@@ -25,6 +30,7 @@ public class ItemPouchActivity extends AppCompatActivity {
         mWishPouch = new WishPouchFragment();
         tabs = (TabLayout)findViewById(R.id.pouchTabLayout);
 
+        /*Fragment 생성. */
         getSupportFragmentManager().beginTransaction().replace(R.id.item_pouch_container,mMyPouch).commit();
 
         tabs = (TabLayout)findViewById(R.id.pouchTabLayout);
@@ -57,4 +63,5 @@ public class ItemPouchActivity extends AppCompatActivity {
             }
         });
     }
+
 }

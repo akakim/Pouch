@@ -1,14 +1,24 @@
 package com.pouch.ui.fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.GridLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.pouch.R;
+import com.pouch.data.Item;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,9 +40,26 @@ public class ProductFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    ArrayList<Item> Items;
+
+    private int mRowSelected = 0;
+    private GridLayout GridItems;
+    static final int ImageList [] ={
+            R.drawable.cream,
+            R.drawable.skin,
+            R.drawable.blush,
+            R.drawable.eyeshadow,
+            R.drawable.skin,
+            R.drawable.blush
+    };
+    private String TAG= getClass().getSimpleName();
+
+
     public ProductFragment() {
         // Required empty public constructor
+
     }
+
 
     /**
      * Use this factory method to create a new instance of
@@ -59,13 +86,17 @@ public class ProductFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        Items= new ArrayList<Item>();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_product, container, false);
+        GridItems = (GridLayout)rootView.findViewById(R.id.product);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product, container, false);
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -105,5 +136,90 @@ public class ProductFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void setItmes(ArrayList<Item> Items){
+
+
+        for(Item i : Items){
+            this.Items.add(i);
+        }
+//        this.Items.addAll(Items.get(0));
+ //       this.Items = Items;
+    }
+
+    public void Invalidate() {
+        if(Items == null){
+            Log.e("ProductFragment", "Item is not initialize");
+        }
+        else if (Items.size() != 0) {
+            LinearLayout[] testLinearLayout;
+            FrameLayout[] testBack;
+            ImageView testArr[];
+            testArr = new ImageView[Items.size()];
+
+
+
+            testBack = new FrameLayout[Items.size()];
+            testLinearLayout = new LinearLayout[Items.size()];
+
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels / 3,
+                    getResources().getDisplayMetrics().heightPixels / 3);
+            params.weight = 1.0f;
+            params.setLayoutDirection(LinearLayout.HORIZONTAL);
+
+            LinearLayout.LayoutParams CancelableParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+
+            for (int i = 0; i < Items.size(); i++) {
+
+                testLinearLayout[i] = new LinearLayout(ProductFragment.this.getContext());
+                testLinearLayout[i].setLayoutParams(params);
+
+                testBack[i] = new FrameLayout(ProductFragment.this.getContext());
+                testBack[i].setLayoutParams(params);
+                testBack[i].setBackgroundColor(Color.DKGRAY);
+
+                testArr [i] = new ImageView(this.getContext());
+                testArr[i].setImageResource(ImageList[0]);
+                CancelableParams.gravity = Gravity.CENTER;
+                testArr[i].setLayoutParams(CancelableParams);
+                testArr[i].setOnClickListener(new View.OnClickListener() {
+                    int selected = mRowSelected;
+                    @Override
+                    public void onClick(View v) {
+                        mRowSelected = selected;
+                    }
+                });
+
+                testArr[i].setOnLongClickListener(new View.OnLongClickListener(){
+                    int selected = mRowSelected;
+                    @Override
+                    public boolean onLongClick(View v) {
+                        mRowSelected = selected;
+                        Log.v("mRowSelected "+mRowSelected,"");
+                        return false;
+                    }
+
+                });
+                mRowSelected++;
+
+                testBack[i].addView(testLinearLayout[i]);
+                testLinearLayout[i].addView(testArr[i]);
+
+
+            }
+
+            // 나중에 선택된 것의 index를 알기 위해 초기화를했다.
+            mRowSelected = 0;
+
+            for (int i = 0; i < Items.size(); i++) {
+                GridItems.addView(testBack[i]);
+            }
+        }
+        else {
+            Log.e(TAG+"Items size","0");
+        }
     }
 }

@@ -38,8 +38,6 @@ import java.util.ArrayList;
 import com.pouch.util.ImageFetcher;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -78,7 +76,6 @@ public class MainActivity extends AppCompatActivity  {
     private QuickAction mQuickAction;
 
     /*카카오와 연동을 위한 추가적인 변수들.*/
-    private SessionCallback Callback;
 
     Intent getUserInformation;
     private ImageView Profile_img;
@@ -140,7 +137,7 @@ public class MainActivity extends AppCompatActivity  {
                     case ID_SEARCH:
                         break;
                     case ID_SHOW_PRODUCT:
-                        i = new Intent(getApplicationContext(),ShowProductsActivity.class);
+                        i = new Intent(getApplicationContext(),ProductsActivity.class);
                         i.putExtra("brandName",brandName[mRowSelected]);
                         startActivity(i);
                         break;
@@ -164,8 +161,6 @@ public class MainActivity extends AppCompatActivity  {
         getUserInformation = getIntent();
         profileUrl = getUserInformation.getExtras().getString("ProfileURL");
         userName = getUserInformation.getExtras().getString("UserName");
-        Log.v("init getUserURL",profileUrl);
-        Log.v("UserName",userName);
        if (profileUrl != null) {
            Picasso.with(getApplicationContext()).load(profileUrl).fit().into(Profile_img);
        }
@@ -173,15 +168,6 @@ public class MainActivity extends AppCompatActivity  {
         if(userName != null){
             userNameTextView.setText(userName);
         }
-
-
-        /**
-         * userNameTextView.setText(userName);
-         Picasso.with(getApplicationContext())
-         .load(profileUrl)
-         .fit()
-         .into(Profile_img);
-         */
     }
     private void InitGridLayout(){
 
@@ -287,7 +273,7 @@ public class MainActivity extends AppCompatActivity  {
                 if (isTest){
                     Log.v(TAG,"Pouch clicked");
                 }
-                i  =new Intent(this,ItemPouchActivity.class);
+                i  =new Intent(this,PouchActivity.class);
                 startActivity(i);
                 break;
             case R.id.navigation_drawer_items_textView_setting:
@@ -300,67 +286,4 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
-    /* 사용자 정보를 위해 추가 되는 부분. */
-    private class SessionCallback implements ISessionCallback {
-        @Override
-        public void onSessionOpened() {
-            Log.d("TAG", "세션 오픈됨");
-            // 사용자 정보를 가져옴, 회원가입 미가입시 자동가입 시킴
-            KakaorequestMe();
-        }
-
-        @Override
-        public void onSessionOpenFailed(KakaoException exception) {
-            if(exception != null) {
-                Log.d("TAG" , exception.getMessage());
-            }
-        }
-   }
-
-    protected void KakaorequestMe() {
-        UserManagement.requestMe(new MeResponseCallback() {
-            @Override
-            public void onFailure(ErrorResult errorResult) {
-                int ErrorCode = errorResult.getErrorCode();
-                int ClientErrorCode = -777;
-
-                if (ErrorCode == ClientErrorCode) {
-                    Toast.makeText(getApplicationContext(), "카카오톡 서버의 네트워크가 불안정합니다. 잠시 후 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d("TAG", "오류로 카카오로그인 실패 ");
-                }
-            }
-
-            public void onSessionClosed(ErrorResult errorResult) {
-                Log.d("TAG", "오류로 카카오로그인 실패 ");
-            }
-
-            @Override
-            public void onSuccess(UserProfile userProfile) {
-                profileUrl = userProfile.getProfileImagePath();
-           //     userId = String.valueOf(userProfile.getId());
-                userName = userProfile.getNickname();
-//
-
-            //    setLayoutText();
-
-            }
-
-            @Override
-            public void onNotSignedUp() {
-                // 자동가입이 아닐경우 동의창
-            }
-        });
-    }
-
-    private void setLayout(){
-        if (Profile_img != null && userNameTextView!= null){
-            userNameTextView.setText(userName);
-            Picasso.with(getApplicationContext())
-                    .load(profileUrl)
-                    .fit()
-                    .into(Profile_img);
-
-        }
-    }
 }
