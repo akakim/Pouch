@@ -21,14 +21,13 @@ import com.pouch.customView.AnimatedExpandableListView;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO : 수정중. 
+//TODO : 수정중.
 public class RegistBrandActivity extends AppCompatActivity {
     private static final String TAG = RegistBrandActivity.class.getSimpleName();
     private ListView listView;
     private RegistAdapter adapter;
     DisplayMetrics metrics;
     int width;
-    List<GroupItem> items;
     String initBrandlst [];
     private void initItems(){
 
@@ -38,18 +37,12 @@ public class RegistBrandActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regist);
 
-        items = new ArrayList<GroupItem>();
 
 
 
         initItems();
-        Log.v(TAG, "group Item Title : " + items.get(0).items.get(0).title);
-
-
-
-        adapter = new RegistAdapter(this);
-        adapter.setData(items);
-        listView = (AnimatedExpandableListView) findViewById(R.id.RegistView);
+      
+        listView = (ListView) findViewById(R.id.RegistView);
         listView.setAdapter(adapter);
 
 
@@ -57,24 +50,6 @@ public class RegistBrandActivity extends AppCompatActivity {
         metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         width = metrics.widthPixels;
-        listView.setIndicatorBoundsRelative(width - GetDipsFromPixel(50), width - GetDipsFromPixel(10));
-
-        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                // We call collapseGroupWithAnimation(int) and
-                // expandGroupWithAnimation(int) to animate group
-                // expansion/collapse.
-
-                if (listView.isGroupExpanded(groupPosition)) {
-                    listView.collapseGroupWithAnimation(groupPosition);
-                } else {
-                    Log.v(TAG, "getChildCount :" + listView.getChildCount());
-                    listView.expandGroupWithAnimation(groupPosition);
-                }
-                return true;
-            }
-        });
     }
 
     @Override
@@ -107,29 +82,7 @@ public class RegistBrandActivity extends AppCompatActivity {
         // Convert the dps to pixels, based on density scale
         return (int) (pixels * scale + 0.5f);
     }
-    // group menu
-    private static class GroupItem {
-        String title;
-        List<ChildItem> items = new ArrayList<ChildItem>();
 
-        public GroupItem(){
-            title = null;
-        }
-        public GroupItem(GroupItem group){
-            this.title = group.title;
-            this.items = group.items;
-        }
-
-        public GroupItem(String title){
-            this.title = title;
-        }
-        public GroupItem(String title,ChildItem child){
-            this.title = title;
-            items.add(child);
-        }
-
-
-    }
 
     private class RegistAdapter extends BaseAdapter {
 
