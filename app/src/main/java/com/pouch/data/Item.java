@@ -15,7 +15,11 @@ public class Item {
     URL imageURL;
     public Item(String title,String prePrice,String price,String url){
         this.Title = title;
-        this.PrePrice = prePrice;
+        if (prePrice == null){
+            prePrice = "null";
+        }else {
+            this.PrePrice = prePrice;
+        }
         this.Price = price;
         try {
             this.imageURL = new URL(url);
@@ -27,5 +31,37 @@ public class Item {
         Log.v("PrePrice : ", PrePrice);
         Log.v("Price : ", Price);
         Log.v("URL : ", url);
+    }
+
+    public String getTitle() {
+        return Title;
+    }
+
+    public URL getImageURL() {
+        return imageURL;
+    }
+
+    public String getPrice() {
+        return Price;
+    }
+
+    public String getPrePrice() {
+        return PrePrice;
+    }
+
+    public void setTitle(String title) {
+        Title = title;
+    }
+
+    public void setPrePrice(String prePrice) {
+        PrePrice = prePrice;
+    }
+
+    public void setPrice(String price) {
+        Price = price;
+    }
+
+    public void setImageURL(URL imageURL) {
+        this.imageURL = imageURL;
     }
 }

@@ -21,87 +21,87 @@ import java.util.ArrayList;
 import java.util.List;
 /*
  * A detailed explanation for how this class works:
- * ¾î¶»°Ô ÀÌ°Ô ÀÛµ¿ÇÏ´Â°¡.
+ *  î¶»ï¿½ï¿½ ï¿½Ì°ï¿½ ï¿½Ûµï¿½ï¿½Ï´Â°ï¿½.
  * Animating the ExpandableListView was no easy task.
- * ½¬¿îÀÏ ¾Æ´Ô.
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½.
  * The way that this
  * class does it is by exploiting how an ExpandableListView works.
  *
  * Normally when {@link ExpandableListView#collapseGroup(int)} or
  * {@link ExpandableListView#expandGroup(int)} is called,
- * ÀÏ¹ÝÀûÀ¸·Î collapseGroup(int) ,#expandGroup(int) °¡ ºÒ·ÁÁö¸é view´Â »óÅÂ¸¦ º¯°æÇÑ´Ù.
+ * ï¿½Ï¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ collapseGroup(int) ,#expandGroup(int) ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ viewï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
  * the view toggles
  * the flag for a group and calls notifyDataSetChanged to cause the ListView
  * to refresh all of it's view.
- * view°¡ »óÅÂ¸¦ º¯°æÇÏ¸é, notifyDataSetChanged¸¦ È£ÃâÇÑ´Ù. ÀÌ ÇÔ¼ö´Â listviewÀÇ ¸ðµç ºäµéÀ» »õ·Î °íÃÄÁØ´Ù.
+ * viewï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½, notifyDataSetChangedï¿½ï¿½ È£ï¿½ï¿½ï¿½Ñ´ï¿½. ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ listviewï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø´ï¿½.
  *
  * This time however, depending on whether a group is expanded or collapsed,
  * certain childViews will either be ignored or added to the list.
- * ÀÌÁ¦ grouptÀÌ È®ÀåµÇ´À³Ä ÆÄ±«µÇ´À³Ä¿Í °ü·ÃÀÖ´Ù.
- * Æ¯Á¤ childviewµéÀº ¹«½ÃµÇ´À³ª list¿¡ ´õÇØÁö´À³Ä ÀÌ´Ù.
+ * ï¿½ï¿½ï¿½ï¿½ grouptï¿½ï¿½ È®ï¿½ï¿½Ç´ï¿½ï¿½ï¿½ ï¿½Ä±ï¿½ï¿½Ç´ï¿½ï¿½Ä¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½.
+ * Æ¯ï¿½ï¿½ childviewï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ÃµÇ´ï¿½ï¿½ï¿½ listï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì´ï¿½.
 
  * Knowing this, we can come up with a way to animate our views.
- * ¿ì¸®´Â ¾Ö´Ï¸ÞÀÌ¼Ç È¿°ú¸¦ ¿ì¸®ÀÇ view¸¦ Ã³¸®ÇÏ´Â°É ¾Ë¾ÆµÖ¶ó.
+ * ï¿½ì¸®ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ì¸®ï¿½ï¿½ viewï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ï´Â°ï¿½ ï¿½Ë¾ÆµÖ¶ï¿½.
  * For instance for group expansion,
- * ¿¹¸¦µé¾î ±×·ìÀÌ ÆØÃ¢ÇÏ¸é
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¢ï¿½Ï¸ï¿½
  * we tell the adapter to animate the children of a certain group. We then expand the group which causes the
- * ¿ì¸®´Â ¾îÅÇÅÍ¿¡°Ô Æ¯Á¤ ±×·ìÀÇ ÀÚ½ÄµéÀ» ¿òÁ÷¿©¾ßÇÑ´Ù ¿ì¸®´Â expandableListview°¡ ¸ðµç ½ºÅ©¸°»óÀÇ ºäµéÀ» refreshÇÏ±â¶§¹®¿¡ ±×·ìÀº
- * ÆØÃ¢ÇÑ´Ù.
+ * ï¿½ì¸®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ Æ¯ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½Ú½Äµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½ ï¿½ì¸®ï¿½ï¿½ expandableListviewï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ refreshï¿½Ï±â¶§ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½
+ * ï¿½ï¿½Ã¢ï¿½Ñ´ï¿½.
  * ExpandableListView to refresh all views on screen.
  *
  * The way that ExpandableListView does this is by calling getView() in the adapter.
- * expandableListView°¡ getview(¾îµªÅÍ¾ÈÀÇ) ¿¡ÀÇÇØ ÀÌ·ç¾îÁø´Ù.
+ * expandableListViewï¿½ï¿½ getview(ï¿½îµªï¿½Í¾ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
  * However since the adapter knows that we are animating a certain group,
- * ÇÏÁö¸¸ ¾îµªÅÍ´Â ¿ì¸®°¡ Æ¯Á¤±×·ì¿¡ ¿¡´Ï¸ÞÀÌ¼ÇÀ» À»ÇÏ·Á´ÂÁö ¸ð¸£±â ¶§¹®¿¡
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½îµªï¿½Í´ï¿½ ï¿½ì¸®ï¿½ï¿½ Æ¯ï¿½ï¿½ï¿½×·ì¿¡ ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ð¸£±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  * instead of returning the real views for the children of the group being
- * ´ë½Å¿¡ ½ÇÁ¦ view¸¦ ±×·ìÀÇ ÀÚ½Ä¿¡ Àû¿ëµÈ¿¡´Ï¸ÞÀÌ¼Ç realview¸¦ ¹ÝÈ¯ÇØ¾ßÇÑ´Ù.
+ * ï¿½ï¿½Å¿ï¿½ ï¿½ï¿½ï¿½ï¿½ viewï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½Ú½Ä¿ï¿½ ï¿½ï¿½ï¿½ï¿½È¿ï¿½ï¿½Ï¸ï¿½ï¿½Ì¼ï¿½ realviewï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ø¾ï¿½ï¿½Ñ´ï¿½.
  * animated,
  * it will return a fake dummy view.
- * ¸ÕÀú ±×°ÍÀº fake dummy view¸¦ ¹ÝÈ¯ÇÑ´Ù.
+ * ï¿½ï¿½ï¿½ï¿½ ï¿½×°ï¿½ï¿½ï¿½ fake dummy viewï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ñ´ï¿½.
  * This dummy view will then
  * draw the real child views within it's dispatchDraw function.
- * ±×¸®°í ÀÌ dummy view´Â ¿ì¸®°¡ ¿øÇÏ´Â °á°úÀÇ ºä¸¦ dispatchdraw function°ú ÇÔ±ú ±×·ÁÁø´Ù.
+ * ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ dummy viewï¿½ï¿½ ï¿½ì¸®ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ä¸¦ dispatchdraw functionï¿½ï¿½ ï¿½Ô±ï¿½ ï¿½×·ï¿½ï¿½ï¿½ï¿½ï¿½.
  * The reason we do this is so that we can animate all of it's children by simply animating the dummy view.
- * ¿Ö³ÄÇÏ¸é ¿ì¸®´Â ÀÌ·¯ÇÑ °úÁ¤À» ´Ü¼øÈ÷ dummy viewÀÇ È¿°ú¿¡ ÀÇÇØ ¸ðµç childrenview¸¦ animateÇÒ ¼ö ÀÖ´Ù.
+ * ï¿½Ö³ï¿½ï¿½Ï¸ï¿½ ï¿½ì¸®ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ü¼ï¿½ï¿½ï¿½ dummy viewï¿½ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ childrenviewï¿½ï¿½ animateï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½.
  * After we complete the animation, we tell the adapter to stop animating the group and call notifyDataSetChanged.
- * È¿°ú°¡ ³¡³ª¸é ¿ì¸®´Â adapter¿¡°Ô animatingÀ» ³¡³»¶ó°í ÇÏ°í group¿¡ µ¥ÀÌÅÍ°¡ º¯°æ‰çÀ½À» ¾Ë·ÁÁØ´Ù.
+ * È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ì¸®ï¿½ï¿½ adapterï¿½ï¿½ï¿½ï¿½ animatingï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï°ï¿½ groupï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë·ï¿½ï¿½Ø´ï¿½.
  * Now the ExpandableListView is forced to refresh it's views again,
- * ÀÌÁ¦ ExpandableListViw´Â ±×°ÍÀÇ viewµéÀ» ´Ù½Ã ÃÊ±âÈ­ ÇÏ·Á°í ÇÒ°ÍÀÌ´Ù.
+ * ï¿½ï¿½ï¿½ï¿½ ExpandableListViwï¿½ï¿½ ï¿½×°ï¿½ï¿½ï¿½ viewï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Ï·ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½ï¿½Ì´ï¿½.
  * except this time, it will get the real views for the expanded group.
- * ÀÌ¹øÇÑ¹øÀ» Á¦¿ÜÇÏ°í´Â ±×°ÍÀº expanded groupÀ» À§ÇÑ real view¸¦ ¾ò°ÔµÉ°ÍÀÌ´Ù.
+ * ï¿½Ì¹ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ ï¿½×°ï¿½ï¿½ï¿½ expanded groupï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ real viewï¿½ï¿½ ï¿½ï¿½ÔµÉ°ï¿½ï¿½Ì´ï¿½.
  * So, to list it all out, when {@link #expandGroupWithAnimation(int)} is
  * called the following happens:
- * ³ª¿­ÇØº¸ÀÚ¸é ´ÙÀ½°ú °°Àº ÀýÂ÷¸¦ ¶è´Ù.
+ * ï¿½ï¿½ï¿½ï¿½ï¿½Øºï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½.
  * 1. The ExpandableListView tells the adapter to animate a certain group.
- * ExpandableListView ´Â adapter¿¡°Ô Æ¯Á¤ ºä¿¡ È¿°ú¸¦ ÁØ´Ù.
+ * ExpandableListView ï¿½ï¿½ adapterï¿½ï¿½ï¿½ï¿½ Æ¯ï¿½ï¿½ ï¿½ä¿¡ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½.
  * 2. The ExpandableListView calls expandGroup.
- * ExpandableListView´Â expandGroupÀ» È£ÃâÇÑ´Ù.
+ * ExpandableListViewï¿½ï¿½ expandGroupï¿½ï¿½ È£ï¿½ï¿½ï¿½Ñ´ï¿½.
  * 3. ExpandGroup calls notifyDataSetChanged.
- * ExpandableListView´Â DataSetÀ» º¯°æÇÑ´Ù.
+ * ExpandableListViewï¿½ï¿½ DataSetï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
  * 4. As an result, getChildView is called for expanding group.
- * µû¶ó¼­ getchildView´Â expanding groupÀ» È£ÃâÇÑ´Ù.
+ * ï¿½ï¿½ï¿½ï¿½ getchildViewï¿½ï¿½ expanding groupï¿½ï¿½ È£ï¿½ï¿½ï¿½Ñ´ï¿½.
  * 5. Since the adapter is in "animating mode", it will return a dummy view.
- * ¶§¹®¿¡ adapter´Â animationg modeÀÌ´Ù. ÀÌ°ÍÀº dummy view¸¦ ¹ÝÈ¯ÇÑ´Ù.
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ adapterï¿½ï¿½ animationg modeï¿½Ì´ï¿½. ï¿½Ì°ï¿½ï¿½ï¿½ dummy viewï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ñ´ï¿½.
  * 6. This dummy view draws the actual children of the expanding group.
- * ÀÌ dummy view´Â È®ÀåµÈ ±×·ìÀÇ ½ÇÁ¦ ÀÚ½ÄµéÀÌ´Ù.
+ * ï¿½ï¿½ dummy viewï¿½ï¿½ È®ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú½Äµï¿½ï¿½Ì´ï¿½.
  * 7. This dummy view's height is animated from 0 to it's expanded height.
- * ´õ¹ÌºäµéÀÇ ³ôÀÌ´Â 0ºÎÅÍ È®ÀåµÈ ³ôÀÌ±îÁö animate¸¦ÇÑ´Ù.
+ * ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½ 0ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì±ï¿½ï¿½ï¿½ animateï¿½ï¿½ï¿½Ñ´ï¿½.
  * 8. Once the animation completes, the adapter is notified to stop
  *    animating the group and notifyDataSetChanged is called again.
- È¿°ú°¡ ¿Ï·áµÇ¸é ¾î´ðÅÍ¿¡°Ô È¿°ú¸¦ ¸ØÃß¶ó°í ÇÏ°í notifyDataSetChangedÀÌ ´Ù½ÃÇÑ¹ø È£ÃâµÈ´Ù.
+ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½Ç¸ï¿½ ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß¶ï¿½ï¿½ ï¿½Ï°ï¿½ notifyDataSetChangedï¿½ï¿½ ï¿½Ù½ï¿½ï¿½Ñ¹ï¿½ È£ï¿½ï¿½È´ï¿½.
  * 9. This forces the ExpandableListView to refresh all of it's views again.
- ÀÌ·¯ÇÑ ÀýÂ÷´Â ExpandableListView¿¡°Ô ¸ðµç ºäµéÀ» ´Ù½ÃÇÑ¹ø ÃÊ±âÈ­ÇÑ´Ù.
+ ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ExpandableListViewï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ï¿½Ñ¹ï¿½ ï¿½Ê±ï¿½È­ï¿½Ñ´ï¿½.
  * 10.This time when getChildView is called, it will return the actual
  *    child views.
- * ÀÌÁ¦ getchildView°¡ ºÒ·ÁÁö°í ±×°ÍÀº ½ÇÁ¦ child viewµéÀ» ¹ÝÈ¯ÇÑ´Ù.
+ * ï¿½ï¿½ï¿½ï¿½ getchildViewï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ child viewï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ñ´ï¿½.
  *
- * ºØ±«´Â Á» ³ªÁß¿¡..
+ * ï¿½Ø±ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ß¿ï¿½..
  *
  * For animating the collapse of a group is a bit more difficult since we
  * can't call collapseGroup from the start as it would just ignore the
  * child items,
- * ±×·ì¿¡´ëÇÑ ºØ±«¸¦ ÇÏ±âÀ§ÇÑ ¾Ö´Ï¸ÞÀÌ¼ÇÈ¿°ú´Â Á¶±Ý ¾î·Æ´Ù ¿Ö³ÄÇÏ¸é
- * ¿ì¸° collapseGroupÀ» ½ÃÀÛ½Ã È£ÃâÇÒ °ÍÀÌ´Ù ±×Àú child itemÀ» ¹«½ÃÇÔÀ¸·Î½á
+ * ï¿½×·ì¿¡ï¿½ï¿½ï¿½ï¿½ ï¿½Ø±ï¿½ï¿½ï¿½ ï¿½Ï±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ´ï¿½ ï¿½Ö³ï¿½ï¿½Ï¸ï¿½
+ * ï¿½ì¸° collapseGroupï¿½ï¿½ ï¿½ï¿½ï¿½Û½ï¿½ È£ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½ï¿½ï¿½ child itemï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î½ï¿½
  *
  * giving up no chance to do any sort of animation.
  * Instead what we have to do is play the animation first and call collapseGroup
@@ -110,11 +110,11 @@ import java.util.List;
  * called the following happens:
  *
  * 1. The ExpandableListView tells the adapter to animate a certain group.
- * ExpandableListView ´Â Æ¯Á¤ÇÑ ±×·ì¿¡ animateÇÏ¶ó°í ÇÑ´Ù.
+ * ExpandableListView ï¿½ï¿½ Æ¯ï¿½ï¿½ï¿½ï¿½ ï¿½×·ì¿¡ animateï¿½Ï¶ï¿½ï¿½ ï¿½Ñ´ï¿½.
  * 2. The ExpandableListView calls notifyDataSetChanged.
- * ExpandableListView´Â datasetÀ» º¯È­½ÃÅ²´Ù.
+ * ExpandableListViewï¿½ï¿½ datasetï¿½ï¿½ ï¿½ï¿½È­ï¿½ï¿½Å²ï¿½ï¿½.
  * 3. As an result, getChildView is called for expanding group.
- * ±×·¡¼­ getchildView´Â groupÀ» È®ÀåÇÑ´Ù.
+ * ï¿½×·ï¿½ï¿½ï¿½ getchildViewï¿½ï¿½ groupï¿½ï¿½ È®ï¿½ï¿½ï¿½Ñ´ï¿½.
  * 4. Since the adapter is in "animating mode", it will return a dummy view.
  * 5. This dummy view draws the actual children of the expanding group.
  * 6. This dummy view's height is animated from it's current height to 0.
@@ -160,12 +160,12 @@ public class AnimatedExpandableListView extends ExpandableListView {
 
     /**
      * Expands the given group with an animation.
-     * ¾Ö´Ï¸ÞÀÌ¼Ç È¿°ú¿Í ÇÔ²² ±×·ìÀ» È®ÀåÇÑ´Ù.
+     * ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½Ô²ï¿½ ï¿½×·ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ñ´ï¿½.
      *
      * @param groupPos The position of the group to expand
      * @return Returns true if the group was expanded. False if the group was
      * already expanded.
-     * ±×·ìÀÌ È®ÀåµÇ¸é true ÀÌ¹Ì ¿­·È´Ù¸é false
+     * ï¿½×·ï¿½ï¿½ï¿½ È®ï¿½ï¿½Ç¸ï¿½ true ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½È´Ù¸ï¿½ false
      */
     @SuppressLint("NewApi")
     public boolean expandGroupWithAnimation(int groupPos) {
@@ -177,7 +177,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
         // flat??
         int groupFlatPos = getFlatListPosition(getPackedPositionForGroup(groupPos));
 
-        //¿¹¿ÜÃ³¸®.
+        //ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½.
         if (groupFlatPos != -1) {
             int childIndex = groupFlatPos - getFirstVisiblePosition();
             if (childIndex < getChildCount()) {
@@ -198,7 +198,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
             }
         }
         // Let the adapter know that we are starting the animation..
-        // ½ÇÁúÀûÀ¸·Î GroupInfoÀÇ °ªµé ¸¸ ¼¼ÆÃÇÑ´Ù. .
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ GroupInfoï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½. .
         adapter.startExpandAnimation(groupPos, 0);
         // Finally call expandGroup (note that expandGroup will call
         // notifyDataSetChanged so we don't need to)
@@ -206,13 +206,13 @@ public class AnimatedExpandableListView extends ExpandableListView {
     }
 
     /**
-     * ¸Þ´º¸¦ ÆÄ±«ÇÏ´Â animation.
+     * ï¿½Þ´ï¿½ï¿½ï¿½ ï¿½Ä±ï¿½ï¿½Ï´ï¿½ animation.
      * Collapses the given group with an animation.
      *
      * @param groupPos The position of the group to collapse
      * @return Returns true if the group was collapsed. False if the group was
      * already collapsed.
-     * ¼º°øÀûÀ¸·Î childviewµéÀ» Áö¿ì¸é true ÀÌ¹Ì Áö¿öÁø°æ¿ì¶ó¸é false .
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ childviewï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ true ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ false .
      */
     public boolean collapseGroupWithAnimation(int groupPos) {
         int groupFlatPos = getFlatListPosition(getPackedPositionForGroup(groupPos));
@@ -220,17 +220,17 @@ public class AnimatedExpandableListView extends ExpandableListView {
             int childIndex = groupFlatPos - getFirstVisiblePosition();
             if(childIndex >= 0 && childIndex <getChildCount()){
                 // get the view for the group it is on screen
-                //½ºÅ©¸°»ó¿¡
+                //ï¿½ï¿½Å©ï¿½ï¿½ï¿½ï¿½
                 View v = getChildAt(childIndex);
                 if(v.getBottom()>=getBottom()){
                     // If the user is not going to be able to see the animation
                     // we just collapse the group without an animation.
-                    // ¸¸¾à À¯Àú°¡ animationÀ» º¸°í½ÍÁö¾Ê´Ù¸é ¿ì¸®´Â ±×³É ±×·ìÀ» ºØ±«ÇÑ´Ù.
-                    // animation¾øÀÌ.
+                    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ animationï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê´Ù¸ï¿½ ï¿½ì¸®ï¿½ï¿½ ï¿½×³ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½Ø±ï¿½ï¿½Ñ´ï¿½.
+                    // animationï¿½ï¿½ï¿½ï¿½.
                     // This resolves the case where getChildView will not be
                     // called if the children of the group is not on screen
-                    // ÀÌ°Í¿¡ ´ëÇÑ ÇØ°áÀº getchildView´Â È£ÃâµÇÁö ¾Ê´Â´Ù.
-                    // ¸¸ÀÏ ±×·ìÀÇ ÀÚ½ÄµéÀÌ ½ºÅ©¸°»ó¿¡ ¾ø´Ù¸é.
+                    // ï¿½Ì°Í¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø°ï¿½ï¿½ï¿½ getchildViewï¿½ï¿½ È£ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´Â´ï¿½.
+                    // ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½Ú½Äµï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½.
                     return collapseGroup(groupPos);
                 }
             }else {
@@ -262,13 +262,13 @@ public class AnimatedExpandableListView extends ExpandableListView {
     private static class GroupInfo {
         /**
          * This variable contains the last known height value of the dummy view.
-         * ´õ¹ÌºäÀÇ ³ôÀÌ°ªÀ» Æ÷ÇÔÇÏ°íÀÖ´Ù.
+         * ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½Ö´ï¿½.
          * We save this information so that if the user collapses a group
          * before it fully expands,
          * <p>
          * the collapse animation will start from the
-         * ¸Þ´º°¡ Áö¿öÁö´Â È¿°ú´Â ÇöÀç ´õ¹ÌºäÀÇ ³ôÀÌ·ÎºÎÅÍ ½ÃÀÛÇÑ´Ù.
-         * ¿ÏÀüÈ÷È÷
+         * ï¿½Þ´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì·Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
+         * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
          * CURRENT height of the dummy view and not from the full expanded
          * height.
          */
@@ -312,7 +312,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
             if (info == null) {
                 info = new GroupInfo();
                 groupInfo.put(groupPosition, info);
-                // ¾øÀ¸¸é »õ·Î ¸¸µç´Ù.
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½.
             }
             return info;
         }
@@ -346,17 +346,17 @@ public class AnimatedExpandableListView extends ExpandableListView {
             if (info.animating) {
                 // If we are animating this group, then all of it's children
                 // are going to be dummy views which we will say is type 0.
-                // ¸¸¾à ¿ì¸®°¡ ±×·ì¿¡ ¿¡´Ï¸ÞÀÌ¼Ç È¿°ú¸¦ ÁØ´Ù¸é ±×°ÍÀÇ ÀÚ½ÄÀº dummy view
-                // °¡ µÉ°ÍÀÌ°í ¿ì¸®´Â ±×°É type 0¶ó ºÎ¸£°Ú´Ù.
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ì¸®ï¿½ï¿½ ï¿½×·ì¿¡ ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½Ì¼ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´Ù¸ï¿½ ï¿½×°ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ dummy view
+                // ï¿½ï¿½ ï¿½É°ï¿½ï¿½Ì°ï¿½ ï¿½ì¸®ï¿½ï¿½ ï¿½×°ï¿½ type 0ï¿½ï¿½ ï¿½Î¸ï¿½ï¿½Ú´ï¿½.
 
                 return 0;
             } else {
                 // If we are not animating this group, then we will add 1 to
                 // the type it has so that no type id conflicts will occur
                 // unless getRealChildType() returns MAX_INT
-                // ¸¸ÀÏ ¿ì¸®°¡ ÀÌ±×·ì¿¡ ¿¡´Ï¸ÞÀÌ¼ÇÀ» ¾ÈÁØ´Ù¸é ¿ì¸®´Â ±× typeÀÌ Áø °ª¿¡ 1À» ´õÇÑ´Ù.
-                // ±×·¯¸é ¾î¶² Å¸ÀÔ¤· idrk Ãæµ¹ÀÌ ¹ß»ýÇÏÁö¾Ê°ÔµÈ´Ù.
-                // getRealChildType°¡ MAX_INT°ªÀ» ¹ÝÈ¯ÇÏ´Â °ÍÀ» Á¦¿ÜÇÏ°í.
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ì¸®ï¿½ï¿½ ï¿½Ì±×·ì¿¡ ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø´Ù¸ï¿½ ï¿½ì¸®ï¿½ï¿½ ï¿½ï¿½ typeï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ï¿½Ñ´ï¿½.
+                // ï¿½×·ï¿½ï¿½ï¿½ ï¿½î¶² Å¸ï¿½Ô¤ï¿½ idrk ï¿½æµ¹ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê°ÔµÈ´ï¿½.
+                // getRealChildTypeï¿½ï¿½ MAX_INTï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½.
                 return getRealChildType(groupPosition, childPosition) + 1;
             }
         }
@@ -393,36 +393,36 @@ public class AnimatedExpandableListView extends ExpandableListView {
 
                 if (childPosition < info.firstChildPosition) {
                     // The reason why we do this is to support the collapse
-                    //¿Ö ÀÌ·¸°Ô ÇÏ³Ä¸é, ¿ì¸®´Â È®ÀåµÈ ¸Þ´º UI¸¦ Áö¿ì´Â °ÍÀÌ´Ù.
+                    //ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½Ï³Ä¸ï¿½, ï¿½ì¸®ï¿½ï¿½ È®ï¿½ï¿½ï¿½ ï¿½Þ´ï¿½ UIï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½.
                     // this group when the group view is not visible but the
-                    // ±×·ìÀÌ º¸ÀÌÁö¾ÊÁö¸¸ ±×·ìÀÇ ÀÚ½ÄÀº ÀÖ´Ù.
+                    // ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½.
                     // children of this group are. When notifyDataSetChanged is called,
-                    // notifyDataSetChanged°¡ ºÒ¸®¾îÁú¶§
+                    // notifyDataSetChangedï¿½ï¿½ ï¿½Ò¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                     // the ExpandableListView tries to keep the list position the same by saving the first visible item
-                    // ExpandableListView Å¬·¡½º´Â list positionÀ» À¯ÁöÇÏ·Á°íÇÑ´Ù. list positionÀº Ã³À½ º¸¿©Áö´Â ¾ÆÀÌÅÛ ºä¸¦ ÀúÀåÇÏ°í,
+                    // ExpandableListView Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ list positionï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½. list positionï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ä¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½,
                     // and jumping back to that item after the views have been  refreshed.
-                    // ±×¸®°í ÀÌÀüÀ¸·Î µ¹¾Æ°¡¼­ itemÀÌ  ºäµéÀÌ°¡Áø °ÍµéÀ» ÃÊ±âÈ­ÇÑ´Ù.
+                    // ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½ï¿½ï¿½ itemï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½Ì°ï¿½ï¿½ï¿½ ï¿½Íµï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½Ñ´ï¿½.
                     // Now the problem is, if a group has 2 items
-                    // ÀÌÁ¦ ¹®Á¦´Â ¸¸¾à ±×·ìÀÌ 2°³ ÀÌ»óÀÇ itemÀ» °¡Áö°í ÀÖ´Â°æ¿ì´Ù .
+                    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ 2ï¿½ï¿½ ï¿½Ì»ï¿½ï¿½ï¿½ itemï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Â°ï¿½ï¿½ï¿½ .
                     // and the first visible item is the 2nd child of the group
-                    // ±×¸®°í Ã³À½ º¸¿©Áø ¾ÆÀÌÅÆÀº ÀÌ ±×·ìÀÇ 2¹øÂ° ÀÚ½ÄÀÌ´Ù.
+                    // ï¿½×¸ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ 2ï¿½ï¿½Â° ï¿½Ú½ï¿½ï¿½Ì´ï¿½.
                     // and this group is collapsed, then the dummy view will be
-                    // ±×¸®°í ÀÌ±×·ìÀº À» ÆÄ±«ÇÏ¸é dummy±×·ìÀÌ ÀÌ ±×·ìÀ» À§ÇØ »ç¿ëµÉ°ÍÀÌ´Ù.
+                    // ï¿½×¸ï¿½ï¿½ï¿½ ï¿½Ì±×·ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ä±ï¿½ï¿½Ï¸ï¿½ dummyï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½É°ï¿½ï¿½Ì´ï¿½.
                     // used for the group. But now the group only has 1 item
-                    // ÇÏÁö¸¸ ±×·ìÀº ÀÌÁ¦ ¿ÀÁ÷ ÇÑ°¡Áö ¾ÆÀÌÅÛ¸¸À» °¡Áö°íÀÖ´Ù.
+                    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Û¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½.
                     // which is the dummy view, thus when the ListView is trying
-                    //´õ¹Ìºä.. ±×·¯¹Ç·Î listView´Â ½ºÅ©·ÑÀÇ À§Ä¡¸¦ È¸º¹ÇÏ·Á ÇÒ°ÍÀÌ´Ù.
+                    //ï¿½ï¿½ï¿½Ìºï¿½.. ï¿½×·ï¿½ï¿½Ç·ï¿½ listViewï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ È¸ï¿½ï¿½ï¿½Ï·ï¿½ ï¿½Ò°ï¿½ï¿½Ì´ï¿½.
                     // to restore the scroll position,
                     //
                     // it will try to jump to the second item of the group.
-                    // ±×°ÍÀº ÀÌ ±×·ìÀÇ 2¹øÂ° ¾ÆÀÌÅÛÀ¸·Î °¡·ÁÇÒ°ÍÀÌ´Ù.
+                    // ï¿½×°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ 2ï¿½ï¿½Â° ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ò°ï¿½ï¿½Ì´ï¿½.
                     // But this group no longer has a second item, so it is forced to jump to the next
-                    // ÇÏÁö¸¸ ´õÀÌ»ó 2¹øÂ° ¾ÆÀÌÅÛÀ» ±×·ìÀº °¡Áö°íÀÖÁö¾Ê´Ù.
-                    // ±×·¡¼­ ÀÌ°ÍÀº ´ÙÀ½ ±×·ìÀ¸·Î °Ç³Ê¶Ù°Ô²û ÇÒ°ÍÀÌ´Ù.
+                    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì»ï¿½ 2ï¿½ï¿½Â° ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê´ï¿½.
+                    // ï¿½×·ï¿½ï¿½ï¿½ ï¿½Ì°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç³Ê¶Ù°Ô²ï¿½ ï¿½Ò°ï¿½ï¿½Ì´ï¿½.
                     // group.
                     //
                     // This will cause a very ugly visual glitch.
-                    // ÀÌ°ÍÀº ¹«¼·°Ô º¸¿©Áú°ÍÀÌ´Ù.
+                    // ï¿½Ì°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½.
                     // So the way that we counteract this is by creating as many
                     // dummy views as we need to maintain the scroll position
                     // of the ListView after notifyDataSetChanged has been
@@ -451,8 +451,8 @@ public class AnimatedExpandableListView extends ExpandableListView {
 
                 final int len = getRealChildrenCount(groupPosition);
 
-                /* groupÀÌ °¡Áø ÀÚ½ÄÀÇ °¹¼ö¸¸Å­
-                 * ºä¸¦ ±×¸± parameterµéÀ» ±¸ÇÏ´Â ¹Ýº¹¹®ÀÌ´Ù.
+                /* groupï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å­
+                 * ï¿½ä¸¦ ï¿½×¸ï¿½ parameterï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ýºï¿½ï¿½ï¿½ï¿½Ì´ï¿½.
                  */
                 for (int i = info.firstChildPosition; i < len; i++) {
                     View childView = getRealChildView(groupPosition, i, (i == len - 1), null, parent);
@@ -477,7 +477,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
 
                     if (totalHeight < clipHeight) {
                         // we only need to draw enough views to fool the user...
-                        // ÃæºÐÇÑ ºäµéÀ» ±×¸±°ÍÀÌ´Ù.. ¹Ùº¸°°Àº À¯Àú¿¡°Ô ¤»¤»¤»¤»
+                        // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ï¿½Ì´ï¿½.. ï¿½Ùºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                         dummyView.addFakeView(childView);
                     } else {
                         dummyView.addFakeView(childView);
@@ -485,7 +485,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
                         // if this group has too many views, we don't want to
                         // calculate the height of everything... just do a light
                         // approximation and break
-                        // ³Ê¹« ºäµéÀ» ±×·ìÀÌ ¸¹ÀÌ°¡Áö¸é ´ë·«ÀûÀ¸·Î¸¸ °è»êÇÏ°í Áß´ÜÇÑ´Ù.
+                        // ï¿½Ê¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ë·«ï¿½ï¿½ï¿½ï¿½ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ß´ï¿½ï¿½Ñ´ï¿½.
                         int averageHeight = totalHeight / (i + 1);
                         totalHeight += (len - i - 1) * averageHeight;
                         break;
@@ -494,7 +494,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
 
                 Object o;
 
-                // ´õ¹Ì ºäÀÇ ÅÂ±× °ªÀ» ¾ò¾î¼­ ºñ¾îÀÖ´Â°æ¿ì¿Í ´Ù¸¥°æ¿ìÀÇ »óÅÂ°ªÀ» ÀúÀå.
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Â±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½î¼­ ï¿½ï¿½ï¿½ï¿½Ö´Â°ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
                 int state = (o = dummyView.getTag()) == null ? STATE_IDLE : (Integer) o;
 
                 if (info.expanding && state != STATE_EXPANDING) {
@@ -509,8 +509,8 @@ public class AnimatedExpandableListView extends ExpandableListView {
                         @Override
                         public void onAnimationEnd(Animation animation) {
                             //3. ExpandGroup calls notifyDataSetChanged.
-                            // ExpandableListView´Â DataSetÀ» º¯°æÇÑ´Ù.
-                            // animation ÀÌ ³¡³­ÈÄ data¸¦ º¯°æÇÏ°í tag¸¦ ¼³Á¤ÇÑ´Ù.
+                            // ExpandableListViewï¿½ï¿½ DataSetï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
+                            // animation ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ dataï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ tagï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
                             stopAnimation(groupPosition);
                             notifyDataSetChanged();
                             dummyView.setTag(STATE_IDLE);
@@ -591,7 +591,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
 
         /**
          *  * Add a view for the DummyView to draw.
-         * ½ÇÁ¦ ºäÀÇ °¹¼ö¸¦ »õ¼­ ÀüÃ¼ÀûÀÎ ÇÏ³ªÀÇ fake view¸¦ ¸¸µç´Ù.
+         * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ fake viewï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½.
          * @param childView View to draw
          */
         public void addFakeView(View childView) {
@@ -638,15 +638,15 @@ public class AnimatedExpandableListView extends ExpandableListView {
                 Log.v(TAG,"groupInfo : "+info.toString());
             }
             view.getLayoutParams().height = startHeight;
-            view.requestLayout(); // ?? parentlayout ¿äÃ» ?
+            view.requestLayout(); // ?? parentlayout ï¿½ï¿½Ã» ?
         }
 
         @Override
         protected void applyTransformation(float interpolatedTime, Transformation t){
             super.applyTransformation(interpolatedTime,t);
 
-            //¹öÆ° ÇÏ³ªÀÇ °ª¼³Á¤. deltaÀÇ °æ¿ì ÀÚ½Ä ºäµéÀÇ ÀüÃ¼ÀûÀÎ
-            //º¯È­°ªÀ» ÀÇ¹ÌÇÑ´Ù.
+            //ï¿½ï¿½Æ° ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½. deltaï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½
+            //ï¿½ï¿½È­ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¹ï¿½ï¿½Ñ´ï¿½.
             if(interpolatedTime<1.0f){
                 int val = baseHeight+(int)(delta * interpolatedTime);
                 view.getLayoutParams().height = val;

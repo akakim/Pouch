@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity  {
     private URL[] brandInstagramURL;
     private String[] brandURL;
     private String[] brandName;
+    private String[] brandNameGoodKey;
 
     // 상품에 대한 정보를 담는 Layout.
     private GridLayout                   GridBrand;
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity  {
 
         int imgID = R.drawable.cream;
         brandName = getResources().getStringArray(R.array.brandlist);
+        brandNameGoodKey = getResources().getStringArray(R.array.brandlist_goodKeyword);
         brandURL = getResources().getStringArray(R.array.instagram_url);
         brandInstagramURL = new URL[brandName.length];
 
@@ -132,9 +134,12 @@ public class MainActivity extends AppCompatActivity  {
                 Intent i;
                 switch (actionId){
                     case ID_EVENT:
-
                         break;
                     case ID_SEARCH:
+                        i = new Intent(getApplicationContext(),GoogleMapServiceActivity.class);
+                        i.putExtra("brandName",brandName[mRowSelected]);
+                        i.putExtra("keyword",brandNameGoodKey[mRowSelected]);
+                        startActivity(i);
                         break;
                     case ID_SHOW_PRODUCT:
                         i = new Intent(getApplicationContext(),ProductsActivity.class);
@@ -157,6 +162,7 @@ public class MainActivity extends AppCompatActivity  {
 
     private void initDrawLayout(){
         Profile_img = (ImageView)findViewById(R.id.profileImage);
+
         userNameTextView = (TextView)findViewById(R.id.navigation_drawer_items_textView_NICKNAME);
         getUserInformation = getIntent();
         profileUrl = getUserInformation.getExtras().getString("ProfileURL");

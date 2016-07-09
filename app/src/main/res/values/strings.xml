@@ -14,6 +14,7 @@
 
     <!-- kakao 연동관련 -->
     <string name="kakao_app_key">f11c9613a2d82ccb7417490d2794baa4</string>
+    <string name="google_maps_key">AIzaSyBM_e5QNdC-x9DUXl2XmQ5xlTcDC2ty1Ac</string>
     <string name="text_kakaostory">KakaoStory</string>
     <string name="text_kakaotalk">KakaoTalk</string>
     <string name="text_push">Push</string>

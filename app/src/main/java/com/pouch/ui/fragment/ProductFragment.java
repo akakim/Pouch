@@ -2,6 +2,7 @@ package com.pouch.ui.fragment;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,13 +11,19 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.pouch.R;
 import com.pouch.data.Item;
+import com.pouch.util.ImageCache;
+import com.pouch.util.ImageFetcher;
 
 import java.util.ArrayList;
 
@@ -44,6 +51,13 @@ public class ProductFragment extends Fragment {
 
     private int mRowSelected = 0;
     private GridLayout GridItems;
+    private ScrollView ScrollItem;
+
+    ImageView ItemView[];
+    TextView ItemTitle[];
+    TextView ItemPreValue[];
+    TextView ItemCurValue[];
+
     static final int ImageList [] ={
             R.drawable.cream,
             R.drawable.skin,
@@ -53,6 +67,10 @@ public class ProductFragment extends Fragment {
             R.drawable.blush
     };
     private String TAG= getClass().getSimpleName();
+    private static final String IMAGE_CACHE_DIR = "thumbs";
+    private int mImageThumbSize;
+    private int mImageThumbSpacing;
+    private ImageFetcher mImageFetcher;
 
 
     public ProductFragment() {
@@ -87,6 +105,21 @@ public class ProductFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         Items= new ArrayList<Item>();
+
+        /* something 초기화. */
+        mImageThumbSize = getResources().getDisplayMetrics().widthPixels / 3;
+        mImageThumbSpacing = getResources().getDimensionPixelSize(R.dimen.image_thumbnail_spacing);
+
+        ImageCache.ImageCacheParams cacheParams =
+                new ImageCache.ImageCacheParams(getActivity(), IMAGE_CACHE_DIR);
+
+        cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
+
+        // The ImageFetcher takes care of loading images into our ImageView children asynchronously
+        mImageFetcher = new ImageFetcher(getActivity(),mImageThumbSize);
+        mImageFetcher.setLoadingImage(R.drawable.empty_photo);
+        mImageFetcher.addImageCache(getActivity().getSupportFragmentManager(), cacheParams);
+
     }
 
     @Override
@@ -95,7 +128,17 @@ public class ProductFragment extends Fragment {
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_product, container, false);
         GridItems = (GridLayout)rootView.findViewById(R.id.product);
-        // Inflate the layout for this fragment
+        ScrollItem = (ScrollView)rootView.findViewById(R.id.scrollView);
+        /*
+        ScrollItem.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+               // mImageFetcher.setPauseWork(false);
+            }
+        });
+*/
+
+                // Inflate the layout for this fragment
         return rootView;
     }
 
@@ -121,6 +164,28 @@ public class ProductFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mImageFetcher.setExitTasksEarly(false);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mImageFetcher.setPauseWork(false);
+        mImageFetcher.setExitTasksEarly(true);
+        mImageFetcher.flushCache();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mImageFetcher.closeCache();
     }
 
     /**
@@ -153,60 +218,102 @@ public class ProductFragment extends Fragment {
             Log.e("ProductFragment", "Item is not initialize");
         }
         else if (Items.size() != 0) {
-            LinearLayout[] testLinearLayout;
-            FrameLayout[] testBack;
-            ImageView testArr[];
-            testArr = new ImageView[Items.size()];
+            LinearLayout[] GridLayoutLinearLayout;
+            FrameLayout[] GridLayoutFrameLayout;
+            RelativeLayout[] GridLayoutRelativeLayout;
+            ItemView = new ImageView[Items.size()];
+            ItemTitle = new TextView[Items.size()];
+            ItemPreValue = new TextView[Items.size()];
+            ItemCurValue = new TextView[Items.size()];
 
 
-
-            testBack = new FrameLayout[Items.size()];
-            testLinearLayout = new LinearLayout[Items.size()];
-
+            GridLayoutFrameLayout = new FrameLayout[Items.size()];
+            GridLayoutLinearLayout = new LinearLayout[Items.size()];
+            GridLayoutRelativeLayout = new RelativeLayout[Items.size()];
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels / 3,
                     getResources().getDisplayMetrics().heightPixels / 3);
-            params.weight = 1.0f;
-            params.setLayoutDirection(LinearLayout.HORIZONTAL);
+            params.setLayoutDirection(LinearLayout.VERTICAL);
 
-            LinearLayout.LayoutParams CancelableParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams CancelableParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
+            RelativeLayout.LayoutParams rel_params =new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,getResources().getDisplayMetrics().heightPixels / 6);
+            RelativeLayout.LayoutParams Title_params =new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            RelativeLayout.LayoutParams Price_params =new RelativeLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels / 6,RelativeLayout.LayoutParams.WRAP_CONTENT);
 
             for (int i = 0; i < Items.size(); i++) {
 
-                testLinearLayout[i] = new LinearLayout(ProductFragment.this.getContext());
-                testLinearLayout[i].setLayoutParams(params);
+                GridLayoutLinearLayout[i] = new LinearLayout(ProductFragment.this.getContext());
+                GridLayoutLinearLayout[i].setLayoutParams(params);
 
-                testBack[i] = new FrameLayout(ProductFragment.this.getContext());
-                testBack[i].setLayoutParams(params);
-                testBack[i].setBackgroundColor(Color.DKGRAY);
+                GridLayoutFrameLayout[i] = new FrameLayout(ProductFragment.this.getContext());
+                GridLayoutFrameLayout[i].setLayoutParams(params);
 
-                testArr [i] = new ImageView(this.getContext());
-                testArr[i].setImageResource(ImageList[0]);
+                GridLayoutRelativeLayout[i] = new RelativeLayout(ProductFragment.this.getContext());
+                GridLayoutRelativeLayout[i].setLayoutParams(rel_params);
+
+
+                GridLayoutFrameLayout[i].setBackgroundColor(Color.DKGRAY);
+
+                ItemView [i] = new ImageView(this.getContext());
+                ItemView[i].setImageResource(R.drawable.empty_photo);
                 CancelableParams.gravity = Gravity.CENTER;
-                testArr[i].setLayoutParams(CancelableParams);
-                testArr[i].setOnClickListener(new View.OnClickListener() {
+                ItemView[i].setLayoutParams(CancelableParams);
+                ItemView[i].setOnClickListener(new View.OnClickListener() {
                     int selected = mRowSelected;
+
                     @Override
                     public void onClick(View v) {
                         mRowSelected = selected;
                     }
                 });
 
-                testArr[i].setOnLongClickListener(new View.OnLongClickListener(){
+                ItemView[i].setOnLongClickListener(new View.OnLongClickListener() {
                     int selected = mRowSelected;
+
                     @Override
                     public boolean onLongClick(View v) {
                         mRowSelected = selected;
-                        Log.v("mRowSelected "+mRowSelected,"");
+                        Log.v("mRowSelected " + mRowSelected, "");
                         return false;
                     }
 
                 });
+
+                ItemTitle[i] = new TextView(this.getContext());
+                ItemTitle[i].setText(Items.get(i).getTitle());
+                Title_params.alignWithParent=true;
+                ItemTitle[i].setGravity(Gravity.CENTER);
+                ItemTitle[i].setTextSize(15.0f);
+                ItemTitle[i].setLayoutParams(Title_params);
+
+                ItemPreValue[i] = new TextView(this.getContext());
+                ItemPreValue[i].setText(Items.get(i).getPrePrice());
+                ItemPreValue[i].setPaintFlags(ItemPreValue[i].getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                ItemPreValue[i].setTextSize(10.0f);
+                ItemPreValue[i].setLayoutParams(Price_params);
+
+                ItemCurValue[i] = new TextView(this.getContext());
+                ItemCurValue[i].setText(Items.get(i).getPrice());
+                ItemCurValue[i].setTextSize(10.0f);
+                ItemCurValue[i].setLayoutParams(Price_params);
+
                 mRowSelected++;
 
-                testBack[i].addView(testLinearLayout[i]);
-                testLinearLayout[i].addView(testArr[i]);
+                /* frame layout
+                 * └LinearLayout
+                 *   └ ImageView
+                 *      Title
+                 *      Pre Cur
+                 */
+                GridLayoutRelativeLayout[i].addView(ItemTitle[i]);
+                GridLayoutLinearLayout[i].addView(ItemView[i]);
+                GridLayoutLinearLayout[i].addView(GridLayoutRelativeLayout[i]);
+
+                GridLayoutFrameLayout[i].addView(GridLayoutLinearLayout[i]);
+
+
+
 
 
             }
@@ -215,11 +322,16 @@ public class ProductFragment extends Fragment {
             mRowSelected = 0;
 
             for (int i = 0; i < Items.size(); i++) {
-                GridItems.addView(testBack[i]);
+                GridItems.addView(GridLayoutFrameLayout[i]);
             }
         }
         else {
-            Log.e(TAG+"Items size","0");
+            Log.e(TAG + "Items size", "0");
         }
+    }
+
+    public void setImage(){
+        for (int i =0;i<Items.size();i++)
+        mImageFetcher.loadImage(Items.get(i).getImageURL(), ItemView[i]);
     }
 }

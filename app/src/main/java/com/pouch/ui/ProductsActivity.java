@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -14,9 +15,11 @@ import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
+import android.util.Log;
 
-import com.pouch.Logger.Log;
+
 import com.pouch.R;
 import com.pouch.data.Item;
 import com.pouch.ui.fragment.ProductFragment;
@@ -87,7 +90,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
             try{
 
             }catch(Exception e){
-                Log.println(Log.VERBOSE, TAG, "네트워크 통신에러");
+                Log.v(TAG, "네트워크 통신에러");
             }
         }
         Items = new ArrayList<Item>();
@@ -165,7 +168,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
                     Log.v(TAG,"message 0");
                     AllOfProuducts.setItmes(Items);
                     AllOfProuducts.Invalidate();
-
+                    AllOfProuducts.setImage();
                 break;
 
             }
@@ -174,105 +177,72 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
 
     }
 
-    private class TonimoriInitThread extends AsyncTask<Void,String,Integer>{
+    private class TonimoriInitThread extends AsyncTask<Void,String,Integer>  {
 
         private ProgressDialog mDialog;
         private Context context;
 
         private InputStream input;
-        private InputStream inputForItem;
         private Source source;
-        private URL target;
-        private URL initTarget;
-
-        StringBuilder ImageURLBuiler [];
-        StringBuilder titleBuilder [];
-        StringBuilder delBuilder[],emBuilder[];
+        private URL targetURL;
 
 
+
+        StringBuilder ImageURL[];
+        StringBuilder product_title[];
+        StringBuilder del[];
+        StringBuilder em[];
+
+        final int NumberOfItmes=20;
         private String TAG = getClass().getSimpleName();
         public TonimoriInitThread(Context context){
             this.context = context;
 
         }
 
+
         @Override
         protected void onPreExecute() {
+
             mDialog = new ProgressDialog(context);
             mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             mDialog.setMessage("네트워크에서 다운로드");
             mDialog.show();
 
-            super.onPreExecute();
+            /* 동적할당의 경우 못해주는건지 못알아낸건지. 여튼 정적할당으로 처리한다. */
+            ImageURL = new StringBuilder[NumberOfItmes];
+            product_title = new StringBuilder[NumberOfItmes];
+            del = new StringBuilder[NumberOfItmes];
+            em =new StringBuilder[NumberOfItmes];
+
         }
 
         //TODO: 나중에 다른 URL들로부터 값들을 받아오려면 Integer -> String
         @Override
         protected Integer doInBackground(Void... params) {
-            Log.v(TAG,"DoinBackground");
-
-            //Integer rating = params[0];
-           // publishProgress("rate", Integer.toString(rating));
-            int targetTableNumber = 0;
-            int targetSectionNumber = 0;
+            int targetSection = 0;
+            int start = 0;
             try {
-                Log.v(TAG,"DoinBackground");
-                target = new URL("http://m.etonymoly.com");
-                input = target.openStream();
+                targetURL = new URL("http://m.etonymoly.com/html/lp_list.asp?cate=140");
+                input = targetURL.openStream();
 
-                initTarget = new URL("http://m.etonymoly.com/html/lp_list.asp?cate=140");
-                inputForItem = initTarget.openStream();
-                // TODO: 각각의 사이트도 다르니 charset또한 추가해줘야됨.
-                source = new Source (new InputStreamReader(input,"euc-kr"));
+                source = new Source(new InputStreamReader(input, "euc-kr"));
                 source.fullSequentialParse();
 
-                List<StartTag> tableTag = source.getAllStartTags(HTMLElementName.UL);
-                List<StartTag> getItemTag = source.getAllStartTags(HTMLElementName.SECTION);
-                for (int i = 0; i<tableTag.size();i++){
-                    // 카테고리를 찾는다.
-                    if(tableTag.get(i).toString().equals("<div class=\"slidebar__category__sub\">")){
-                        targetTableNumber = i;
+                // section 타입의 모든 태그를 불러옴.
+                List<StartTag> tableTag = source.getAllStartTags(HTMLElementName.SECTION);
+                for (int i = 0; i < tableTag.size(); i++) {
+                    if (tableTag.get(i).toString().equals("<section class=\"goods-list-section\">")) {
+                        targetSection = i;
 
-                        }
-                    Log.v(TAG,String.valueOf(i));
-                }
-
-                /* 카테고리 리스트를 불러온다. */
-
-                Element Target_UL =  (Element)source.getAllElements(HTMLElementName.UL).get(targetTableNumber);
-                for (int j = 0; j<Target_UL.getAllElements(HTMLElementName.LI).size();j++){
-                    Element TargetLI = (Element)Target_UL.getAllElements(HTMLElementName.LI).get(j);
-                    Element Target_a = (Element)TargetLI.getAllElements(HTMLElementName.A).get(0);
-                    if (Target_a.getAttributeValue("href").equals("#")){
-                        // category의 사이즈를 정하기위함.
-                        URLMaxSize = j;
-                        break;
-                    }
-                    URLList[j]= Target_a.getAttributeValue("href");
-
-                    Segment s = TargetLI.getAllElements(HTMLElementName.A).get(0).getContent();
-                    TitleList[j] = s.toString();
-
-                    if(URLList[j]==null){
-                        break;
-                    }
-                   // rating++;
-                }
-
-                /*아이템 리스트 초기값을 불러온다. */
-
-                // 초기 아이템 list를 불러온다.
-                for (int i = 0; i < getItemTag.size(); i++) {
-                    if (getItemTag.get(i).toString().equals("<section class=\"goods-list-section\">")) {
-                        targetSectionNumber = i;
                         break;
                     }
                 }
 
-                Element Target_SECTION = (Element) source.getAllElements(HTMLElementName.SECTION).get(targetSectionNumber);
+                Element Target_SECTION = (Element) source.getAllElements(HTMLElementName.SECTION).get(targetSection);
+                Element Target_UL = (Element) Target_SECTION.getAllElements(HTMLElementName.UL).get(0);
 
-                Target_UL = (Element) Target_SECTION.getAllElements(HTMLElementName.UL).get(0);
-
+                // 결과값 유무확인
                 Element rule = (Element) Target_UL.getAllElements(HTMLElementName.LI).get(0);
 
 
@@ -281,90 +251,297 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
                     int count = 0;
                     List<StartTag> startTagList = Target_UL.getAllStartTags(HTMLElementName.LI);
                     for (StartTag tmp : startTagList) {
+                        // Log.v("StartTag", tmp.toString());
                         count++;
-                        ImageURLBuiler = new StringBuilder[count];
                     }
+                    android.util.Log.v("Count", String.valueOf(count));
 
                     for (int j = 0; j < count; j++) {
                         Element Target_LI = (Element) Target_UL.getAllElements(HTMLElementName.LI).get(j);
-                        Element Target_DIV = (Element) Target_LI.getAllElements(HTMLElementName.DIV).get(0);
-                        Element Target_SPAN = (Element) Target_DIV.getAllElements(HTMLElementName.SPAN).get(0);
-                        Element Target_PRODUCT_DIV = (Element) Target_DIV.getAllElements(HTMLElementName.DIV).get(1);
-                        Element Target_A = (Element) Target_SPAN.getAllElements(HTMLElementName.A).get(0);
-                        Element IMGURL = (Element) Target_A.getAllElements(HTMLElementName.IMG).get(0);
-                        ImageURLBuiler[j] = new StringBuilder(IMGURL.getAttributeValue("src"));
+                        android.util.Log.v("Target_LI", Target_LI.toString());
 
+
+                        Element Target_DIV = (Element) Target_LI.getAllElements(HTMLElementName.DIV).get(0);
+
+                        android.util.Log.v("Target_DIV", Target_DIV.toString());
+                        Element Target_SPAN = (Element) Target_DIV.getAllElements(HTMLElementName.SPAN).get(0);
+
+                        Element Target_PRODUCT_DIV = (Element) Target_DIV.getAllElements(HTMLElementName.DIV).get(1);
+                        android.util.Log.v("Target_Product_div", Target_PRODUCT_DIV.toString());
+                        Element Target_A = (Element) Target_SPAN.getAllElements(HTMLElementName.A).get(0);
+
+                        Element IMGURL = (Element) Target_A.getAllElements(HTMLElementName.IMG).get(0);
+
+                        // Log.v("IMGURL",IMGURL.toString());
+                         ImageURL[j] = new StringBuilder(IMGURL.getAttributeValue("src"));
+
+                        // Log.v("imageURL",ImageURL);
                         Element TITLE_SPAN = (Element) Target_PRODUCT_DIV.getAllElements(HTMLElementName.SPAN).get(0);
+                        //             Log.v("TITLE_SPAN",TITLE_SPAN.toString());
                         Element PRICE_SPAN = (Element) Target_PRODUCT_DIV.getAllElements(HTMLElementName.SPAN).get(1);
 
                         Element Product_A = (Element) TITLE_SPAN.getAllElements(HTMLElementName.A).get(0);
                         Segment TITLE = Product_A.getFirstElement().getContent();
-
-                        titleBuilder[j] = new StringBuilder(TITLE.toString());
+                         title = TITLE.toString();
 
                         Element DEL;
                         Element EM = (Element) PRICE_SPAN.getAllElements(HTMLElementName.EM).get(0);
 
                         List<Tag> lst = PRICE_SPAN.getAllTags();
-
-
                         for (Tag tmp : lst) {
+                            android.util.Log.v("for", tmp.toString());
                             if (tmp.toString().equals("<del>")) {
-
                                 DEL = (Element) PRICE_SPAN.getAllElements(HTMLElementName.DEL).get(0);
-                                delBuilder[j] = new StringBuilder(DEL.getContent().toString());
+                                android.util.Log.v("DEL", DEL.getContent().toString());
+                                del[j] = new StringBuilder(DEL.getContent().toString());
                             }
+                            else
+                                del[j] = new StringBuilder("");
                             if (tmp.toString().equals("<em>")) {
 
-                                emBuilder[j] = new StringBuilder( EM.getContent().toString());
-                                android.util.Log.v("EM", "IS");
+                                em[j]= new StringBuilder(EM.getContent().toString());
+
                             }
                         }
-                        Log.v(TAG, Items.get(j).toString());
-                      //  rating++;
 
+                        product_title[j] = new StringBuilder(TITLE.toString());
+
+                        Item tmpItem = new Item(product_title[j].toString(),del[j].toString(),em[j].toString(),URL_PRIMARY+ImageURL[j].toString());
+                        Items.add(tmpItem);
+
+                        android.util.Log.v("EM", EM.getContent().toString());
                     }
-
-                   // getSupportFragmentManager().beginTransaction().replace(R.id.show_product_container, AllOfProuducts).commit();
                 }
                 else if (rule.getAttributeValue("class").equals("NO_RESULT")) {
                     android.util.Log.v("NO_RESULT", "결과가없음!");
+
                 }
 
-            }catch (MalformedURLException e){
-                Log.println(Log.VERBOSE,TAG,"URL Malformed");
-                e.printStackTrace();
-            }catch (Exception e){
+
+
+            }
+            catch(MalformedURLException e){
+                android.util.Log.v(TAG, "MalformedURL");
+            }
+            catch(Exception e){
                 e.printStackTrace();
             }
 
 
-
-
-
-            return 0;
-      }
-
-        @Override
-        protected void onProgressUpdate(String... progress){
-
+            return null;
         }
 
         @Override
         protected void onPostExecute(Integer result){
 
-            for(int i =0; i<ImageURLBuiler.length;i++){
-                Items.add(new Item(titleBuilder.toString(),delBuilder.toString(), emBuilder.toString(),ImageURLBuiler.toString()));
-            }
-
-            handler.sendEmptyMessage(0);
+            mDialog.setMessage("받아온값 "+result);
             mDialog.dismiss();
-
-
-
+            handler.sendEmptyMessage(0);
         }
     }
 
+
+    /*category를 불러오는 task */
+    private class task extends AsyncTask<Integer,Integer,Integer>{
+        private InputStream input;
+        private Source source;
+        private URL targetURL;
+        int maxSize;
+        @Override
+        protected Integer doInBackground(Integer... params) {
+            int targetTableNumber = 0;
+            android.util.Log.v(TAG, "doInBackground...");
+            try {
+
+                targetURL = new URL(URL_PRIMARY);
+                input = targetURL.openStream();
+
+                source = new Source(new InputStreamReader(input, "euc-kr"));
+                source.fullSequentialParse();
+
+                // UL타입의 모든 태그를 불러옴.
+                List<StartTag> tableTag = source.getAllStartTags(HTMLElementName.UL);
+                for (int i = 0; i<tableTag.size();i++){
+                    if(tableTag.get(i).toString().equals("<div class=\"slidebar__category__sub\">")){
+                        targetTableNumber = i;
+                        //Log.v(TAG,"Target div Location : "+ i);
+                    }
+                }
+
+                //BBSlocate 번째 의 UL 를 모두 가져온다.
+                Element Target_UL =  (Element)source.getAllElements(HTMLElementName.UL).get(targetTableNumber);
+                // URLList = new String[Target_UL.length()];
+                //TitleList =new String [Target_UL.length()];
+
+                // Log.v(TAG,"index Range" + Target_UL.getAllElements(HTMLElementName.LI).size());
+
+                /**
+                 * Expandable ListView로 구현해야되 .ㅠㅠㅠㅜㅠㅠ
+                 *
+                 */
+                for (int j = 0; j<Target_UL.getAllElements(HTMLElementName.LI).size();j++){
+                    Element TargetLI = (Element)Target_UL.getAllElements(HTMLElementName.LI).get(j);
+                    Element Target_a = (Element)TargetLI.getAllElements(HTMLElementName.A).get(0);
+                    if (Target_a.getAttributeValue("href").equals("#")){
+                        // category의 사이즈를 정하기위함.
+                        maxSize = j;
+                        break;
+                    }
+                    URLList[j]= Target_a.getAttributeValue("href");
+
+                    Segment s = TargetLI.getAllElements(HTMLElementName.A).get(0).getContent();
+                    TitleList[j] = s.toString();
+//                    URLList[j] = Target_LI
+
+                    if(URLList[j]==null){
+                        break;
+                    }
+                    android.util.Log.v("URL", URLList[j]);
+                    android.util.Log.v("Title", TitleList[j]);
+                }
+
+
+            }
+            catch(MalformedURLException e){
+                android.util.Log.v(TAG, "MalformedURL");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+
+            android.util.Log.v("URL0", URLList[0]);
+            super.onPostExecute(integer);
+        }
+    }
+
+    /*category안의 Item List를불러오는 task */
+    private class task2 extends AsyncTask<Integer,Integer,Integer>{
+        private InputStream input;
+        private Source source;
+        private URL targetURL;
+        @Override
+        protected Integer doInBackground(Integer... params) {
+            int targetSection = 0;
+            int start = 0;
+            try {
+                targetURL = new URL("http://m.etonymoly.com/html/lp_list.asp?cate=140");
+                input = targetURL.openStream();
+
+                source = new Source(new InputStreamReader(input, "euc-kr"));
+                source.fullSequentialParse();
+
+                // section 타입의 모든 태그를 불러옴.
+                List<StartTag> tableTag = source.getAllStartTags(HTMLElementName.SECTION);
+                for (int i = 0; i < tableTag.size(); i++) {
+                    if (tableTag.get(i).toString().equals("<section class=\"goods-list-section\">")) {
+                        targetSection = i;
+
+                        android.util.Log.v(TAG, "Target section Location : " + i);
+                        android.util.Log.v("table TAG", tableTag.get(i).toString());
+                        break;
+                    }
+                }
+
+                Element Target_SECTION = (Element) source.getAllElements(HTMLElementName.SECTION).get(targetSection);
+                Element Target_UL = (Element) Target_SECTION.getAllElements(HTMLElementName.UL).get(0);
+                // 결과값 유무확인
+                Element rule = (Element) Target_UL.getAllElements(HTMLElementName.LI).get(0);
+
+//                Log.v("Target_UL",Target_UL.toString());
+                /*li tag 갯수새기 */
+
+
+                if (rule.getAttributeValue("class") == null){
+                    int count = 0;
+                    List<StartTag> startTagList = Target_UL.getAllStartTags(HTMLElementName.LI);
+                    for (StartTag tmp : startTagList) {
+                        // Log.v("StartTag", tmp.toString());
+                        count++;
+                    }
+                    android.util.Log.v("Count", String.valueOf(count));
+
+                    for (int j = 0; j < count; j++) {
+                        Element Target_LI = (Element) Target_UL.getAllElements(HTMLElementName.LI).get(j);
+                        android.util.Log.v("Target_LI", Target_LI.toString());
+
+
+                        Element Target_DIV = (Element) Target_LI.getAllElements(HTMLElementName.DIV).get(0);
+
+                        android.util.Log.v("Target_DIV", Target_DIV.toString());
+                        Element Target_SPAN = (Element) Target_DIV.getAllElements(HTMLElementName.SPAN).get(0);
+
+                        //Log.v("Target_SPAN",Target_SPAN.toString());
+                        Element Target_PRODUCT_DIV = (Element) Target_DIV.getAllElements(HTMLElementName.DIV).get(1);
+                        android.util.Log.v("Target_Product_div", Target_PRODUCT_DIV.toString());
+                        Element Target_A = (Element) Target_SPAN.getAllElements(HTMLElementName.A).get(0);
+//                Log.v("Target_A",Target_A.toString());
+                        Element IMGURL = (Element) Target_A.getAllElements(HTMLElementName.IMG).get(0);
+
+                        // Log.v("IMGURL",IMGURL.toString());
+                        String ImageURL = IMGURL.getAttributeValue("src");
+                        // Log.v("imageURL",ImageURL);
+                        Element TITLE_SPAN = (Element) Target_PRODUCT_DIV.getAllElements(HTMLElementName.SPAN).get(0);
+                        //             Log.v("TITLE_SPAN",TITLE_SPAN.toString());
+                        Element PRICE_SPAN = (Element) Target_PRODUCT_DIV.getAllElements(HTMLElementName.SPAN).get(1);
+
+                        Element Product_A = (Element) TITLE_SPAN.getAllElements(HTMLElementName.A).get(0);
+                        Segment TITLE = Product_A.getFirstElement().getContent();
+                        String title = TITLE.toString();
+
+/*
+
+                if(DEL == null){
+                    Log.v("DEL","NULL");
+                }*/
+                        Element DEL;
+                        Element EM = (Element) PRICE_SPAN.getAllElements(HTMLElementName.EM).get(0);
+
+                        List<Tag> lst = PRICE_SPAN.getAllTags();
+                        for (Tag tmp : lst) {
+                            android.util.Log.v("for", tmp.toString());
+                            if (tmp.toString().equals("<del>")) {
+                                DEL = (Element) PRICE_SPAN.getAllElements(HTMLElementName.DEL).get(0);
+                                android.util.Log.v("DEL", DEL.getContent().toString());
+                                android.util.Log.v("DEL", "IS");
+                            }
+                            if (tmp.toString().equals("<em>")) {
+
+
+                                android.util.Log.v("EM", "IS");
+                            }
+                        }
+                        android.util.Log.v("Image URL", ImageURL);
+                        android.util.Log.v("Product Title", title);
+                        android.util.Log.v("EM", EM.getContent().toString());
+                    }
+                }
+                else if (rule.getAttributeValue("class").equals("NO_RESULT")) {
+                    android.util.Log.v("NO_RESULT", "결과가없음!");
+
+                }
+
+
+
+            }
+            catch(MalformedURLException e){
+                android.util.Log.v(TAG, "MalformedURL");
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+
+
+            return null;
+        }
+
+
+
+    }
     // TODO: filter를 적용할 때 Thread 작성.
 }
 

@@ -5,6 +5,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:name=".common.GlobalApplication"
         android:allowBackup="true"
@@ -14,6 +19,9 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
 
         <activity
             android:name=".ui.SplashActivity"
@@ -34,12 +42,12 @@
             android:name=".ui.RegistBrandActivity"
             android:label="@string/title_activity_regist_brand" />
         <activity android:name=".ui.PouchActivity" />
-        <activity android:name=".ui.ColorPalatteActivity" />
         <activity android:name=".ui.EventInfoActivity" />
         <activity android:name=".ui.SearchActivity" />
         <activity android:name=".common.LoginActivity" />
         <activity android:name=".common.SignUpActivity" />
-        <activity android:name=".ui.ProductsActivity"></activity>
+        <activity android:name=".ui.ProductsActivity" />
+        <activity android:name=".ui.GoogleMapServiceActivity"></activity>
     </application>
 
 </manifest>
