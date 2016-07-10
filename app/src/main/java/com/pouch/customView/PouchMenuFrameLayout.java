@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 
 import com.pouch.R;
 import com.pouch.ui.*;
+
 /**
  * Created by Ala on 2016-05-25.
  */
@@ -24,7 +25,14 @@ public class PouchMenuFrameLayout extends FrameLayout {
     private final Rect mTempRect = new Rect();
     private OnInsetsCallback mOnInsetsCallback;
     private boolean isTest = true;
-
+/*
+    // 로그인 처리를 위한 sample 소스코드
+    private SignInButton signInButton;
+    private GoogleSignInOptions gso;
+    private GoogleApiClient mGoogleApiClient;
+    //Signin constant to check the activity result
+    private int RC_SIGN_IN = 100;
+*/
 
     public PouchMenuFrameLayout(Context context) {
         super(context);

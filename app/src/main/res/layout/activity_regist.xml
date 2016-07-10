@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     tools:context="com.pouch.ui.RegistBrandActivity">
 
-    <com.pouch.customView.AnimatedExpandableListView
+    <ListView
         android:id="@+id/RegistView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

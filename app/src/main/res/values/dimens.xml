@@ -10,7 +10,6 @@
 
     <!-- Navigation Drawer -->
     <dimen name="navigation_drawer_max_width">320dp</dimen>
-
     <dimen name="nav_drawer_profile_image_size">64dp</dimen>
     <dimen name="nav_drawer_account_section_default_height">164dp</dimen>
     <dimen name="nav_drawer_vertical_keyline_icon_left">16dp</dimen>
@@ -22,10 +21,15 @@
     <dimen name="nav_drawer_vertical_spacing_listing_divider_bottom">8dp</dimen>
     <dimen name="nav_drawer_subheader_height">48dp</dimen>
 
+
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="divider_height">1dp</dimen>
 
     <dimen name="image_thumbnail_size">150dp</dimen>
     <dimen name="image_thumbnail_spacing">0dp</dimen>
     <dimen name="page_margin">10dp</dimen>
+
+    <!-- kakao design -->
+    <dimen name="title_text_size">16dp</dimen>
+    <dimen name="menu_text_size">18dp</dimen>
 </resources>

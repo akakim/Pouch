@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/pouch/customView/AnimatedExpandableListView.java" charset="x-windows-949" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-ldpi/app_icon.png" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-ldpi/facebook_icon.png" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-ldpi/google_icon.png" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-ldpi/twitter_icon.png" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/libs/jericho-android.3.3" charset="x-windows-949" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

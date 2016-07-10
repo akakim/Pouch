@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\usermgmt\\build\\intermediates\\res\\merged\\debug\\layout\\kakao_login_layout.xml",
+        "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\usermgmt\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\layout\\kakao_login_layout.xml"
+    },
+    {
+        "merged": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\usermgmt\\build\\intermediates\\res\\merged\\debug\\layout\\kakao_internal_login_activity.xml",
+        "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\usermgmt\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\layout\\kakao_internal_login_activity.xml"
+    }
+]

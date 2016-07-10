@@ -20,6 +20,9 @@ import java.util.List;
  * 만드는게 목적.
  * 다시말하면 데이터와 상환없는 무언가 ..
  * http://inducesmile.com/android/android-gridview-vs-gridlayout-example-tutorial/
+ *
+ * create QuickActionDialog-in-android;
+ * http://www.londatiga.net/it/how-to-create-quickaction-dialog-in-android/
  */
 public class DataAdapter extends BaseAdapter {
 
@@ -62,6 +65,7 @@ public class DataAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.activity_main_item,parent,false);
             listImageHolder.imageListView = (ImageView)convertView.findViewById(R.id.Main_ImageItem);
             listImageHolder.imageListView.setImageResource(listStorage.get(position).getBrandImageRes());
+
             convertView.setTag(listImageHolder);
         }
         else {

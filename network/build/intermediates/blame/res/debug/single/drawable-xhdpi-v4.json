@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\network\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\kakaotalk_icon.png",
+        "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\network\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable-xhdpi-v4\\kakaotalk_icon.png"
+    },
+    {
+        "merged": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\network\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\kakaoaccount_icon.png",
+        "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\network\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable-xhdpi-v4\\kakaoaccount_icon.png"
+    },
+    {
+        "merged": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\network\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\kakaostory_icon.png",
+        "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\network\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable-xhdpi-v4\\kakaostory_icon.png"
+    }
+]

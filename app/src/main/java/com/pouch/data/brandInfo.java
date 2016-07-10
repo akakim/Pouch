@@ -15,6 +15,7 @@ public class brandInfo {
         this.brandName = brandName;
         InstagramURL = instagramURL;
         this.brandImageRes = brandImageRes;
+
     }
 
     public URL getInstagramURL() {

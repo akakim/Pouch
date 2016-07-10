@@ -27,6 +27,7 @@
                    android:layout_height="wrap_content"
                    android:id="@+id/scrollView" >
                    <GridLayout
+                       android:id="@+id/main_brandlist"
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
                        android:columnCount="2"
@@ -35,9 +36,9 @@
                        TODO: 실제로는 이미지에 패딩값이 더 더해질 수 있다. 기본적으로
                               이미지는 배경이 투명해야하고
                               위쪽에 NewQuickAction이란 것을 넣어야하기 때문에 도 padding을해야됨.
-
+                              <include layout="@layout/activity_main_item"/>
                        -->
-                       <include layout="@layout/activity_main_item"/>
+
 
                    </GridLayout>
                </ScrollView>
