@@ -25,6 +25,7 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+//        getAppKeyHash();
         callback = new SessionCallback();
 
         Session.getCurrentSession().addCallback(callback);

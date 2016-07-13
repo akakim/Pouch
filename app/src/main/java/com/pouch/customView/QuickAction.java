@@ -1,8 +1,12 @@
 package com.pouch.customView;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,7 +75,9 @@ private ImageView mArrowUp;
         mAnimateTrack = true;
         mChildPos = 0;
     }
-        @Override
+
+
+    @Override
     public void onDismiss() {
         if(!mDidAction && mDismissListener != null){
             mDismissListener.onDismiss();
@@ -104,7 +110,7 @@ private ImageView mArrowUp;
         //when tapping fastly on a view to show quickaction dialog.
         //Thanx to zammbi (github.com/zammbi)
 
-        mRootView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+//        mRootView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 
         setContentView(mRootView);
     }
@@ -188,9 +194,9 @@ private ImageView mArrowUp;
         mDismissListener = listener;
     }
     /**
-     * show popup Window
+     * GridLayout에 맞추기 위해 수정.
      */
-    public void show(View anchor){
+    public void show(View anchor,int columns,int size){
         preShow();
         int[] location 		= new int[2];
         mDidAction 			= false;
@@ -203,14 +209,62 @@ private ImageView mArrowUp;
 
         mRootView.measure(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
+
         int rootWidth  = mRootView.getMeasuredWidth();
         int rootHeight = mRootView.getMeasuredHeight();
 
         int screenWidth = mWindowManager.getDefaultDisplay().getWidth();
 
-        int xPos    = (screenWidth - rootWidth)/2;
-        int yPos    = anchorRect.top - rootHeight;
+        int xPos    =columns *size;
+        int yPos    =anchorRect.top - rootHeight;
 
+        boolean onTop = true;
+
+        /*어떤 버튼이 눌려진경우 위쪽과 아랫쪽 둘중 하나를 그릴건지에 대한 선택. */
+        //display on bottom
+        if(rootHeight>anchor.getTop()){
+            yPos = anchorRect.bottom;
+            onTop	= false;
+        }
+
+        showArrow(((onTop) ? R.id.arrow_down : R.id.arrow_up), anchorRect.centerX(),columns,size);
+
+        setAnimationStyle(screenWidth, anchorRect.centerX(), onTop);
+        // 화살방향, 애니메이션 효과가지 전부 새팅.
+        mWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, xPos, yPos);
+
+        if (mAnimateTrack) mTrack.startAnimation(mTrackAnim);
+    }
+
+
+    public void show(View anchor){
+        preShow();
+        int[] location 		= new int[2];
+        mDidAction 			= false;
+
+        anchor.getLocationOnScreen(location);
+
+        Rect anchorRect = new Rect(location[0],location[1],
+                location[0]+anchor.getWidth(),location[1]+anchor.getHeight()
+        );
+
+        mRootView.measure(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
+
+        int rootWidth  = mRootView.getMeasuredWidth();
+        int rootHeight = mRootView.getMeasuredHeight();
+
+        int screenWidth = mWindowManager.getDefaultDisplay().getWidth();
+
+//        int xPos    = (screenWidth - rootWidth)/2;
+//        int yPos    = anchorRect.top - rootHeight;
+        int xPos    =0;//(screenWidth - rootWidth)/2;
+        int yPos    =anchorRect.top;
+
+        Log.v("ypos",String.valueOf(yPos));
+        Log.v("anchorRect.top",String.valueOf(anchorRect.top));
+        Log.v("anchorRect",anchorRect.toShortString());
+        Log.v("rootHeight",String.valueOf(rootHeight));
         boolean onTop = true;
 
         /*어떤 버튼이 눌려진경우 위쪽과 아랫쪽 둘중 하나를 그릴건지에 대한 선택. */
@@ -224,18 +278,34 @@ private ImageView mArrowUp;
 
         setAnimationStyle(screenWidth, anchorRect.centerX(), onTop);
         // 화살방향, 애니메이션 효과가지 전부 새팅.
-        mWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, xPos, yPos);
+        mWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, 0, yPos);
 
         if (mAnimateTrack) mTrack.startAnimation(mTrackAnim);
     }
-
     /**
      * Show arrow
      *
      * @param whichArrow arrow type resource id
      * @param requestedX distance from left screen
      */
+
+    private void showArrow(int whichArrow,int requestedX,int columns,int width){
+        // 현재는 showArrow = down hide는 up
+        final View showArrow = (whichArrow == R.id.arrow_up) ? mArrowUp : mArrowDown;
+        final View hideArrow = (whichArrow == R.id.arrow_up) ? mArrowDown : mArrowUp;
+
+        final int arrowWidth = mArrowUp.getMeasuredWidth();
+
+        showArrow.setVisibility(View.VISIBLE);
+
+//        ViewGroup.MarginLayoutParams param = (ViewGroup.MarginLayoutParams)showArrow.getLayoutParams();
+//        showArrow.setPadding(columns*width,0,0,0);
+  //      param.leftMargin = columns*width;
+
+        hideArrow.setVisibility(View.INVISIBLE);
+    }
     private void showArrow(int whichArrow,int requestedX){
+        // 현재는 showArrow = down hide는 up
         final View showArrow = (whichArrow == R.id.arrow_up) ? mArrowUp : mArrowDown;
         final View hideArrow = (whichArrow == R.id.arrow_up) ? mArrowDown : mArrowUp;
 
@@ -244,7 +314,7 @@ private ImageView mArrowUp;
         showArrow.setVisibility(View.VISIBLE);
 
         ViewGroup.MarginLayoutParams param = (ViewGroup.MarginLayoutParams)showArrow.getLayoutParams();
-        param.leftMargin = requestedX - arrowWidth/2;
+        param.leftMargin = requestedX - arrowWidth;
 
         hideArrow.setVisibility(View.INVISIBLE);
     }

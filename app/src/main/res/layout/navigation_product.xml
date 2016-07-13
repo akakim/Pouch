@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--현재 style적용이 안됬고, toolbar 도 가리고있는문제  -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/pouchMenuLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_marginTop="?actionBarSize"
+    tools:layout_marginEnd="?actionBarSize"
+    tools:layout_marginRight="?actionBarSize"
+
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/navigation_drawer_background"
+        android:clipToPadding="false"
+        >
+
+        <!--
+        <LinearLayout
+            android:id="@+id/navigation_drawer_linearLayout_entries_root_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="v
+            ertical">
+
+            <Button
+                android:id="@+id/navigation_drawer_items_textView_PASS"
+                style="@style/NavDrawerRowItemText"
+                android:text="NOTIFICATION" />
+
+
+
+        </LinearLayout>
+-->
+
+    </ScrollView>
+
+    <ListView
+        android:id="@+id/category_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="1dp"
+        android:background="#cccc"
+        android:textFilterEnabled="false"
+        android:layout_gravity="right|center_vertical" />
+</FrameLayout>
