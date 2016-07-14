@@ -41,7 +41,7 @@ public class RegistBrandActivity extends AppCompatActivity {
 
 
         initItems();
-      
+
         listView = (ListView) findViewById(R.id.RegistView);
         listView.setAdapter(adapter);
 
