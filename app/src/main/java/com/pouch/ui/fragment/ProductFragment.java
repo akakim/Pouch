@@ -58,14 +58,6 @@ public class ProductFragment extends Fragment {
     TextView ItemPreValue[];
     TextView ItemCurValue[];
 
-    static final int ImageList [] ={
-            R.drawable.cream,
-            R.drawable.skin,
-            R.drawable.blush,
-            R.drawable.eyeshadow,
-            R.drawable.skin,
-            R.drawable.blush
-    };
     private String TAG= getClass().getSimpleName();
     private static final String IMAGE_CACHE_DIR = "thumbs";
     private int mImageThumbSize;
@@ -129,14 +121,7 @@ public class ProductFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_product, container, false);
         GridItems = (GridLayout)rootView.findViewById(R.id.product);
         ScrollItem = (ScrollView)rootView.findViewById(R.id.scrollView);
-        /*
-        ScrollItem.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-               // mImageFetcher.setPauseWork(false);
-            }
-        });
-*/
+
 
                 // Inflate the layout for this fragment
         return rootView;
@@ -209,8 +194,6 @@ public class ProductFragment extends Fragment {
         for(Item i : Items){
             this.Items.add(i);
         }
-//        this.Items.addAll(Items.get(0));
- //       this.Items = Items;
     }
 
     public void Invalidate() {
@@ -231,13 +214,14 @@ public class ProductFragment extends Fragment {
             GridLayoutLinearLayout = new LinearLayout[Items.size()];
             GridLayoutRelativeLayout = new RelativeLayout[Items.size()];
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels / 3,
-                    getResources().getDisplayMetrics().heightPixels / 3);
-            params.setLayoutDirection(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels / 2,
+                    getResources().getDisplayMetrics().heightPixels / 2);
 
-            LinearLayout.LayoutParams CancelableParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//            params.setLayoutDirection(LinearLayout.VERTICAL);
 
-            RelativeLayout.LayoutParams rel_params =new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,getResources().getDisplayMetrics().heightPixels / 6);
+            LinearLayout.LayoutParams CancelableParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            RelativeLayout.LayoutParams rel_params =new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,getResources().getDisplayMetrics().heightPixels / 3);
             RelativeLayout.LayoutParams Title_params =new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
             RelativeLayout.LayoutParams Price_params =new RelativeLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels / 6,RelativeLayout.LayoutParams.WRAP_CONTENT);
 
@@ -245,6 +229,7 @@ public class ProductFragment extends Fragment {
 
                 GridLayoutLinearLayout[i] = new LinearLayout(ProductFragment.this.getContext());
                 GridLayoutLinearLayout[i].setLayoutParams(params);
+                GridLayoutLinearLayout[i].setOrientation(LinearLayout.VERTICAL);
 
                 GridLayoutFrameLayout[i] = new FrameLayout(ProductFragment.this.getContext());
                 GridLayoutFrameLayout[i].setLayoutParams(params);
@@ -256,8 +241,10 @@ public class ProductFragment extends Fragment {
                 GridLayoutFrameLayout[i].setBackgroundColor(Color.DKGRAY);
 
                 ItemView [i] = new ImageView(this.getContext());
-                ItemView[i].setImageResource(R.drawable.empty_photo);
+                mImageFetcher.loadImage(Items.get(i).getImageURL(), ItemView[i]);
+                CancelableParams.setMargins(20, 20, 20, 20);
                 CancelableParams.gravity = Gravity.CENTER;
+
                 ItemView[i].setLayoutParams(CancelableParams);
                 ItemView[i].setOnClickListener(new View.OnClickListener() {
                     int selected = mRowSelected;
@@ -285,18 +272,18 @@ public class ProductFragment extends Fragment {
                 Title_params.alignWithParent=true;
                 ItemTitle[i].setGravity(Gravity.CENTER);
                 ItemTitle[i].setTextSize(15.0f);
-                ItemTitle[i].setLayoutParams(Title_params);
+    //            ItemTitle[i].setLayoutParams(Title_params);
 
                 ItemPreValue[i] = new TextView(this.getContext());
                 ItemPreValue[i].setText(Items.get(i).getPrePrice());
                 ItemPreValue[i].setPaintFlags(ItemPreValue[i].getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 ItemPreValue[i].setTextSize(10.0f);
-                ItemPreValue[i].setLayoutParams(Price_params);
+//                ItemPreValue[i].setLayoutParams(Price_params);
 
                 ItemCurValue[i] = new TextView(this.getContext());
                 ItemCurValue[i].setText(Items.get(i).getPrice());
                 ItemCurValue[i].setTextSize(10.0f);
-                ItemCurValue[i].setLayoutParams(Price_params);
+  //              ItemCurValue[i].setLayoutParams(Price_params);
 
                 mRowSelected++;
 
@@ -306,13 +293,14 @@ public class ProductFragment extends Fragment {
                  *      Title
                  *      Pre Cur
                  */
-                GridLayoutRelativeLayout[i].addView(ItemTitle[i]);
-                GridLayoutLinearLayout[i].addView(ItemView[i]);
-                GridLayoutLinearLayout[i].addView(GridLayoutRelativeLayout[i]);
+          //      GridLayoutRelativeLayout[i].addView(ItemTitle[i]);
+
+                GridLayoutLinearLayout[i].addView(ItemView[i],0);
+                GridLayoutLinearLayout[i].addView(ItemTitle[i],1);
+                GridLayoutLinearLayout[i].addView(ItemPreValue[i],2);
+                GridLayoutLinearLayout[i].addView(ItemCurValue[i],3);
 
                 GridLayoutFrameLayout[i].addView(GridLayoutLinearLayout[i]);
-
-
 
 
 
@@ -328,6 +316,12 @@ public class ProductFragment extends Fragment {
         else {
             Log.e(TAG + "Items size", "0");
         }
+    }
+
+    public void clean(){
+        this.GridItems.removeAllViews();
+        Items.clear();
+
     }
 
     public void setImage(){

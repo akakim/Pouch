@@ -149,6 +149,8 @@ public class MainActivity extends AppCompatActivity  {
                 }
             }
         });
+
+
         //setup on dismiss listener, set the icon back to normal
         mQuickAction.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
@@ -177,13 +179,13 @@ public class MainActivity extends AppCompatActivity  {
     }
     private void InitGridLayout(){
 
-        LinearLayout [] testLinearLayout;
-        FrameLayout []testBack;
-        ImageView[] testArr;
-        testArr = new ImageView[brandName.length];
+        LinearLayout [] LinearLayout_FrameLayoutChild;
+        FrameLayout []ItemBackground_FrameLayout;
+        ImageView[] BrandShopArr;
+        BrandShopArr = new ImageView[brandName.length];
 
-        testBack = new FrameLayout[brandName.length];
-        testLinearLayout = new LinearLayout[brandName.length];
+        ItemBackground_FrameLayout = new FrameLayout[brandName.length];
+        LinearLayout_FrameLayoutChild = new LinearLayout[brandName.length];
 
 
 
@@ -192,39 +194,50 @@ public class MainActivity extends AppCompatActivity  {
         params.weight= 1.0f;
         params.setLayoutDirection(LinearLayout.HORIZONTAL);
 
-        LinearLayout.LayoutParams CancelableParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams CancelableParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
 
+        int background [] = {
+                 Color.BLUE,
+                Color.RED,
+                Color.CYAN,
+                Color.GRAY,
+                Color.WHITE,
+                Color.RED,
+                Color.GRAY,
+                Color.BLACK
+        };
         for(int i =0;i<brandURL.length;i++){
             try {
                 Log.v("URL : ",brandURL[i]);
 
                 brandInstagramURL[i] = new URL(brandURL[i]);
 
-                testLinearLayout[i]  = new LinearLayout(this);
-                testLinearLayout[i].setLayoutParams(params);
+                LinearLayout_FrameLayoutChild[i]  = new LinearLayout(this);
+                LinearLayout_FrameLayoutChild[i].setLayoutParams(params);
 
-                testBack[i] = new FrameLayout(this);
-                testBack[i].setLayoutParams(params);
-                testBack[i].setBackgroundColor(Color.GREEN);
+                ItemBackground_FrameLayout[i] = new FrameLayout(this);
+                ItemBackground_FrameLayout[i].setLayoutParams(params);
+                ItemBackground_FrameLayout[i].setBackgroundColor(background[i%brandURL.length]);
 
-                testArr [i] = new ImageView(this);
-                testArr[i].setImageResource(R.drawable.concealer);
+                BrandShopArr [i] = new ImageView(this);
+                BrandShopArr[i].setImageResource(R.drawable.concealer);
                 CancelableParams.gravity=Gravity.CENTER;
-                testArr[i].setLayoutParams(CancelableParams);
-                testArr[i].setOnClickListener(new View.OnClickListener(){
+                BrandShopArr[i].setLayoutParams(CancelableParams);
+                BrandShopArr[i].setOnClickListener(new View.OnClickListener() {
                     int selected = mRowSelected;
 
                     @Override
                     public void onClick(View v) {
                         mRowSelected = selected;
-                        mQuickAction.show(v);
+                        // column 값을 전달한다.
+                        mQuickAction.show(v,selected%2,getResources().getDisplayMetrics().widthPixels/2);
                     }
                 });
                 mRowSelected++;
 
-                testBack[i].addView(testLinearLayout[i]);
-                testLinearLayout[i].addView(testArr[i]);
+                ItemBackground_FrameLayout[i].addView(LinearLayout_FrameLayoutChild[i]);
+                LinearLayout_FrameLayoutChild[i].addView(BrandShopArr[i]);
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -236,8 +249,8 @@ public class MainActivity extends AppCompatActivity  {
 
         GridBrand = (GridLayout)findViewById(R.id.main_brandlist);
 
-        for(int i =0;i<testArr.length;i++){
-            GridBrand.addView(testBack[i]);
+        for(int i =0;i<BrandShopArr.length;i++){
+            GridBrand.addView(ItemBackground_FrameLayout[i]);
         }
     }
 

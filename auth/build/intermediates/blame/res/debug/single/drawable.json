@@ -8,6 +8,10 @@
         "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable\\kakao_account_button_background.xml"
     },
     {
+        "merged": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\res\\merged\\debug\\drawable\\kakao_cancel_button_background.xml",
+        "source": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable\\kakao_cancel_button_background.xml"
+    },
+    {
         "merged": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\res\\merged\\debug\\drawable\\kakao_close_button.png",
         "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\auth\\src\\main\\res\\drawable\\kakao_close_button.png"
     },
@@ -16,16 +20,52 @@
         "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable\\kakao_cancel_button_background.xml"
     },
     {
+        "merged": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\res\\merged\\debug\\drawable\\kakao_profile_boxbg.9.png",
+        "source": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable\\kakao_profile_boxbg.9.png"
+    },
+    {
+        "merged": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\res\\merged\\debug\\drawable\\kakao_account_logo.png",
+        "source": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable\\kakao_account_logo.png"
+    },
+    {
         "merged": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\res\\merged\\debug\\drawable\\kakao_profile_boxbg.9.png",
         "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable\\kakao_profile_boxbg.9.png"
+    },
+    {
+        "merged": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\res\\merged\\debug\\drawable\\kakao_login_bar.png",
+        "source": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable\\kakao_login_bar.png"
+    },
+    {
+        "merged": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\res\\merged\\debug\\drawable\\kakao_editable_profile.png",
+        "source": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable\\kakao_editable_profile.png"
     },
     {
         "merged": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\res\\merged\\debug\\drawable\\kakao_editable_profile.png",
         "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable\\kakao_editable_profile.png"
     },
     {
+        "merged": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\res\\merged\\debug\\drawable\\kakao_login_symbol.png",
+        "source": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable\\kakao_login_symbol.png"
+    },
+    {
         "merged": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\res\\merged\\debug\\drawable\\kakao_login_symbol.png",
         "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable\\kakao_login_symbol.png"
+    },
+    {
+        "merged": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\res\\merged\\debug\\drawable\\kakao_account_button_background.xml",
+        "source": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable\\kakao_account_button_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\res\\merged\\debug\\drawable\\kakao_close_button.png",
+        "source": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\src\\main\\res\\drawable\\kakao_close_button.png"
+    },
+    {
+        "merged": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\res\\merged\\debug\\drawable\\kakao_login_button_background.9.png",
+        "source": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable\\kakao_login_button_background.9.png"
+    },
+    {
+        "merged": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\res\\merged\\debug\\drawable\\kakao_default_profile_image.png",
+        "source": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\exploded-aar\\Pouch\\util\\1.1.16\\debug\\res\\drawable\\kakao_default_profile_image.png"
     },
     {
         "merged": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\auth\\build\\intermediates\\res\\merged\\debug\\drawable\\kakao_login_bar.png",
