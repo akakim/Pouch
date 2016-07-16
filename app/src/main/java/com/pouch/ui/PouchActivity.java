@@ -33,7 +33,6 @@ public class PouchActivity extends AppCompatActivity {
         /*Fragment 생성. */
         getSupportFragmentManager().beginTransaction().replace(R.id.item_pouch_container,mMyPouch).commit();
 
-        tabs = (TabLayout)findViewById(R.id.pouchTabLayout);
 
         tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
         {

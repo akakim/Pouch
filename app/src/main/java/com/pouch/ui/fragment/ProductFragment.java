@@ -1,6 +1,7 @@
 package com.pouch.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 
 import com.pouch.R;
 import com.pouch.data.Item;
+import com.pouch.ui.ProductDetailActivity;
 import com.pouch.util.ImageCache;
 import com.pouch.util.ImageFetcher;
 
@@ -40,7 +42,7 @@ public class ProductFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    public static final String KEY_ITEM_DATA = "item_data";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -62,6 +64,7 @@ public class ProductFragment extends Fragment {
     private static final String IMAGE_CACHE_DIR = "thumbs";
     private int mImageThumbSize;
     private int mImageThumbSpacing;
+
     private ImageFetcher mImageFetcher;
 
 
@@ -246,26 +249,21 @@ public class ProductFragment extends Fragment {
                 CancelableParams.gravity = Gravity.CENTER;
 
                 ItemView[i].setLayoutParams(CancelableParams);
+
+                ItemView[i].setFocusable(true);
+//                ItemView[i].setClickable(true);
                 ItemView[i].setOnClickListener(new View.OnClickListener() {
                     int selected = mRowSelected;
-
                     @Override
                     public void onClick(View v) {
-                        mRowSelected = selected;
+                        Intent intent = new Intent(getContext(), ProductDetailActivity.class);
+                        Log.v("mRowSelected selected",mRowSelected+" : "+selected);
+                        intent.putExtra("selectedItem",selected);
+                        intent.putParcelableArrayListExtra(KEY_ITEM_DATA,Items);
+                        startActivity(intent);
                     }
                 });
 
-                ItemView[i].setOnLongClickListener(new View.OnLongClickListener() {
-                    int selected = mRowSelected;
-
-                    @Override
-                    public boolean onLongClick(View v) {
-                        mRowSelected = selected;
-                        Log.v("mRowSelected " + mRowSelected, "");
-                        return false;
-                    }
-
-                });
 
                 ItemTitle[i] = new TextView(this.getContext());
                 ItemTitle[i].setText(Items.get(i).getTitle());
