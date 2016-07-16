@@ -43,6 +43,11 @@ public class ProductFavoriteFragment extends Fragment {
             R.drawable.cream,
             R.drawable.eyeliner,
             R.drawable.fact,
+            R.drawable.fact,
+            R.drawable.fact,
+            R.drawable.fact,
+            R.drawable.fact,
+
     };
 
     public ProductFavoriteFragment() {
@@ -80,6 +85,7 @@ public class ProductFavoriteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_product_favorite, container, false);
+        GridItems = (GridLayout)rootView.findViewById(R.id.product_favorite);
 
         // Inflate the layout for this fragment
         LinearLayout[] testLinearLayout;
@@ -130,8 +136,10 @@ public class ProductFavoriteFragment extends Fragment {
             mRowSelected = 0;
         }
 
-        GridItems = (GridLayout)rootView.findViewById(R.id.product_favorite);
+
         for(int i =0;i<testArr.length;i++){
+
+
             GridItems.addView(testBack[i]);
         }
 

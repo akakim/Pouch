@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -34,7 +33,9 @@
         </activity>
         <activity
             android:name=".ui.MainActivity"
-            android:label="@string/title_activity_main" />
+            android:label="@string/title_activity_main">
+            <category android:name="android.intent.category.BROWSABLE" />
+        </activity>
         <activity
             android:name=".ui.SettingActivity"
             android:label="@string/title_activity_setting" />
@@ -47,7 +48,9 @@
         <activity android:name=".common.LoginActivity" />
         <activity android:name=".common.SignUpActivity" />
         <activity android:name=".ui.ProductsActivity" />
-        <activity android:name=".ui.GoogleMapServiceActivity"></activity>
+        <activity android:name=".ui.GoogleMapServiceActivity" />
+        <activity android:name=".ui.ProductDetailActivity" />
+        <activity android:name=".ui.ShowProductActivity"></activity>
     </application>
 
 </manifest>

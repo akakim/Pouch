@@ -1,5 +1,8 @@
 package com.pouch.data;
 
+import android.media.Image;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import java.net.MalformedURLException;
@@ -8,12 +11,35 @@ import java.net.URL;
 /**
  * Created by USER on 2016-07-07.
  */
-public class Item {
+public class Item implements Parcelable{
     String Title;
     String PrePrice;
     String Price;
     URL imageURL;
-    public Item(String title,String prePrice,String price,String url){
+    URL ProductURL;
+
+    public static final Creator<Item> CREATOR = new Creator<Item>() {
+        @Override
+        public Item createFromParcel(Parcel in) {
+            return new Item(in);
+        }
+
+        @Override
+        public Item[] newArray(int size) {
+            return new Item[size];
+        }
+    };
+
+    public URL getProductURL() {
+        return ProductURL;
+    }
+
+    public void setProductURL(URL productURL) {
+        ProductURL = productURL;
+    }
+
+
+    public Item(String title,String prePrice,String price,String imageURL,String ProductURL){
         this.Title = title;
         if (prePrice == null){
             prePrice = "null";
@@ -22,15 +48,27 @@ public class Item {
         }
         this.Price = price;
         try {
-            this.imageURL = new URL(url);
+            this.imageURL = new URL(imageURL);
+            this.ProductURL=new URL(ProductURL);
         }
         catch (MalformedURLException e){
             e.printStackTrace();
         }
-        Log.v("Title : ", title);
-        Log.v("PrePrice : ", PrePrice);
-        Log.v("Price : ", Price);
-        Log.v("URL : ", url);
+
+    }
+
+    public Item(Parcel src){
+        this.Title = src.readString();
+        this.PrePrice = src.readString();
+        this.Price = src.readString();
+        String ImageURL = src.readString();
+        String ProductURL = src.readString();
+        try {
+            this.imageURL = new URL(ImageURL);
+            this.ProductURL = new URL(ProductURL);
+        }catch(MalformedURLException e){
+            e.printStackTrace();
+        }
     }
 
     public String getTitle() {
@@ -64,4 +102,21 @@ public class Item {
     public void setImageURL(URL imageURL) {
         this.imageURL = imageURL;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+
+        dest.writeString(Title);
+        dest.writeString(PrePrice);
+        dest.writeString(Price);
+        dest.writeString(imageURL.toString());
+        dest.writeString(ProductURL.toString());
+    }
+
 }

@@ -2,22 +2,33 @@ package com.pouch.ui.fragment;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
+import android.widget.GridLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pouch.R;
 import com.pouch.customView.AnimatedExpandableListView;
+import com.pouch.data.ItemDetailInform;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by USER on 2016-06-10.
@@ -27,239 +38,146 @@ import java.util.List;
 
 public class WishPouchFragment extends Fragment {
     private static final String TAG = WishPouchFragment.class.getSimpleName();
-    private AnimatedExpandableListView listView;
-    private RegistAdapter adapter;
-    DisplayMetrics metrics;
-    int width;
-    List<GroupItem> items;
-    String initBrandlst [];
-    boolean isTest = true;
+    public static final String PRODUCT_DATA_SET = "product_data_set" ;
+    public static final String PRODUCT_DATA_KEY_SET = "product_data_key_set" ;
+    private int mRowSelected = 0;
+    SharedPreferences sharedPreferences;
+    ArrayList<ItemDetailInform> item_inform;
 
-    private void initItems(){
+    private GridLayout GridItems;
+    static final int ImageList [] ={
+            R.drawable.eyeliner,
+            R.drawable.fact,
+            R.drawable.eyeshadow,
+            R.drawable.skin,
+            R.drawable.blush,
+            R.drawable.eyeshadow,
+            R.drawable.skin,
+            R.drawable.blush
+    };
 
-        initBrandlst = getResources().getStringArray(R.array.brandlist);
 
-        for (int i =0;i <initBrandlst.length;i++){
-            GroupItem group = new GroupItem(initBrandlst[i]);
-            ChildItem child = new ChildItem();
-            child.title = initBrandlst[i];
-            group.items.add(child);
-            items.add(group);
+    /*초기화시 기존의 자료가 있는지 없는지를 점검후
+    * 있다면 gridlayout에 넣어주고
+    * 없다면 pass.
+    * */
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG, "onCreate()");
+
+
+
+
+
+//        product_data_set = sharedPreferences.getStringSet()
+        super.onCreate(savedInstanceState);
+        sharedPreferences = getActivity().getSharedPreferences(PRODUCT_DATA_SET,Context.MODE_APPEND);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String key_set = sharedPreferences.getString(PRODUCT_DATA_KEY_SET, "null");
+        Log.v(TAG,"key_set : "+ key_set);
+        String title = sharedPreferences.getString(key_set + "_TITLE", "null");
+
+        Log.v(TAG,"title : "+ title);
+        ArrayList<String> head = new ArrayList<>();
+        ArrayList<String> tail = new ArrayList<>();
+        int size = 0;
+        try {
+            size = Integer.parseInt(sharedPreferences.getString(key_set + "_SIZE", "0"));
+            Log.v(TAG,"size : "+size);
+        }catch (Exception e){
+            e.printStackTrace();
         }
+         if (size != 0){
+             for (int i =0; i<size;i++){
+                 StringBuilder headBuilder = new StringBuilder(sharedPreferences.getString(key_set + "_HEAD_"+i, "null"));
+                 StringBuilder tailBuilder = new StringBuilder(sharedPreferences.getString(key_set + "_TAIL_"+i, "null"));
+                 Log.v(TAG,"tail : "+ tailBuilder.toString());
+                 head.add(headBuilder.toString());
+                 tail.add(tail.toString());
+             }
+         }
+
+
+        /*
+        StringBuilder key = new StringBuilder(Items.get(selectedItem).getImageURL().toString());
+        sharedPreferences = getSharedPreferences(PRODUCT_DATA_SET, Context.MODE_APPEND);
+        SharedPreferences.Editor editor =  sharedPreferences.edit();
+        editor.putString(PRODUCT_DATA_KEY_SET, key.toString());
+        editor.putString(key.toString()+"_title",Items.get(selectedItem).getTitle());
+        // editor.putString(key.toString()+"_title",Items.get(selectedItem).);
+        ProductDetailFragment fragment = ( ProductDetailFragment)mAdapter.getItem(selectedItem);
+        ArrayList<String> Head = fragment.getHeadValues();
+        ArrayList<String> Tail = fragment.getTailValues();
+
+        for(int i =0; i<Head.size();i++) {
+                    editor.putString(key.toString() + "_HEAD_"+String.valueOf(i),Tail.get(i).toString());
+                    editor.putString(key.toString() + "_TAIL_"+String.valueOf(i), Tail.get(i).toString());
+                }
+
+        editor.commit();*/
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.activity_item_wishpouch, container, false);
+        Log.v(TAG,"onCreateView()");
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.activity_item_mypouch, container, false);
 
-        /**
-         * TODO: 사용자의 정보에 대한 확인을 해야한다.
-         */
-        items = new ArrayList<GroupItem>();
+        LinearLayout[] testLinearLayout;
+        FrameLayout[]testBack;
+        ImageView[] testArr;
+        testArr = new ImageView[ImageList.length];
+
+        testBack = new FrameLayout[ImageList.length];
+        testLinearLayout = new LinearLayout[ImageList.length];
 
 
 
-        initItems();
-        if(isTest) {
-            Log.v(TAG, "group Item Title : " + items.get(0).items.get(0).title);
-            Log.v("getContext() : ",getContext().toString());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels/3,
+                getResources().getDisplayMetrics().heightPixels/3);
+        params.weight= 1.0f;
+        params.setLayoutDirection(LinearLayout.HORIZONTAL);
+
+        LinearLayout.LayoutParams CancelableParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+
+        for(int i =0;i<ImageList.length;i++){
+
+            testLinearLayout[i]  = new LinearLayout(WishPouchFragment.this.getContext());
+            testLinearLayout[i].setLayoutParams(params);
+
+            testBack[i] = new FrameLayout(WishPouchFragment.this.getContext());
+            testBack[i].setLayoutParams(params);
+            testBack[i].setBackgroundColor(Color.DKGRAY);
+
+            testArr [i] = new ImageView(WishPouchFragment.this.getContext());
+            testArr[i].setImageResource(ImageList[i]);
+            CancelableParams.gravity= Gravity.CENTER;
+            testArr[i].setLayoutParams(CancelableParams);
+            testArr[i].setOnClickListener(new View.OnClickListener(){
+                int selected = mRowSelected;
+
+                @Override
+                public void onClick(View v) {
+                    mRowSelected = selected;
+                }
+            });
+            mRowSelected++;
+
+            testBack[i].addView(testLinearLayout[i]);
+            testLinearLayout[i].addView(testArr[i]);
+
+
         }
 
+        // 나중에 선택된 것의 index를 알기 위해 초기화를했다.
+        mRowSelected = 0;
 
-        adapter = new RegistAdapter(getContext());
-        adapter.setData(items);
-        listView = (AnimatedExpandableListView) rootView.findViewById(R.id.listView);
-
-        listView.setAdapter(adapter);
-
-        listView.setIndicatorBoundsRelative(width - GetDipsFromPixel(50), width - GetDipsFromPixel(10));
-
-        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                // We call collapseGroupWithAnimation(int) and
-                // expandGroupWithAnimation(int) to animate group
-                // expansion/collapse.
-
-                if (listView.isGroupExpanded(groupPosition)) {
-                    listView.collapseGroupWithAnimation(groupPosition);
-                } else {
-                    Log.v(TAG, "getChildCount :" + listView.getChildCount());
-                    listView.expandGroupWithAnimation(groupPosition);
-                }
-                return true;
-            }
-        });
+        GridItems = (GridLayout)rootView.findViewById(R.id.main_brandlist);
+        for(int i =0;i<testArr.length;i++){
+            GridItems.addView(testBack[i]);
+        }
 
         return rootView;
-    }
-
-
-
-    private int GetDipsFromPixel(float pixels)
-    {
-        // Get the screen's density scale
-        final float scale = getResources().getDisplayMetrics().density;
-        // Convert the dps to pixels, based on density scale
-        return (int) (pixels * scale + 0.5f);
-    }
-    // group menu
-    private static class GroupItem {
-        String title;
-        List<ChildItem> items = new ArrayList<ChildItem>();
-
-        public GroupItem(){
-            title = null;
-        }
-        public GroupItem(GroupItem group){
-            this.title = group.title;
-            this.items = group.items;
-        }
-
-        public GroupItem(String title){
-            this.title = title;
-        }
-        public GroupItem(String title,ChildItem child){
-            this.title = title;
-            items.add(child);
-        }
-
-
-    }
-
-    //
-    private static class ChildItem {
-        String title;
-
-        public ChildItem(){
-            title = null;
-        }
-        public ChildItem(String child) {
-            this.title = title;
-        }
-        public ChildItem(ChildItem i){
-            this.title = i.title;
-        }
-    }
-
-    // 왜 홀더를 만들어야만하는가.
-    // title과 자식의 textView를 가르키게도니다.
-    private static class ChildHolder {
-        TextView title;
-    }
-
-    private static class GroupHolder {
-        TextView title;
-    }
-
-    private class RegistAdapter extends AnimatedExpandableListView.AnimatedExpandableListAdapter {
-        private final String TAG = RegistAdapter.class.getSimpleName();
-        private LayoutInflater inflater;
-
-        private List<GroupItem> items;
-
-        public RegistAdapter(Context context) {
-            inflater = LayoutInflater.from(context);
-        }
-
-        public void setData(List<GroupItem> items) {
-            this.items = items;
-        }
-
-        /* get child View expandable ListView와 같이 */
-
-        @Override
-        public ChildItem getChild(int groupPosition, int childPosition) {
-            return items.get(groupPosition).items.get(childPosition);
-        }
-
-        @Override
-        public long getChildId(int groupPosition, int childPosition) {
-            return childPosition;
-        }
-
-        /**
-         * getGroupView와 달리 중요하게 animation효과를 집어넣어야하므로 주목.
-         *
-         * @param groupPosition
-         * @param childPosition
-         * @param isLastChild
-         * @param convertView
-         * @param parent
-         * @return
-         */
-        @Override
-        public View getRealChildView(int groupPosition,int childPosition,boolean isLastChild, View convertView, ViewGroup parent){
-            ChildHolder holder;
-            ChildItem item = getChild(groupPosition,childPosition);
-            Log.v(TAG, "getRealChildView() item.title : " + item.title);
-            if(convertView ==null){
-                Log.v(TAG,"makeConvertView");
-                holder = new ChildHolder();
-
-                convertView = inflater.inflate(R.layout.activity_item_wishpouch_item,parent,false);
-                holder.title = (TextView) convertView.findViewById(R.id.getWishItem);
-
-                convertView.setTag(holder);
-            }else {
-                Log.v(TAG,"not make" );
-                // getGroupView와 유사하다.
-                holder = (ChildHolder) convertView.getTag();
-            }
-
-            holder.title.setText(item.title);
-
-            return convertView;
-        }
-
-        @Override
-        public int getRealChildrenCount(int groupPosition) {
-            return items.get(groupPosition).items.size();
-        }
-
-        @Override
-        public GroupItem getGroup(int groupPosition) {
-            return items.get(groupPosition);
-        }
-
-        @Override
-        public int getGroupCount() {
-            return items.size();
-        }
-
-        @Override
-        public long getGroupId(int groupPosition) {
-            return groupPosition;
-        }
-
-        @Override
-        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-            GroupHolder holder;
-            GroupItem item = getGroup(groupPosition);
-
-            if(convertView == null){
-                holder = new GroupHolder();
-                convertView = inflater.inflate(R.layout.activity_item_wishpouch_group_item,parent,false);
-                holder.title = (TextView)convertView.findViewById(R.id.getWishGroupItem);
-                convertView.setTag(holder);
-            }else{
-                holder = (GroupHolder)convertView.getTag();
-            }
-
-            holder.title.setText(item.title);
-
-            return convertView;
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return true;
-        }
-
-        @Override
-        public boolean isChildSelectable(int arg0, int arg1) {
-            return true;
-        }
     }
 }

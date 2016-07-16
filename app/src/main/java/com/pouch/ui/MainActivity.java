@@ -1,7 +1,14 @@
 package com.pouch.ui;
 
+import android.annotation.TargetApi;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +40,7 @@ import com.pouch.data.brandInfo;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 
 import com.pouch.util.ImageFetcher;
@@ -66,7 +74,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
     private String[]                     menuList; // 필요한 catagory들이 들어간다.
-    private boolean isTest=true;
+    private boolean isTest=false;
 
     /* QuickAction을 위한 변수. */
     private static final int ID_EVENT = 1;
@@ -134,6 +142,8 @@ public class MainActivity extends AppCompatActivity  {
                 Intent i;
                 switch (actionId){
                     case ID_EVENT:
+                        i = new Intent(getApplicationContext(),EventInfoActivity.class);
+                        startActivity(i);
                         break;
                     case ID_SEARCH:
                         i = new Intent(getApplicationContext(),GoogleMapServiceActivity.class);
@@ -169,14 +179,15 @@ public class MainActivity extends AppCompatActivity  {
         getUserInformation = getIntent();
         profileUrl = getUserInformation.getExtras().getString("ProfileURL");
         userName = getUserInformation.getExtras().getString("UserName");
-       if (profileUrl != null) {
+       if (profileUrl != null&& Profile_img != null) {
            Picasso.with(getApplicationContext()).load(profileUrl).fit().into(Profile_img);
        }
 
-        if(userName != null){
+        if(userName != null && userNameTextView!=null){
             userNameTextView.setText(userName);
         }
     }
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void InitGridLayout(){
 
         LinearLayout [] LinearLayout_FrameLayoutChild;
@@ -187,7 +198,16 @@ public class MainActivity extends AppCompatActivity  {
         ItemBackground_FrameLayout = new FrameLayout[brandName.length];
         LinearLayout_FrameLayoutChild = new LinearLayout[brandName.length];
 
-
+        int imgsrc[] = {
+                R.drawable.laneige,
+                R.drawable.tonymoly,
+                R.drawable.etudehouse,
+                R.drawable.iope,
+                R.drawable.innisfree,
+                R.drawable.missha,
+                R.drawable.nature_republic,
+                R.drawable.the_face_shop
+        };
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels/2,
                 getResources().getDisplayMetrics().heightPixels/2);
@@ -196,20 +216,8 @@ public class MainActivity extends AppCompatActivity  {
 
         LinearLayout.LayoutParams CancelableParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-
-        int background [] = {
-                 Color.BLUE,
-                Color.RED,
-                Color.CYAN,
-                Color.GRAY,
-                Color.WHITE,
-                Color.RED,
-                Color.GRAY,
-                Color.BLACK
-        };
         for(int i =0;i<brandURL.length;i++){
             try {
-                Log.v("URL : ",brandURL[i]);
 
                 brandInstagramURL[i] = new URL(brandURL[i]);
 
@@ -218,10 +226,25 @@ public class MainActivity extends AppCompatActivity  {
 
                 ItemBackground_FrameLayout[i] = new FrameLayout(this);
                 ItemBackground_FrameLayout[i].setLayoutParams(params);
-                ItemBackground_FrameLayout[i].setBackgroundColor(background[i%brandURL.length]);
+                switch (i%4){
+                    case 0:
+                        ItemBackground_FrameLayout[i].setBackground(getResources().getDrawable(R.drawable.back_1,null));
+                        break;
+                    case 1:
+                        ItemBackground_FrameLayout[i].setBackground(getResources().getDrawable(R.drawable.back_2,null));
+                        break;
+                    case 2:
+                        ItemBackground_FrameLayout[i].setBackground(getResources().getDrawable(R.drawable.back_3,null));
+
+                        break;
+                    case 3:
+                        ItemBackground_FrameLayout[i].setBackground(getResources().getDrawable(R.drawable.back_4,null));
+                        break;
+
+                }
 
                 BrandShopArr [i] = new ImageView(this);
-                BrandShopArr[i].setImageResource(R.drawable.concealer);
+                BrandShopArr[i].setImageResource(imgsrc[i]);
                 CancelableParams.gravity=Gravity.CENTER;
                 BrandShopArr[i].setLayoutParams(CancelableParams);
                 BrandShopArr[i].setOnClickListener(new View.OnClickListener() {
@@ -287,6 +310,10 @@ public class MainActivity extends AppCompatActivity  {
                 startActivity(i);
                 break;
             case R.id.Instagram:
+                Uri uri = Uri.parse(brandURL[mRowSelected]);
+                i=new Intent(Intent.ACTION_VIEW);
+                i.setData(uri);
+                startActivity(i);
                 break;
             case R.id.Pouch:
                 if (isTest){
@@ -304,5 +331,9 @@ public class MainActivity extends AppCompatActivity  {
                 break;
         }
     }
-
+    private boolean isIntentAvailable(Context ctx, Intent intent) {
+        final PackageManager packageManager = ctx.getPackageManager();
+        List<ResolveInfo> list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
+    }
 }

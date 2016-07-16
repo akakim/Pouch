@@ -35,26 +35,6 @@
 
     </ScrollView>
     </android.support.v7.widget.CardView>
-    <!--<string-array name="cosmetic_list">
-        <item>스킨</item>
-        <item>토너</item>
-        <item>크림</item>
-        <item>메이크업베이스</item>
-        <item>파운데이션</item>
-        <item>스틱커버</item>
-        <item>컨실러</item>
-        <item>파우더 </item>
-        <item>팩트</item>
 
-        <item>아이새도우</item>
-        <item>블러셔</item>
-
-        <item>립글로스</item>
-        <item>틴트</item>
-        <item>아이라이너</item>
-        <item>마스카라</item>
-        <item>폼클랜징</item>
-        <item>마스크팩</item>
-    </string-array>-->
     </RelativeLayout>
 </RelativeLayout>

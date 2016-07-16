@@ -1,11 +1,11 @@
 [
     {
-        "merged": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\push\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-mdpi-v4\\common_signin_btn_icon_disabled_dark.9.png",
-        "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\push\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\7.8.0\\res\\drawable-mdpi\\common_signin_btn_icon_disabled_dark.9.png"
-    },
-    {
         "merged": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\push\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-mdpi-v4\\common_signin_btn_icon_focus_dark.9.png",
         "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\push\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\7.8.0\\res\\drawable-mdpi\\common_signin_btn_icon_focus_dark.9.png"
+    },
+    {
+        "merged": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\push\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-mdpi-v4\\common_signin_btn_icon_disabled_dark.9.png",
+        "source": "C:\\Users\\USER\\AndroidStudioProjects\\Pouch\\push\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\7.8.0\\res\\drawable-mdpi\\common_signin_btn_icon_disabled_dark.9.png"
     },
     {
         "merged": "C:\\Users\\Ala\\AndroidStudioProjects\\Pouch\\push\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-mdpi-v4\\common_signin_btn_text_disabled_light.9.png",

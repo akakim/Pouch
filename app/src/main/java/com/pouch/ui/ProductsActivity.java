@@ -1,6 +1,5 @@
 package com.pouch.ui;
 
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -12,15 +11,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -51,7 +47,8 @@ import java.util.List;
 
 public class ProductsActivity extends AppCompatActivity implements ProductFragment.OnFragmentInteractionListener
         ,ProductFavoriteFragment.OnFragmentInteractionListener
-        ,DrawerLayout.DrawerListener{
+        ,DrawerLayout.DrawerListener
+        {
     private static final String TAG = "PouchActivity";
     BrandURLs brand = new BrandURLs();// TODO: 브랜드 파싱을 더할 수있다면 여길 이용하자.
     private static String URL_PRIMARY = "http://m.etonymoly.com";
@@ -60,10 +57,9 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
     NetworkInfo networkInfo;
 
     ProductFragment AllOfProuducts;
-    ProductFavoriteFragment FavoriteProducts;
 
     InnerHandler handler;
-    TabLayout tabs;
+
     Intent getbrandName;
     String title;
 
@@ -75,8 +71,8 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
     ListView CategoryList;
     CatagroyAdapter adapter;
     ArrayList <categoryInform> CategoryData;
-    int URLMaxSize = 0;
     ArrayList<Item> Items;
+    FragmentManager fm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,43 +114,11 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
 
         AllOfProuducts = new ProductFragment();
 
-        FavoriteProducts =new ProductFavoriteFragment();
-
-        tabs = (TabLayout)findViewById(R.id.showProductTabLayout);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.show_product_container, AllOfProuducts).commit();
-
-
-        tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int pos = tab.getPosition();
-
-                Fragment selected = null;
-                if (pos == 0) {
-                    selected = AllOfProuducts;
-                } else
-                    selected = FavoriteProducts;
-
-                getSupportFragmentManager().beginTransaction().replace(R.id.item_pouch_container, selected).commit();
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
+        fm = getSupportFragmentManager();
+        fm.beginTransaction().replace(R.id.show_product_container, AllOfProuducts).commit();
 
         CategoryList = (ListView)findViewById(R.id.category_list);
         CategoryData = new ArrayList<>();
-
 
 
         new TonimoriInitThread(this).execute();
@@ -169,9 +133,6 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
         return !networkInfo.isConnected();
     }
 
-    public void InitMenuAndItmes(){
-
-    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -208,10 +169,14 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
             int message = msg.what;
             switch(message){
                 case 0:
-                    Log.v(TAG,"message 0");
                     AllOfProuducts.setItmes(Items);
                     AllOfProuducts.Invalidate();
                 break;
+                case 1:
+                    AllOfProuducts.clean();
+                    AllOfProuducts.setItmes(Items);
+                    AllOfProuducts.Invalidate();
+                    break;
 
             }
         }
@@ -234,6 +199,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
         StringBuilder product_title[];
         StringBuilder del[];
         StringBuilder em[];
+        StringBuilder ProductURL[];
 
         final int NumberOfItmes=50;
         private String TAG = getClass().getSimpleName();
@@ -256,7 +222,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
             product_title = new StringBuilder[NumberOfItmes];
             del = new StringBuilder[NumberOfItmes];
             em =new StringBuilder[NumberOfItmes];
-
+            ProductURL = new StringBuilder[NumberOfItmes];
         }
 
         //TODO: 나중에 다른 URL들로부터 값들을 받아오려면 Integer -> String
@@ -318,6 +284,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
                         Element PRICE_SPAN = (Element) Target_PRODUCT_DIV.getAllElements(HTMLElementName.SPAN).get(1);
 
                         Element Product_A = (Element) TITLE_SPAN.getAllElements(HTMLElementName.A).get(0);
+                        ProductURL[j] = new StringBuilder(Product_A.getAttributeValue("href"));
                         Segment TITLE = Product_A.getFirstElement().getContent();
                          title = TITLE.toString();
 
@@ -343,15 +310,15 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
 
                         product_title[j] = new StringBuilder(TITLE.toString());
 
-                        Item tmpItem = new Item(product_title[j].toString(),del[j].toString(),em[j].toString(),URL_PRIMARY+ImageURL[j].toString());
+                        Item tmpItem = new Item(product_title[j].toString(),del[j].toString(),
+                                em[j].toString(),URL_PRIMARY+ImageURL[j].toString()
+                                ,URL_PRIMARY+"/html/"+ProductURL[j].toString());
                         Items.add(tmpItem);
 
-                        android.util.Log.v("EM", EM.getContent().toString());
                     }
                 }
                 else if (rule.getAttributeValue("class").equals("NO_RESULT")) {
                     android.util.Log.v("NO_RESULT", "결과가없음!");
-
                 }
 
 
@@ -374,9 +341,10 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
             mDialog.setMessage("받아온값 "+result);
             mDialog.dismiss();
             handler.sendEmptyMessage(0);
+            mDialog.onDetachedFromWindow();
+            mDialog = null;
         }
     }
-
 
     /*category를 불러오는 task */
     private class TonymolyCate extends AsyncTask<Integer,Integer,Integer>{
@@ -465,7 +433,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
         StringBuilder product_title[];
         StringBuilder del[];
         StringBuilder em[];
-
+        StringBuilder ProductURL[];
         final int NumberOfItmes=50;
 
         @Override
@@ -475,7 +443,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
             product_title = new StringBuilder[NumberOfItmes];
             del = new StringBuilder[NumberOfItmes];
             em =new StringBuilder[NumberOfItmes];
-
+            ProductURL = new StringBuilder[NumberOfItmes];
         }
 
         @Override
@@ -494,9 +462,6 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
                 for (int i = 0; i < tableTag.size(); i++) {
                     if (tableTag.get(i).toString().equals("<section class=\"goods-list-section\">")) {
                         targetSection = i;
-
-                        android.util.Log.v(TAG, "Target section Location : " + i);
-                        android.util.Log.v("table TAG", tableTag.get(i).toString());
                         break;
                     }
                 }
@@ -532,6 +497,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
                         Element PRICE_SPAN = (Element) Target_PRODUCT_DIV.getAllElements(HTMLElementName.SPAN).get(1);
 
                         Element Product_A = (Element) TITLE_SPAN.getAllElements(HTMLElementName.A).get(0);
+                        ProductURL[j] = new StringBuilder(Product_A.getAttributeValue("href"));
                         Segment TITLE = Product_A.getFirstElement().getContent();
                         product_title[j] = new StringBuilder(TITLE.toString());
 
@@ -544,7 +510,6 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
                             if (tmp.toString().equals("<del>")) {
                                 DEL = (Element) PRICE_SPAN.getAllElements(HTMLElementName.DEL).get(0);
                                 del[j] = new StringBuilder(DEL.getContent().toString());
-//                                android.util.Log.v("DEL", DEL.getContent().toString());
                             }else {
                                 del[j] =  new StringBuilder("");
                             }
@@ -555,7 +520,9 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
                             }
                         }
 
-                        Item tmp = new Item(product_title[j].toString(),del[j].toString(),em[j].toString(),URL_PRIMARY+ImageURL[j].toString());
+                        Item tmp = new Item(product_title[j].toString(),del[j].toString()
+                                ,em[j].toString(),URL_PRIMARY+ImageURL[j].toString()
+                                ,URL_PRIMARY+"/html/"+ProductURL[j].toString());
                         Items.add(tmp);
                     }
                 }

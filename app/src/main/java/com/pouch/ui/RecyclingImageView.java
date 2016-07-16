@@ -24,7 +24,6 @@ import android.widget.ImageView;
 
 import com.pouch.util.RecyclingBitmapDrawable;
 
-
 /**
  * Sub-class of ImageView which automatically notifies the drawable when it is
  * being displayed.
