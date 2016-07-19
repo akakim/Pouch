@@ -203,6 +203,7 @@ public class ProductFragment extends Fragment {
         if(Items == null){
             Log.e("ProductFragment", "Item is not initialize");
         }
+
         else if (Items.size() != 0) {
             LinearLayout[] GridLayoutLinearLayout;
             FrameLayout[] GridLayoutFrameLayout;

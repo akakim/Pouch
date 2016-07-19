@@ -16,7 +16,10 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.pouch.R;
+import com.pouch.common.LoginActivity;
 import com.pouch.customView.AnimatedExpandableListView;
 import com.pouch.customView.AnimatedExpandableListView.*;
 
@@ -25,7 +28,7 @@ import java.util.List;
 
 public class SettingActivity extends AppCompatActivity {
     private static final String TAG="SettingActivity";
-    private boolean isTest=  true;
+    private boolean isTest=  false;
     private AnimatedExpandableListView listView;
     private SettingAdapter adapter;
     DisplayMetrics metrics;
@@ -128,8 +131,15 @@ public class SettingActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"닉네임을 변경합니다",Toast.LENGTH_SHORT).show();
                         }
                         else {
+                            UserManagement.requestLogout(new LogoutResponseCallback() {
+                                @Override
+                                public void onCompleteLogout() {
+                                    redirectLoginActivity();
+                                }
+                            });
                             Toast.makeText(getApplicationContext(),"로그아웃합니다. ",Toast.LENGTH_SHORT).show();
                         }
+                        break;
                     case 3:
                         Toast.makeText(getApplicationContext(),"토글버튼을 생성. ",Toast.LENGTH_SHORT).show();
                         break;
@@ -299,5 +309,12 @@ public class SettingActivity extends AppCompatActivity {
             return true;
         }
 
+    }
+
+    public void redirectLoginActivity(){
+        Intent i = new Intent(this,LoginActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
     }
 }

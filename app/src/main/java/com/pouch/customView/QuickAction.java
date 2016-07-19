@@ -50,6 +50,16 @@ private ImageView mArrowUp;
     public static final int ANIM_GROW_FROM_CENTER = 3;
     public static final int ANIM_AUTO = 4;
 
+    private int selectedParent = 0;
+    public int getSelectedParent() {
+        return selectedParent;
+    }
+
+    public void setSelectedParent(int selectedParent) {
+        this.selectedParent = selectedParent;
+    }
+
+
     public QuickAction(Context context) {
         super(context);
 
@@ -138,20 +148,20 @@ private ImageView mArrowUp;
         Drawable icon = action.getIcon();
         View container = (View)inflater.inflate(R.layout.quick_action_item,null);
         ImageView img = (ImageView)container.findViewById(R.id.iv_icon);
-        TextView text = (TextView)container.findViewById(R.id.tv_title);
+        //TextView text = (TextView)container.findViewById(R.id.tv_title);
 
         if (icon != null) {
             img.setImageDrawable(icon);
         } else {
             img.setVisibility(View.GONE);
         }
-
+/*
         if (title != null) {
             text.setText(title);
         } else {
             text.setVisibility(View.GONE);
         }
-
+*/
         final int pos = mChildPos;
         final int actionId = action.getActionId();
         //TODO : 버튼을 클릭할 때 마다. title에 따라 다른 Intent를해줘야됨.

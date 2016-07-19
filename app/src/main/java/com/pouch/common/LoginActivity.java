@@ -14,6 +14,7 @@ import com.kakao.auth.Session;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
 import com.pouch.R;
+import com.pouch.ui.MainActivity;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -35,12 +36,20 @@ public class LoginActivity extends BaseActivity {
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Session.getCurrentSession().removeCallback(callback);
+        if(Session.getCurrentSession().implicitOpen()){
+            Log.v("Session","session 열림");
+        }
+//        Session.getCurrentSession().removeCallback(callback);
         setContentView(R.layout.activity_login);
+
+//        Log.v("requestCode", String.valueOf(requestCode));
+  //      Log.v("resultCode",String.valueOf(resultCode));
+        //Log.v("requestCode",requestCode);
 
         if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
             return;
         }
+//        if(Session.getCurrentSession().h)
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -52,6 +61,7 @@ public class LoginActivity extends BaseActivity {
 
     private class SessionCallback implements ISessionCallback{
         public void onSessionOpened() {
+            Log.v("SessionCallBack", "onSessionOpen()");
             redirectSignupActivity();
         }
         @Override

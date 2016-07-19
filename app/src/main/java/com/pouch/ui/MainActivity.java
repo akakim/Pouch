@@ -6,7 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -115,6 +119,25 @@ public class MainActivity extends AppCompatActivity  {
         mDrawerLayout = (DrawerLayout)findViewById(R.id.main_drawer_layout);
 
         BottomToolbar = (Toolbar)findViewById(R.id.m_bottomTabBar);
+        ImageButton reviewBtn =(ImageButton) BottomToolbar.findViewById(R.id.Review);
+        ImageButton Instagram = (ImageButton) BottomToolbar.findViewById(R.id.Instagram);
+        ImageButton Search = (ImageButton) BottomToolbar.findViewById(R.id.Search);
+        ImageButton Pouch = (ImageButton) BottomToolbar.findViewById(R.id.Pouch);
+
+        BitmapFactory.Options options = new  BitmapFactory.Options();
+        options.inSampleSize = 3;
+
+        reviewBtn.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.review_toolbar,options));
+        Instagram.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.instagram_toolbar,options));
+        Search.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.search_toolbar,options));
+        Pouch.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pouch_toolbar,options));
+
+        //setImageResource(R.drawable.review_toolbar);
+//        Instagram.setImageResource(R.drawable.instagram_toolbar);
+//        Search.setImageResource(R.drawable.search_toolbar);
+ //
+ //
+ //      Pouch.setImageResource(R.drawable.pouch_toolbar);
 
         BrandList = new ArrayList<brandInfo>();
         for(int i =0;i<brandName.length;i++){
@@ -124,9 +147,9 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
-        ActionItem addItem 		= new ActionItem(ID_EVENT, "Event", getResources().getDrawable(R.drawable.ic_add));
-        ActionItem acceptItem 	= new ActionItem(ID_SEARCH, "Accept", getResources().getDrawable(R.drawable.ic_accept));
-        ActionItem uploadItem 	= new ActionItem(ID_SHOW_PRODUCT, "Upload", getResources().getDrawable(R.drawable.ic_up));
+        ActionItem addItem 		= new ActionItem(ID_EVENT, "Event", getResources().getDrawable(R.drawable.event_quickactionbar));
+        ActionItem acceptItem 	= new ActionItem(ID_SEARCH, "Accept", getResources().getDrawable(R.drawable.map_quickactionbar));
+        ActionItem uploadItem 	= new ActionItem(ID_SHOW_PRODUCT, "Upload", getResources().getDrawable(R.drawable.productlist_quickactionbar));
 
         mQuickAction 	= new QuickAction(this);
 
@@ -138,8 +161,9 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onItemClick(QuickAction quickAction, int pos, int actionId) {
                 ActionItem actionItem = quickAction.getActionItem(pos);
-                String NextActivity = BrandList.get(mRowSelected).getBrandName();
+
                 Intent i;
+                int selected = mQuickAction.getSelectedParent();
                 switch (actionId){
                     case ID_EVENT:
                         i = new Intent(getApplicationContext(),EventInfoActivity.class);
@@ -147,13 +171,13 @@ public class MainActivity extends AppCompatActivity  {
                         break;
                     case ID_SEARCH:
                         i = new Intent(getApplicationContext(),GoogleMapServiceActivity.class);
-                        i.putExtra("brandName",brandName[mRowSelected]);
-                        i.putExtra("keyword",brandNameGoodKey[mRowSelected]);
+                        i.putExtra("brandName",brandName[selected]);
+                        i.putExtra("keyword",brandNameGoodKey[selected]);
                         startActivity(i);
                         break;
                     case ID_SHOW_PRODUCT:
                         i = new Intent(getApplicationContext(),ProductsActivity.class);
-                        i.putExtra("brandName",brandName[mRowSelected]);
+                        i.putExtra("brandName",brandName[selected]);
                         startActivity(i);
                         break;
                 }
@@ -213,7 +237,7 @@ public class MainActivity extends AppCompatActivity  {
                 getResources().getDisplayMetrics().heightPixels/2);
         params.weight= 1.0f;
         params.setLayoutDirection(LinearLayout.HORIZONTAL);
-
+        params.bottomMargin = 10;
         LinearLayout.LayoutParams CancelableParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         for(int i =0;i<brandURL.length;i++){
@@ -228,23 +252,29 @@ public class MainActivity extends AppCompatActivity  {
                 ItemBackground_FrameLayout[i].setLayoutParams(params);
                 switch (i%4){
                     case 0:
-                        ItemBackground_FrameLayout[i].setBackground(getResources().getDrawable(R.drawable.back_1,null));
+                        ItemBackground_FrameLayout[i].setBackground(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(),R.drawable.back_1)));
                         break;
                     case 1:
-                        ItemBackground_FrameLayout[i].setBackground(getResources().getDrawable(R.drawable.back_2,null));
+                        ItemBackground_FrameLayout[i].setBackground(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(),R.drawable.back_2)));
                         break;
                     case 2:
-                        ItemBackground_FrameLayout[i].setBackground(getResources().getDrawable(R.drawable.back_3,null));
-
+                        ItemBackground_FrameLayout[i].setBackground(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(),R.drawable.back_3)));
                         break;
                     case 3:
-                        ItemBackground_FrameLayout[i].setBackground(getResources().getDrawable(R.drawable.back_4,null));
+                        ItemBackground_FrameLayout[i].setBackground(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(),R.drawable.back_4)));
                         break;
 
                 }
+                //BitmapDrawable img = new BitmapDrawable(getResources(),BitmapFactory.decodeResource(getResources(),imgsrc[i]));
+                //BrandShopArr [i] = new ImageView(this);
+                //BrandShopArr[i].setImageDrawable(img);
 
                 BrandShopArr [i] = new ImageView(this);
-                BrandShopArr[i].setImageResource(imgsrc[i]);
+                BitmapFactory.Options options = new  BitmapFactory.Options();
+                options.inSampleSize = 2;
+
+                BrandShopArr[i].setImageDrawable(new BitmapDrawable(getResources(),BitmapFactory.decodeResource(getResources(),imgsrc[i],options)));
+
                 CancelableParams.gravity=Gravity.CENTER;
                 BrandShopArr[i].setLayoutParams(CancelableParams);
                 BrandShopArr[i].setOnClickListener(new View.OnClickListener() {
@@ -252,9 +282,9 @@ public class MainActivity extends AppCompatActivity  {
 
                     @Override
                     public void onClick(View v) {
-                        mRowSelected = selected;
                         // column 값을 전달한다.
                         mQuickAction.show(v,selected%2,getResources().getDisplayMetrics().widthPixels/2);
+                        mQuickAction.setSelectedParent(selected);
                     }
                 });
                 mRowSelected++;
@@ -266,8 +296,6 @@ public class MainActivity extends AppCompatActivity  {
                 e.printStackTrace();
             }
         }
-
-        // 나중에 선택된 것의 index를 알기 위해 초기화를했다.
         mRowSelected = 0;
 
         GridBrand = (GridLayout)findViewById(R.id.main_brandlist);
@@ -275,9 +303,30 @@ public class MainActivity extends AppCompatActivity  {
         for(int i =0;i<BrandShopArr.length;i++){
             GridBrand.addView(ItemBackground_FrameLayout[i]);
         }
+
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
+    @Override
+    protected void onPause() {
+        Log.v(TAG, "onPause()");
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.v(TAG, "onStop()");
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+    }
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);

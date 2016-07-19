@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+
     <string-array name="brandlist">
-        <item>이니스프리</item>
-        <item>토니모리</item>
-        <item>네이처리퍼블릭</item>
-        <item>더페이스샵</item>
-        <item>잇츠스킨</item>
-        <item>스킨푸드</item>
-        <item>미샤</item>
-        <item>에뛰드하우스</item>
+        <item>LANEIGE</item>
+        <item>TONYMOLY</item>
+        <item>ETUDE HOUSE</item>
+        <item>IOPE</item>
+        <item>INNISFREE</item>
+        <item>MISSHA</item>
+        <item>NATURE REPUBLIC</item>
+        <item>THE FACE SHOP</item>
     </string-array>
 
     <!-- 네이쳐리퍼블릭 미샤는 어떻게 해도 JSON값이 안나온다. -->
     <string-array name="brandlist_goodKeyword">
-        <item>이니스프리</item>
+        <item>laneige</item>
         <item>tonymoly</item>
+        <item>에뛰드하우스</item>
         <item>네이처리퍼블릭</item>
-        <item>더페이스샵</item>
-        <item>잇츠스킨</item>
-        <item>스킨푸드</item>
-        <item>미샤</item>
+        <item>INNISFREE</item>
+        <item>MISSHA</item>
+        <item>네이처리퍼블릭</item>
         <item>에뛰드하우스</item>
     </string-array>
     <string-array name="instagram_url">
-        <item>https://www.instagram.com/innisfreeofficial/</item>
+        <item>https://www.instagram.com/laneige_kr/</item>
         <item>https://www.instagram.com/tonymoly.official/</item>
+        <item>https://www.instagram.com/etude_official/</item>
+        <item>https://www.instagram.com/explore/tags/iope/</item>
+        <item>https://www.instagram.com/innisfreeofficial/</item>
+        <item>https://www.instagram.com/missha.official/</item>
         <item>https://www.instagram.com/naturerepublic_kr/</item>
         <item>https://www.instagram.com/thefaceshop.official/</item>
-        <item>https://www.instagram.com/itsskin_power_sale/</item>
-        <item>https://www.instagram.com/skinfood1957/</item>
-        <item>https://www.instagram.com/missha.official/</item>
-        <item>https://www.instagram.com/etude_official/</item>
     </string-array>
 
 

@@ -43,8 +43,6 @@
             android:id="@+id/tracks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="4dip"
-            android:paddingBottom="4dip" 
             android:orientation="horizontal">
 
         </LinearLayout>
