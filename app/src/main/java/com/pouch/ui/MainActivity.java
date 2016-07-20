@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import com.pouch.database.helper.PouchDatabase;
 import com.pouch.util.ImageFetcher;
 import com.squareup.picasso.Picasso;
 
@@ -96,13 +97,16 @@ public class MainActivity extends AppCompatActivity  {
     private String profileUrl;
     private String userName;
 
-
+    private PouchDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        database = PouchDatabase.getInstance(this);
+
+      //  database.execSQL("select * from ")
         int imgID = R.drawable.cream;
         brandName = getResources().getStringArray(R.array.brandlist);
         brandNameGoodKey = getResources().getStringArray(R.array.brandlist_goodKeyword);
@@ -282,6 +286,7 @@ public class MainActivity extends AppCompatActivity  {
 
                     @Override
                     public void onClick(View v) {
+                        mRowSelected = selected;
                         // column 값을 전달한다.
                         mQuickAction.show(v,selected%2,getResources().getDisplayMetrics().widthPixels/2);
                         mQuickAction.setSelectedParent(selected);

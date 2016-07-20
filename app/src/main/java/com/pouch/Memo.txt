@@ -8,12 +8,78 @@
     -원하는 브팬드
     -푸쉬를 원하는 브랜드.
     -푸쉬설정에 대한 여부
-    -
 
-
-원하는
+사용자의 정보
+ID , nickname ,profile 사진
 
 제품에 대한 정보
      -brand,종류 , 가격, 할인정보 , 이벤트정보 ,
 
-RondedI
+상품의 thumbnail
+이미지, 이전 가격, 최종가격, 이름.
+
+detail한 정보
+header와 tail의 string 값들.
+
+
+->
+user table {
+    id(PK)
+    nickname
+    prifile url
+}
+
+wish product {
+    product URL
+    userid (foriegn key)
+    image
+    title?
+    numberof..
+    //  여기까지가 thumbnail
+
+}
+detail product{
+    product URL (FK)
+    Header
+    Tail
+}
+
+
+1. pouch란 무엇인가.
+화장품에 대한 정보를 얻고, 자신의 화장품 리스트를 관리하는 앱.
+
+2.주요기능
+화장품 목록에 대한 정보를 얻는다.
+화장품에 관한 이벤트를 정보를 얻을 수 있다.
+주변 로드샵에 관한 정보를 얻는다.
+화장품을 list로 관리할 수 있다.
+
+3.과제
+디자이너의 이미지를 가져올 때 메모리문제 .
+push 알림에 대한 미구현.
+추가 UI에 대한 개선사항.
+요구사항에 대한 수정.
+
+
+4.미구현사항.
+wish list와 my pouch에 자료를 저장하는 내용.
+잠금화면에서의
+
+
+5. 한계점.
+기본적으로 화장품 회사의 홈페이지에서 자료를 가져온거라 홈페이지의 구조가 바뀌면 어플리케이션이 크게 바뀌어야합니다.
+다시 말하자면 화장품 회사의 도움이 없다면 자료가 바뀔때마다 app 자체의 많은 부분이 수정이 되어야합니다.
+
+지도서비스의경우 구글의 map service를 이용해서 구현하였지만, 특정 brand의 경우 주변 검색에 대한 자료가 아무것도 나오지않는다. 네이버지도서비스를 이용하면 바로 나오지만.
+바코드를 이용해 화장품을 관리할 경우 사용기간에 대한 push알람은 앱에서 지원하기엔 애매모호.
+
+
+
+  R.drawable.laneige,
+                R.drawable.tonymoly,
+                R.drawable.etudehouse,
+                R.drawable.iope,
+                R.drawable.innisfree,
+                R.drawable.missha,
+                R.drawable.nature_republic,
+                R.drawable.the_face_shop

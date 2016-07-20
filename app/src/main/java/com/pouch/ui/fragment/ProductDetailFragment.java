@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pouch.R;
 import com.pouch.data.Item;
@@ -65,6 +66,10 @@ public class ProductDetailFragment extends Fragment implements ImageWorker.OnIma
     Adapter newAdapter;
 
     private Button push_SharedPreference;
+    private Button push_check_path;
+    SharedPreferences sharedPreferences;
+
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -114,7 +119,28 @@ public class ProductDetailFragment extends Fragment implements ImageWorker.OnIma
         mProgressBar = (ProgressBar) v.findViewById(R.id.progressbar);
         lstView = (ListView)v.findViewById(R.id.listView);
         this.push_SharedPreference = (Button)v.findViewById(R.id.shared_prereference);
+        push_SharedPreference.setOnClickListener(new View.OnClickListener(){
 
+            @Override
+            public void onClick(View v) {
+                StringBuilder key = new StringBuilder(mImageUrl.toString());
+                sharedPreferences = getActivity().getSharedPreferences(PRODUCT_DATA_SET, Context.MODE_APPEND);
+
+                SharedPreferences.Editor editor =  sharedPreferences.edit();
+                Log.v("onClicked , key value",key.toString());
+
+//                editor.putString(PRODUCT_DATA_KEY_SET, key.toString());
+            }
+        });
+        this.push_check_path = (Button)v.findViewById(R.id.check_path);
+
+        push_check_path.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity().getApplicationContext(), "URI :" + mImageFetcher.getUri(), Toast.LENGTH_SHORT).show();
+            }
+        });
         new getDetailInform().execute(mProductUrl);
 
 
@@ -351,7 +377,7 @@ public class ProductDetailFragment extends Fragment implements ImageWorker.OnIma
 
     // Activity 로 데이터를 전달할 커스텀 리스너
     public interface CustomOnClickListener {
-        public void onClicked(int id);
+       void onClicked(int id);
     }
 
     // Activity 로 데이터를 전달할 커스텀 리스너의 인터페이스
@@ -364,5 +390,6 @@ public class ProductDetailFragment extends Fragment implements ImageWorker.OnIma
             customListener.onClicked(v.getId());
         }
     };
+
 
 }

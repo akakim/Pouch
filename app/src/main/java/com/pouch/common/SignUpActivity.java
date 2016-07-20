@@ -17,6 +17,7 @@ import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.helper.log.Logger;
 import com.pouch.R;
+import com.pouch.database.helper.PouchDatabase;
 import com.pouch.ui.MainActivity;
 import com.pouch.widget.KakaoToast;
 import com.squareup.picasso.Picasso;
@@ -36,6 +37,7 @@ public class SignUpActivity extends BaseActivity {
     private TextView userNameTextView;
 
 
+    PouchDatabase database;
 //    private MainActivity activity;
     /**
      * Main으로 넘길지 가입 페이지를 그릴지 판단하기 위해 me를 호출한다.
@@ -44,8 +46,14 @@ public class SignUpActivity extends BaseActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-  //      activity = getApplication();
-        Log.v(TAG, "Hash Key" + getResources().getString(R.string.kakao_app_key));
+
+        // open database
+        if (database != null) {
+            database.close();
+            database = null;
+        }
+        database = PouchDatabase.getInstance(this);
+  //      Log.v(TAG, "Hash Key" + getResources().getString(R.string.kakao_app_key));
         requestMe();
 
     }
@@ -70,6 +78,7 @@ public class SignUpActivity extends BaseActivity {
 
             @Override
             public void onSuccess(Long result) {
+
                 requestMe();
             }
 
@@ -136,6 +145,9 @@ public class SignUpActivity extends BaseActivity {
     private void redirectMainActivity(String url,String username,long id) {
 //        Log.v(TAG, "redirectMainActivity() this TO KakaoServiceListActivity");
         Intent i = new Intent(this,MainActivity.class);
+
+        database.execSQL( "insert into USER_INFO(id,nickname,profile_url) values ("+ String.valueOf(id)+ "," + username +"," +url+");" );
+
         i.putExtra("ProfileURL",url);
         i.putExtra("UserName",username);
         i.putExtra("ID",id);

@@ -295,4 +295,8 @@ public class ImageFetcher extends ImageResizer{
             System.setProperty("http.keepAlive", "false");
         }
     }
+
+    public String getUri(){
+        return this.mHttpCacheDir.getAbsolutePath();
+    }
 }
