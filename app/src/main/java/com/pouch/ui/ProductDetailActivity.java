@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.pouch.R;
 import com.pouch.data.Item;
+import com.pouch.database.helper.PouchDatabase;
 import com.pouch.ui.fragment.ProductDetailFragment;
 import com.pouch.util.ImageCache;
 import com.pouch.util.ImageFetcher;
@@ -40,7 +41,7 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
     public static final String KEY_ITEM_DATA = "item_data";
     public static final String PRODUCT_DATA_SET = "product_data_set" ;
     public static final String PRODUCT_DATA_KEY_SET = "product_data_key_set" ;
-
+    int extraCurrentItem ;
 
     SharedPreferences sharedPreferences;
 
@@ -57,15 +58,17 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
     int selectedItem = 0;
 
     ProductDetailFragment instnance;
+   PouchDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
-
+        db = PouchDatabase.getInstance(this);
+        db.open();
         Intent intent=  getIntent();
         selectedItem = intent.getIntExtra("selectedItem",0);
         Items = intent.getParcelableArrayListExtra(KEY_ITEM_DATA);
-
+        extraCurrentItem = getIntent().getIntExtra(EXTRA_IMAGE, -1);
         if(isInternetConnected()){
             Toast.makeText(getApplicationContext(), "인터넷에 연결되지않아 불러오기를 중단합니다.", Toast.LENGTH_SHORT).show();
             finish();
@@ -150,7 +153,7 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
         }
 
         // Set the current item based on the extra passed in to this activity
-        final int extraCurrentItem = getIntent().getIntExtra(EXTRA_IMAGE, -1);
+
         if (extraCurrentItem != -1) {
             Log.v(TAG,"extraCurrentItem -1");
             mPager.setCurrentItem(extraCurrentItem);
@@ -269,7 +272,8 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
     public ImageFetcher getImageFetcher() {
         return mImageFetcher;
     }
-
+    public Item getItem (int pos) {return Items.get(pos);}
+    public int getCurrentPos(){return extraCurrentItem;}
     @Override
     public void onClick(View v) {
         final int vis = mPager.getSystemUiVisibility();

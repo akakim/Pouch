@@ -3,6 +3,7 @@ package com.pouch.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -299,4 +300,9 @@ public class ImageFetcher extends ImageResizer{
     public String getUri(){
         return this.mHttpCacheDir.getAbsolutePath();
     }
+
+    public BitmapDrawable getImage(String path){
+        return getImageCache().getBitmapFromMemCache(path);
+    }
+
 }

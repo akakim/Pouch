@@ -3,6 +3,7 @@ package com.pouch.ui.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,9 @@ import android.widget.TextView;
 import com.pouch.R;
 import com.pouch.customView.AnimatedExpandableListView;
 import com.pouch.data.ItemDetailInform;
+import com.pouch.database.helper.PouchDatabase;
+import com.pouch.database.helper.PouchTableList;
+import com.pouch.ui.PouchActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,11 +42,10 @@ import java.util.Set;
 
 public class WishPouchFragment extends Fragment {
     private static final String TAG = WishPouchFragment.class.getSimpleName();
-    public static final String PRODUCT_DATA_SET = "product_data_set" ;
-    public static final String PRODUCT_DATA_KEY_SET = "product_data_key_set" ;
     private int mRowSelected = 0;
     SharedPreferences sharedPreferences;
-    ArrayList<ItemDetailInform> item_inform;
+    PouchDatabase db;
+
 
     private GridLayout GridItems;
     static final int ImageList [] ={
@@ -72,50 +75,17 @@ public class WishPouchFragment extends Fragment {
 
 //        product_data_set = sharedPreferences.getStringSet()
         super.onCreate(savedInstanceState);
-        sharedPreferences = getActivity().getSharedPreferences(PRODUCT_DATA_SET,Context.MODE_APPEND);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        String key_set = sharedPreferences.getString(PRODUCT_DATA_KEY_SET, "null");
-        Log.v(TAG,"key_set : "+ key_set);
-        String title = sharedPreferences.getString(key_set + "_TITLE", "null");
 
-        Log.v(TAG,"title : "+ title);
+        db = ((PouchActivity)getActivity()).getDB();
+        Cursor c = db.getRowSQL(PouchTableList.TABLE_PRODUCT_INFO);
+        for(;c.moveToNext()!=false;) {
+            Log.v(TAG, "Cursor" + c.getString(0));
+            Log.v(TAG, "Cursor" + c.getString(1));
+        }
         ArrayList<String> head = new ArrayList<>();
         ArrayList<String> tail = new ArrayList<>();
-        int size = 0;
-        try {
-            size = Integer.parseInt(sharedPreferences.getString(key_set + "_SIZE", "0"));
-            Log.v(TAG,"size : "+size);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-         if (size != 0){
-             for (int i =0; i<size;i++){
-                 StringBuilder headBuilder = new StringBuilder(sharedPreferences.getString(key_set + "_HEAD_"+i, "null"));
-                 StringBuilder tailBuilder = new StringBuilder(sharedPreferences.getString(key_set + "_TAIL_"+i, "null"));
-                 Log.v(TAG,"tail : "+ tailBuilder.toString());
-                 head.add(headBuilder.toString());
-                 tail.add(tail.toString());
-             }
-         }
 
 
-        /*
-        StringBuilder key = new StringBuilder(Items.get(selectedItem).getImageURL().toString());
-        sharedPreferences = getSharedPreferences(PRODUCT_DATA_SET, Context.MODE_APPEND);
-        SharedPreferences.Editor editor =  sharedPreferences.edit();
-        editor.putString(PRODUCT_DATA_KEY_SET, key.toString());
-        editor.putString(key.toString()+"_title",Items.get(selectedItem).getTitle());
-        // editor.putString(key.toString()+"_title",Items.get(selectedItem).);
-        ProductDetailFragment fragment = ( ProductDetailFragment)mAdapter.getItem(selectedItem);
-        ArrayList<String> Head = fragment.getHeadValues();
-        ArrayList<String> Tail = fragment.getTailValues();
-
-        for(int i =0; i<Head.size();i++) {
-                    editor.putString(key.toString() + "_HEAD_"+String.valueOf(i),Tail.get(i).toString());
-                    editor.putString(key.toString() + "_TAIL_"+String.valueOf(i), Tail.get(i).toString());
-                }
-
-        editor.commit();*/
     }
 
     @Override

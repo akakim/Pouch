@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.pouch.Logger.Log;
 import com.pouch.R;
+import com.pouch.database.helper.PouchDatabase;
 import com.pouch.ui.fragment.MyPouchFragment;
 import com.pouch.ui.fragment.WishPouchFragment;
 
@@ -21,6 +22,10 @@ public class PouchActivity extends AppCompatActivity {
     MyPouchFragment   mMyPouch;
     WishPouchFragment mWishPouch;
     TabLayout tabs;
+    PouchDatabase db;
+    public static String TABLE_PRODUCT_INFO = "PRODUCT_INFO";
+    public static String TABLE_DETAIL_OF_PRODUCT_INFO = "DETAIL_OF_PRODUCT_INFO";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +34,8 @@ public class PouchActivity extends AppCompatActivity {
         mMyPouch = new MyPouchFragment();
         mWishPouch = new WishPouchFragment();
         tabs = (TabLayout)findViewById(R.id.pouchTabLayout);
+
+        db = PouchDatabase.getInstance(this);
 
         /*Fragment 생성. */
         getSupportFragmentManager().beginTransaction().replace(R.id.item_pouch_container,mMyPouch).commit();
@@ -63,4 +70,13 @@ public class PouchActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+    }
+
+    public PouchDatabase getDB(){
+        return db;
+    }
 }

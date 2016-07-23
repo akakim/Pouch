@@ -38,7 +38,13 @@ public class Item implements Parcelable{
         ProductURL = productURL;
     }
 
-
+    public Item(Item item){
+        this.Title = item.getTitle();
+        this.PrePrice = item.getPrePrice();
+        this.Price = item.getPrice();
+        this.imageURL = item.getImageURL();
+        this.ProductURL = item.getProductURL();
+    }
     public Item(String title,String prePrice,String price,String imageURL,String ProductURL){
         this.Title = title;
         if (prePrice == null){

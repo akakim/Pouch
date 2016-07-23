@@ -1,9 +1,11 @@
 package com.pouch.ui.fragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,17 +23,18 @@ import android.widget.Toast;
 
 import com.pouch.R;
 import com.pouch.data.Item;
+import com.pouch.database.helper.PouchDatabase;
 import com.pouch.ui.ProductDetailActivity;
 import com.pouch.util.ImageFetcher;
 import com.pouch.util.ImageWorker;
 import com.pouch.util.Utils;
-import com.pouch.widget.DialogBuilder;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
 import net.htmlparser.jericho.StartTag;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -42,15 +45,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
 /**
  * Created by USER on 2016-07-14.
  */
 public class ProductDetailFragment extends Fragment implements ImageWorker.OnImageLoadedListener {
     private static final String IMAGE_DATA_EXTRA = "extra_image_data";
     private static final String PRODUCT_DATA_EXTRA = "product_data";
-
-    public static final String PRODUCT_DATA_SET = "product_data_set" ;
-
+    private static final String TAG= "ProductDetailFragment";
+    public static String TABLE_PRODUCT_INFO = "PRODUCT_INFO";
+    public static String TABLE_DETAIL_OF_PRODUCT_INFO = "DETAIL_OF_PRODUCT_INFO";
 
     private String mImageUrl;
     private String mProductUrl;
@@ -67,9 +71,10 @@ public class ProductDetailFragment extends Fragment implements ImageWorker.OnIma
 
     private Button push_SharedPreference;
     private Button push_check_path;
-    SharedPreferences sharedPreferences;
 
 
+    PouchDatabase db;
+    int myPos;
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -85,6 +90,7 @@ public class ProductDetailFragment extends Fragment implements ImageWorker.OnIma
         if (View.OnClickListener.class.isInstance(getActivity()) && Utils.hasHoneycomb()) {
             mImageView.setOnClickListener((View.OnClickListener) getActivity());
         }
+
         HeadValues = new ArrayList<>();
         TailValues = new ArrayList<>();
 
@@ -106,8 +112,7 @@ public class ProductDetailFragment extends Fragment implements ImageWorker.OnIma
         super.onCreate(savedInstanceState);
         mImageUrl = getArguments() != null ? getArguments().getString(IMAGE_DATA_EXTRA) : null;
         mProductUrl = getArguments() != null ? getArguments().getString(PRODUCT_DATA_EXTRA) : null;
-
-        Log.v("onCreate", mProductUrl);
+        myPos = ((ProductDetailActivity)getActivity()).getCurrentPos();
     }
 
     @Override
@@ -119,17 +124,42 @@ public class ProductDetailFragment extends Fragment implements ImageWorker.OnIma
         mProgressBar = (ProgressBar) v.findViewById(R.id.progressbar);
         lstView = (ListView)v.findViewById(R.id.listView);
         this.push_SharedPreference = (Button)v.findViewById(R.id.shared_prereference);
+        db = PouchDatabase.getInstance(getActivity().getApplicationContext());
+
         push_SharedPreference.setOnClickListener(new View.OnClickListener(){
+            ContentValues Values;
+            BitmapDrawable detailImage;
 
             @Override
             public void onClick(View v) {
-                StringBuilder key = new StringBuilder(mImageUrl.toString());
-                sharedPreferences = getActivity().getSharedPreferences(PRODUCT_DATA_SET, Context.MODE_APPEND);
 
-                SharedPreferences.Editor editor =  sharedPreferences.edit();
-                Log.v("onClicked , key value",key.toString());
+                //TODO: 권한에 대한 예외처리 구현.
+                detailImage = mImageFetcher.getImage(mImageUrl);
+                Bitmap bitmap = detailImage.getBitmap();
+                ByteArrayOutputStream stream =new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG,90,stream);
+                byte[] image = stream.toByteArray();
 
-//                editor.putString(PRODUCT_DATA_KEY_SET, key.toString());
+                Values= new ContentValues();
+                if(Info == null){
+                    Log.e(TAG,"Info is null");
+
+                }
+
+
+                else if (image == null){
+                    Log.e(TAG,"Image is null");
+                }
+                else {
+                    Values.put("TITLE", Info.getTitle());
+                    Values.put("PRICE", Info.getPrice());
+                    Values.put("THUMBNAIL", image);
+
+                    Log.v(TAG,Values.getAsString("TITLE"));
+                    Log.v(TAG,Values.getAsString("PRICE"));
+                    db.InsertRow(TABLE_PRODUCT_INFO, Values);
+                }
+//                byte arr[] = detailImage.getBitmap().
             }
         });
         this.push_check_path = (Button)v.findViewById(R.id.check_path);
@@ -161,7 +191,7 @@ public class ProductDetailFragment extends Fragment implements ImageWorker.OnIma
         final Bundle args = new Bundle();
         args.putString(IMAGE_DATA_EXTRA, ImageURL);
         args.putString(PRODUCT_DATA_EXTRA, InfoURL);
-        Info = i;
+        Info = new Item(i);
         p.setArguments(args);
 
         return p;

@@ -48,11 +48,11 @@ public class SignUpActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         // open database
-        if (database != null) {
-            database.close();
-            database = null;
-        }
-        database = PouchDatabase.getInstance(this);
+//        if (database != null) {
+ //           database.close();
+  //          database = null;
+  //      }
+//        database = PouchDatabase.getInstance(this);
   //      Log.v(TAG, "Hash Key" + getResources().getString(R.string.kakao_app_key));
         requestMe();
 
@@ -146,7 +146,7 @@ public class SignUpActivity extends BaseActivity {
 //        Log.v(TAG, "redirectMainActivity() this TO KakaoServiceListActivity");
         Intent i = new Intent(this,MainActivity.class);
 
-        database.execSQL( "insert into USER_INFO(id,nickname,profile_url) values ("+ String.valueOf(id)+ "," + username +"," +url+");" );
+//        database.execSQL( "insert into USER_INFO(id,nickname,profile_url) values ("+ String.valueOf(id)+ "," + username +"," +url+");" );
 
         i.putExtra("ProfileURL",url);
         i.putExtra("UserName",username);

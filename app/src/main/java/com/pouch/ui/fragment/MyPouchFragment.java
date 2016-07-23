@@ -14,10 +14,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.pouch.R;
+import com.pouch.database.helper.PouchDatabase;
+import com.pouch.ui.PouchActivity;
 
 public class MyPouchFragment extends Fragment {
     private int mRowSelected = 0;
     private GridLayout GridItems;
+    PouchDatabase db;
     static final int ImageList [] ={
             R.drawable.cream,
             R.drawable.blush,
@@ -30,6 +33,13 @@ public class MyPouchFragment extends Fragment {
             R.drawable.skin,
             R.drawable.blush
     };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        db = ((PouchActivity)getActivity()).getDB();
+        super.onCreate(savedInstanceState);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.activity_item_mypouch, container, false);

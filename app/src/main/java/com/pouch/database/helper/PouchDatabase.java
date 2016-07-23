@@ -1,10 +1,17 @@
 package com.pouch.database.helper;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.CharArrayBuffer;
+import android.database.ContentObserver;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.pouch.common.SignUpActivity;
@@ -18,6 +25,7 @@ public class PouchDatabase {
     public static String TABLE_USER_INFO = "USER_INFO";
     public static String TABLE_PRODUCT_INFO = "PRODUCT_INFO";
     public static String TABLE_DETAIL_OF_PRODUCT_INFO = "DETAIL_OF_PRODUCT_INFO";
+
     public static int DATABASE_VERSION = 1;
 
 
@@ -50,6 +58,7 @@ public class PouchDatabase {
             Log.v(TAG,"OPEN() "+DATABASE_NAME);
         dbHelper = new DatabaseHelper(context);
         db = dbHelper.getWritableDatabase();
+        dbHelper.onOpen(db);
         if (db != null){
             return true;
         }
@@ -90,12 +99,29 @@ public class PouchDatabase {
         return true;
     }
 
+    public long InsertRow(String tablename,ContentValues contents){
+        return db.insert(tablename,"",contents);
+    }
+    public Cursor getRowSQL(String tablename){
+        Cursor output = null;
+        try {
+            Log.v(TAG, "tablename : " + tablename);
+            output = db.query(tablename, null, null, null, null, null, null, null);
+
+        } catch(Exception ex) {
+            Log.e(TAG, "Exception in query", ex);
+        }
+
+        return output;
+    }
+
     private class DatabaseHelper extends SQLiteOpenHelper
     {
 
         public DatabaseHelper(Context context)
         {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
+            db = getWritableDatabase();
             Log.v(TAG,context.toString());
         }
         @Override
@@ -103,29 +129,60 @@ public class PouchDatabase {
             if (isTest) {
                 Log.v(TAG, "create table [" + TABLE_USER_INFO + "]");
             }
-
-                String DROP_SQL = "drop table if exists " + TABLE_USER_INFO;
-                try {
-                    db.execSQL(DROP_SQL);
-                } catch (Exception e) {
-                    Log.e(TAG, "Exception DROPTABLE");
-                }
-
-
-            String create_USER_SQL = "create table "+ TABLE_USER_INFO + "("
-                    + " ID INTEGER NOT NULL PRIMARY KEY,"
-                    + " NICKNAME TEXT,"
-                    + " PROFILE_URL TEXT)";
-            try{
-                db.execSQL(create_USER_SQL);
-            }catch(Exception e){
-                Log.e(TAG,"Exception in CREATE_SQL");
-            }
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+        }
+
+        @Override
+        public void onOpen(SQLiteDatabase db) {
+            super.onOpen(db);
+            String DROP_SQL = "drop table if exists " + TABLE_USER_INFO;
+            String DROP_SQL_PRODUCT_INFO = "drop table if exists "+ TABLE_PRODUCT_INFO;
+            String DROP_SQL_DETAIL_OF_PRODUCT_INFO = "drop table if exists "+TABLE_DETAIL_OF_PRODUCT_INFO;
+            try {
+                db.execSQL(DROP_SQL);
+                db.execSQL(DROP_SQL_PRODUCT_INFO);
+                db.execSQL(DROP_SQL_DETAIL_OF_PRODUCT_INFO);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception DROPTABLE");
+            }
+
+
+            String create_USER_SQL = "create table "+ TABLE_USER_INFO + "("
+                    + " ID INTEGER NOT NULL PRIMARY KEY,"
+                    + " NICKNAME TEXT,"
+                    + " PROFILE_URL TEXT);";
+            String create_INFO_SQL = "create table "+TABLE_PRODUCT_INFO +"("
+                    + " NUM INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+                    + " TITLE TEXT,"
+                    + " PRICE TEXT,"
+                    + " THUMBNAIL BLOB);";
+            String create_DETAIL_INFO_SQL="create table " + TABLE_DETAIL_OF_PRODUCT_INFO+"("
+                    + " GROUP_NO INTEGER NOT NULL,"
+                    + " HEAD TEXT,"
+                    + " TAIL TEXT);"
+                    ;
+            try{
+                Log.e(TAG,create_USER_SQL);
+                Log.e(TAG,create_DETAIL_INFO_SQL);
+                Log.e(TAG,create_INFO_SQL);
+
+                db.execSQL(create_USER_SQL);
+                db.execSQL(create_INFO_SQL);
+                db.execSQL(create_DETAIL_INFO_SQL);
+                String [] Column = {"tbl_name"};
+                Cursor c = db.query("sqlite_master",Column,null,null,null,null,null);
+                for (int i = 0;i<c.getCount();i++){
+                    Log.v(TAG,"tbl_name" + c.getString(i));
+                }
+            }catch(Exception e){
+
+                e.printStackTrace();
+                Log.e(TAG,"Exception in CREATE_SQL");
+            }
         }
     }
 }

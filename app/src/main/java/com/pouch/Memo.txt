@@ -5,7 +5,7 @@
 
     ID - ID값으로 구분한다. ,닉네임 , 프로필사진을 가져온다.
 
-    -원하는 브팬드
+    -원하는 브랜드드
     -푸쉬를 원하는 브랜드.
     -푸쉬설정에 대한 여부
 
@@ -16,10 +16,14 @@ ID , nickname ,profile 사진
      -brand,종류 , 가격, 할인정보 , 이벤트정보 ,
 
 상품의 thumbnail
-이미지, 이전 가격, 최종가격, 이름.
+pk NO ,이미지 binary 값, 이전 가격, 최종가격, 이름.
+
+detail image
+group no의 fk ,이미지 binary 값
 
 detail한 정보
-header와 tail의 string 값들.
+group NO의 FK ,  header value  , tail value
+
 
 
 ->

@@ -97,14 +97,15 @@ public class MainActivity extends AppCompatActivity  {
     private String profileUrl;
     private String userName;
 
-    private PouchDatabase database;
+    private PouchDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+      //  database = PouchDatabase.getInstance(this);
+        //database.open();
 
-        database = PouchDatabase.getInstance(this);
 
       //  database.execSQL("select * from ")
         int imgID = R.drawable.cream;
@@ -205,8 +206,21 @@ public class MainActivity extends AppCompatActivity  {
 
         userNameTextView = (TextView)findViewById(R.id.navigation_drawer_items_textView_NICKNAME);
         getUserInformation = getIntent();
-        profileUrl = getUserInformation.getExtras().getString("ProfileURL");
-        userName = getUserInformation.getExtras().getString("UserName");
+
+        if (getUserInformation.getExtras().get("ProfileURL") == null){
+            profileUrl = "";
+            userName = "";
+        }
+        else if (getUserInformation.getExtras().getString("ProfileURL") ==null && getUserInformation.getExtras().getString("UserName") == null){
+            profileUrl = "";
+            userName = "";
+        }
+        else {
+            profileUrl = getUserInformation.getExtras().getString("ProfileURL");
+            userName = getUserInformation.getExtras().getString("UserName");
+        }
+        profileUrl = null;
+        userName = null;
        if (profileUrl != null&& Profile_img != null) {
            Picasso.with(getApplicationContext()).load(profileUrl).fit().into(Profile_img);
        }
@@ -275,7 +289,7 @@ public class MainActivity extends AppCompatActivity  {
 
                 BrandShopArr [i] = new ImageView(this);
                 BitmapFactory.Options options = new  BitmapFactory.Options();
-                options.inSampleSize = 2;
+                options.inSampleSize = 4;
 
                 BrandShopArr[i].setImageDrawable(new BitmapDrawable(getResources(),BitmapFactory.decodeResource(getResources(),imgsrc[i],options)));
 
@@ -330,6 +344,10 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onDestroy(){
+
+        Log.v(TAG,"onDestroy");
+        db= PouchDatabase.getInstance(this);
+        db.close();
         super.onDestroy();
     }
     @Override
