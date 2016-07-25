@@ -327,6 +327,8 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onResume() {
+        Log.v(TAG, "onResume()");
+        mRowSelected=0;
         super.onResume();
     }
 

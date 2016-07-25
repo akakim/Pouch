@@ -1,0 +1,11 @@
+1. thread cancelable 기능 구현. ->
+
+2. viewpager에서 update를 좀 더 빠르게 -> ANR 에러가 생기는 경우에 대해 time critical을 설정해줘야됨.
+
+3. Asynchtask로 구현하면 api level을 좀더 참고해야한다 Thread pool의 옵션이 다를 수 있기때문에.
+-> 다시말하자면 Asynchtask는 customizing을 해야할 필요성이 언젠가는 생긴다. 따라서 Thread pool에
+   대한 옵션
+
+4. 동기화 관련 이슈 http://ismydream.tistory.com/154
+1. 사용자의 클릭을 제한하기 위해서 한번 클릭이 된 버튼은 비활성 처리를 하고 작업이 완료시 다시 활성 시켜주면 됩니다.
+2. View 에 접근하는 작업은 synchronized 를 사용하여 한번에 하나의 쓰레드만 작업을 처리할 수 있도록 해줍니다.
