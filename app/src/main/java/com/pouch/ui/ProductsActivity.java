@@ -3,7 +3,6 @@ package com.pouch.ui;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.pdf.PdfRenderer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -19,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.util.Log;
@@ -69,7 +69,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
 
 
     ListView CategoryList;
-    CatagroyAdapter adapter;
+    CategroyAdapter adapter;
     ArrayList <categoryInform> CategoryData;
     ArrayList<Item> Items;
     FragmentManager fm;
@@ -159,6 +159,33 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
         Log.v(TAG,"onDrawerStaeChanged");
     }
 
+
+    public void setListViewHeightBasedOnItems(ListView listView){
+        ListAdapter listAdapter = listView.getAdapter();
+
+        if(listAdapter == null) {
+            Log.e (TAG,"listview's adapter is null");
+            return;
+        }
+
+        int numberOfItems = listAdapter.getCount();
+        Log.v(TAG,"numberOfItems "+ numberOfItems);
+
+        int totalItemsHeight= 0;
+        for(int itemPos= 0; itemPos< numberOfItems;itemPos++){
+            View viewItem = listAdapter.getView(itemPos,null,listView);
+            viewItem.measure(0,0);
+            totalItemsHeight += viewItem.getMeasuredHeight();
+        }
+
+        int totalDividerHeight= listView.getDividerHeight() * (numberOfItems -1);
+
+        // set list height
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalItemsHeight +totalDividerHeight;
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
     private class InnerHandler extends Handler {
         InnerHandler(){}
 
@@ -414,11 +441,10 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
 
         @Override
         protected void onPostExecute(Integer integer) {
-            Log.v(TAG,URLList[0].toString());
-            Log.v(TAG, "CategoryData" + CategoryData.get(0).getTitle());
 
-            adapter = new CatagroyAdapter(context,CategoryData);
+            adapter = new CategroyAdapter(context,CategoryData);
             CategoryList.setAdapter(adapter);
+            //setListViewHeightBasedOnItems(CategoryList);
             super.onPostExecute(integer);
         }
     }
@@ -566,14 +592,14 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
     static class ViewHolder{
         Button button;
     }
-    private class CatagroyAdapter extends BaseAdapter{
+    private class CategroyAdapter extends BaseAdapter{
 
         private Context context;
         private LayoutInflater layoutInflater;
         private ArrayList<categoryInform>categoryList;
 
 
-        public CatagroyAdapter(Context context,ArrayList<categoryInform> categoryList){
+        public CategroyAdapter(Context context, ArrayList<categoryInform> categoryList){
             this.context = context;
             this.categoryList = categoryList;
             layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -618,7 +644,19 @@ public class ProductsActivity extends AppCompatActivity implements ProductFragme
             }
             return convertView;
         }
+
+        @Override
+        public int getViewTypeCount(){
+            return getCount();
+        }
+
+        @Override
+        public int getItemViewType(int position){
+            return position;
+        }
     }
+
+
 
 }
 

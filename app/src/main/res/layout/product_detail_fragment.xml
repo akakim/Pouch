@@ -38,13 +38,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text = "WISHLIST등록"
-            android:id="@+id/shared_prereference"
+            android:id="@+id/wish_list_button"
             />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text = "PATH"
-            android:id="@+id/check_path"
+            android:text = "MYPOUCH등록"
+            android:id="@+id/my_pouch_button"
             />
     </LinearLayout>
 

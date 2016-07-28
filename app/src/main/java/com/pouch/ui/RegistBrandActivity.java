@@ -1,6 +1,7 @@
 package com.pouch.ui;
 
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,21 +30,17 @@ public class RegistBrandActivity extends AppCompatActivity {
     private RegistAdapter adapter;
     DisplayMetrics metrics;
     int width;
-    String initBrandlst [];
-    private void initItems(){
+    String Brandlst [];
 
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regist);
 
 
-
-
-        initItems();
-
+        Brandlst = getResources().getStringArray(R.array.brandlist);
         listView = (ListView) findViewById(R.id.RegistView);
+        adapter = new RegistAdapter(this,Brandlst);
         listView.setAdapter(adapter);
 
 
@@ -85,7 +83,13 @@ public class RegistBrandActivity extends AppCompatActivity {
 
 
     private class RegistAdapter extends BaseAdapter {
+        Context context;
+        String brandlist [];
 
+        RegistAdapter(Context context,String brandlist []){
+            this.context = context;
+            this.brandlist = brandlist;
+        }
         @Override
         public int getCount() {
             return 0;
@@ -103,7 +107,12 @@ public class RegistBrandActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
+            return convertView;
         }
+    }
+
+    static class ViewHolder{
+        TextView brandName;
+        ImageView imageView;
     }
 }

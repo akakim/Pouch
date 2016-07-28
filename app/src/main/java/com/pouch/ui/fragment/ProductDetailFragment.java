@@ -3,7 +3,6 @@ package com.pouch.ui.fragment;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
@@ -24,6 +23,7 @@ import android.widget.Toast;
 import com.pouch.R;
 import com.pouch.data.Item;
 import com.pouch.database.helper.PouchDatabase;
+import com.pouch.database.helper.PouchTableList;
 import com.pouch.ui.ProductDetailActivity;
 import com.pouch.util.ImageFetcher;
 import com.pouch.util.ImageWorker;
@@ -41,9 +41,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -69,12 +67,12 @@ public class ProductDetailFragment extends Fragment implements ImageWorker.OnIma
     private ListView lstView;
     Adapter newAdapter;
 
-    private Button push_SharedPreference;
-    private Button push_check_path;
+    private Button push_wishList;
+    private Button push_my_pouch;
 
 
     PouchDatabase db;
-    int myPos;
+    static int myPos;
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -101,18 +99,15 @@ public class ProductDetailFragment extends Fragment implements ImageWorker.OnIma
         mProgressBar.setVisibility(View.GONE);
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        customListener = (CustomOnClickListener)activity;
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageUrl = getArguments() != null ? getArguments().getString(IMAGE_DATA_EXTRA) : null;
         mProductUrl = getArguments() != null ? getArguments().getString(PRODUCT_DATA_EXTRA) : null;
-        myPos = ((ProductDetailActivity)getActivity()).getCurrentPos();
+        myPos = 0;
+
     }
 
     @Override
@@ -123,52 +118,84 @@ public class ProductDetailFragment extends Fragment implements ImageWorker.OnIma
         mImageView = (ImageView) v.findViewById(R.id.imageView);
         mProgressBar = (ProgressBar) v.findViewById(R.id.progressbar);
         lstView = (ListView)v.findViewById(R.id.listView);
-        this.push_SharedPreference = (Button)v.findViewById(R.id.shared_prereference);
+        this.push_wishList = (Button)v.findViewById(R.id.wish_list_button);
         db = PouchDatabase.getInstance(getActivity().getApplicationContext());
 
-        push_SharedPreference.setOnClickListener(new View.OnClickListener(){
+        push_wishList.setOnClickListener(new View.OnClickListener() {
             ContentValues Values;
             BitmapDrawable detailImage;
 
             @Override
             public void onClick(View v) {
-
+                Item tmp;
                 //TODO: 권한에 대한 예외처리 구현.
                 detailImage = mImageFetcher.getImage(mImageUrl);
                 Bitmap bitmap = detailImage.getBitmap();
-                ByteArrayOutputStream stream =new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG,90,stream);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] image = stream.toByteArray();
 
-                Values= new ContentValues();
-                if(Info == null){
-                    Log.e(TAG,"Info is null");
+                Values = new ContentValues();
+                myPos = ((ProductDetailActivity) getActivity()).getCurrentPos();
+                Log.v(TAG, "myPos" + myPos);
+                tmp = new Item(((ProductDetailActivity) getActivity()).getItem(myPos));
+                if (tmp == null) {
+                    Log.e(TAG, "tmp is null");
 
-                }
-
-
-                else if (image == null){
-                    Log.e(TAG,"Image is null");
-                }
-                else {
-                    Values.put("TITLE", Info.getTitle());
-                    Values.put("PRICE", Info.getPrice());
+                } else if (image == null) {
+                    Log.e(TAG, "Image is null");
+                } else {
+                    Log.v("Values : ", tmp.getTitle());
+                    Values.put("TITLE", tmp.getTitle());
+                    Values.put("PRICE", tmp.getPrice());
                     Values.put("THUMBNAIL", image);
 
-                    Log.v(TAG,Values.getAsString("TITLE"));
-                    Log.v(TAG,Values.getAsString("PRICE"));
+                    Log.v(TAG, Values.getAsString("TITLE"));
+                    Log.v(TAG, Values.getAsString("PRICE"));
                     db.InsertRow(TABLE_PRODUCT_INFO, Values);
+                    Toast.makeText(getActivity().getApplicationContext(),"Wish List에 "+tmp.getTitle()+" 항목이 추가되었습니다.", Toast.LENGTH_SHORT).show();
                 }
 //                byte arr[] = detailImage.getBitmap().
             }
         });
-        this.push_check_path = (Button)v.findViewById(R.id.check_path);
+        this.push_my_pouch = (Button)v.findViewById(R.id.my_pouch_button);
 
-        push_check_path.setOnClickListener(new View.OnClickListener() {
+        push_my_pouch.setOnClickListener(new View.OnClickListener() {
+            ContentValues Values;
+            BitmapDrawable detailImage;
 
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity().getApplicationContext(), "URI :" + mImageFetcher.getUri(), Toast.LENGTH_SHORT).show();
+                Item tmp;
+
+                detailImage = mImageFetcher.getImage(mImageUrl);
+                Bitmap bitmap = detailImage.getBitmap();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] image = stream.toByteArray();
+
+                Values = new ContentValues();
+                myPos = ((ProductDetailActivity) getActivity()).getCurrentPos();
+                tmp = new Item(((ProductDetailActivity) getActivity()).getItem(myPos));
+                if (tmp == null) {
+                    Log.e(TAG, "tmp is null");
+
+                } else if (image == null) {
+                    Log.e(TAG, "Image is null");
+                } else {
+                    Log.v("Values : ", tmp.getTitle());
+                    Values.put("TITLE", tmp.getTitle());
+                    Values.put("PRICE", tmp.getPrice());
+                    Values.put("THUMBNAIL", image);
+
+                    Log.v(TAG, Values.getAsString("TITLE"));
+                    Log.v(TAG, Values.getAsString("PRICE"));
+                    db.InsertRow(PouchTableList.TABLE_MY_POUCH, Values);
+                }
+
+                Toast.makeText(getActivity().getApplicationContext(),"MY Pouch에 "+tmp.getTitle()+" 항목이 추가되었습니다.", Toast.LENGTH_SHORT).show();
             }
         });
         new getDetailInform().execute(mProductUrl);
@@ -191,6 +218,7 @@ public class ProductDetailFragment extends Fragment implements ImageWorker.OnIma
         final Bundle args = new Bundle();
         args.putString(IMAGE_DATA_EXTRA, ImageURL);
         args.putString(PRODUCT_DATA_EXTRA, InfoURL);
+
         Info = new Item(i);
         p.setArguments(args);
 
@@ -410,16 +438,6 @@ public class ProductDetailFragment extends Fragment implements ImageWorker.OnIma
        void onClicked(int id);
     }
 
-    // Activity 로 데이터를 전달할 커스텀 리스너의 인터페이스
-    private CustomOnClickListener customListener;
-
-    // 버튼에 설정한 OnClickListener의 구현, 버튼이 클릭 될 때마다 Activity의 커스텀 리스너를 호출함
-    View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            customListener.onClicked(v.getId());
-        }
-    };
 
 
 }

@@ -146,12 +146,15 @@ private ImageView mArrowUp;
 
         String title = action.getTitle();
         Drawable icon = action.getIcon();
+
         View container = (View)inflater.inflate(R.layout.quick_action_item,null);
         ImageView img = (ImageView)container.findViewById(R.id.iv_icon);
         //TextView text = (TextView)container.findViewById(R.id.tv_title);
 
         if (icon != null) {
+            img.setMaxWidth(30);
             img.setImageDrawable(icon);
+
         } else {
             img.setVisibility(View.GONE);
         }

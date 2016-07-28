@@ -4,60 +4,42 @@ package com.pouch.ui.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pouch.R;
-import com.pouch.customView.AnimatedExpandableListView;
-import com.pouch.data.ItemDetailInform;
 import com.pouch.database.helper.PouchDatabase;
 import com.pouch.database.helper.PouchTableList;
 import com.pouch.ui.PouchActivity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-/**
- * Created by USER on 2016-06-10.
- */
-
-// TODO : 애니매이션 효과 적용중 가장 끝 메뉴에서 거슬리는 부분이 있다. 효과에 대해서 약간 수정해야한다.
 
 public class WishPouchFragment extends Fragment {
     private static final String TAG = WishPouchFragment.class.getSimpleName();
     private int mRowSelected = 0;
-    SharedPreferences sharedPreferences;
     PouchDatabase db;
 
-
+    ArrayList<String> titles = null;
+    ArrayList<String> prices = null;
+    ArrayList<byte[]>thumbnails = null;
     private GridLayout GridItems;
-    static final int ImageList [] ={
-            R.drawable.eyeliner,
-            R.drawable.fact,
-            R.drawable.eyeshadow,
-            R.drawable.skin,
-            R.drawable.blush,
-            R.drawable.eyeshadow,
-            R.drawable.skin,
-            R.drawable.blush
-    };
 
 
     /*초기화시 기존의 자료가 있는지 없는지를 점검후
@@ -76,11 +58,22 @@ public class WishPouchFragment extends Fragment {
 //        product_data_set = sharedPreferences.getStringSet()
         super.onCreate(savedInstanceState);
 
+        titles = new ArrayList<>();
+        prices = new ArrayList<>();
+        thumbnails = new ArrayList<>();
+
         db = ((PouchActivity)getActivity()).getDB();
         Cursor c = db.getRowSQL(PouchTableList.TABLE_PRODUCT_INFO);
+        int numberOfItems = 0;
         for(;c.moveToNext()!=false;) {
-            Log.v(TAG, "Cursor" + c.getString(0));
-            Log.v(TAG, "Cursor" + c.getString(1));
+;
+
+            titles.add(c.getString(1));
+            prices.add(c.getString(2));
+            byte image [] = c.getBlob(3);
+            thumbnails.add(image);
+
+
         }
         ArrayList<String> head = new ArrayList<>();
         ArrayList<String> tail = new ArrayList<>();
@@ -92,62 +85,88 @@ public class WishPouchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.v(TAG,"onCreateView()");
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.activity_item_mypouch, container, false);
+        GridItems = (GridLayout)rootView.findViewById(R.id.main_brandlist);
 
+        int width_pixel = 460;
+        int height_pixel = 500;
         LinearLayout[] testLinearLayout;
         FrameLayout[]testBack;
         ImageView[] testArr;
-        testArr = new ImageView[ImageList.length];
+        TextView[] titleArr;
 
-        testBack = new FrameLayout[ImageList.length];
-        testLinearLayout = new LinearLayout[ImageList.length];
-
-
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels/3,
-                getResources().getDisplayMetrics().heightPixels/3);
-        params.weight= 1.0f;
-        params.setLayoutDirection(LinearLayout.HORIZONTAL);
-
-        LinearLayout.LayoutParams CancelableParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        if(titles.size()>0) {
+            testArr = new ImageView[titles.size()];
+            titleArr = new TextView[titles.size()];
 
 
-        for(int i =0;i<ImageList.length;i++){
-
-            testLinearLayout[i]  = new LinearLayout(WishPouchFragment.this.getContext());
-            testLinearLayout[i].setLayoutParams(params);
-
-            testBack[i] = new FrameLayout(WishPouchFragment.this.getContext());
-            testBack[i].setLayoutParams(params);
-            testBack[i].setBackgroundColor(Color.DKGRAY);
-
-            testArr [i] = new ImageView(WishPouchFragment.this.getContext());
-            testArr[i].setImageResource(ImageList[i]);
-            CancelableParams.gravity= Gravity.CENTER;
-            testArr[i].setLayoutParams(CancelableParams);
-            testArr[i].setOnClickListener(new View.OnClickListener(){
-                int selected = mRowSelected;
-
-                @Override
-                public void onClick(View v) {
-                    mRowSelected = selected;
-                }
-            });
-            mRowSelected++;
-
-            testBack[i].addView(testLinearLayout[i]);
-            testLinearLayout[i].addView(testArr[i]);
+            testBack = new FrameLayout[titles.size()];
+            testLinearLayout = new LinearLayout[titles.size()];
 
 
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.weight = 1.0f;
+
+            FrameLayout.LayoutParams Frame_params = new FrameLayout.LayoutParams(width_pixel, height_pixel);
+
+            Log.v("width Pixel : " + getResources().getDisplayMetrics().widthPixels / 3, "height Pixel : " + getResources().getDisplayMetrics().heightPixels / 3);
+            Log.v("linear width :" + params.width, "linear height :" + params.height);
+            //Log.v("width : "+width,"height : "+ height);
+            params.weight = 1.0f;
+
+            LinearLayout.LayoutParams CancelableParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            int FrameColors[] = {Color.GREEN, Color.BLACK, Color.RED};
+
+
+            for (int i = 0; i < titles.size(); i++) {
+
+                testLinearLayout[i] = new LinearLayout(WishPouchFragment.this.getContext());
+                testLinearLayout[i].setOrientation(LinearLayout.VERTICAL);
+                testLinearLayout[i].setLayoutParams(params);
+                testLinearLayout[i].setBackgroundColor(Color.BLACK);
+                testLinearLayout[i].setGravity(Gravity.CENTER);
+
+                testBack[i] = new FrameLayout(WishPouchFragment.this.getContext());
+                testBack[i].setLayoutParams(Frame_params);
+                testBack[i].setBackgroundColor(FrameColors[i % 3]);
+
+                testArr[i] = new ImageView(WishPouchFragment.this.getContext());
+                testArr[i].setImageBitmap(BitmapFactory.decodeByteArray(thumbnails.get(i), 0, thumbnails.get(i).length));
+
+                CancelableParams.gravity = Gravity.CENTER;
+                CancelableParams.weight = 0.7f;
+                testArr[i].setLayoutParams(CancelableParams);
+                testArr[i].setOnClickListener(new View.OnClickListener() {
+                    int selected = mRowSelected;
+
+                    @Override
+                    public void onClick(View v) {
+                        mRowSelected = selected;
+                    }
+                });
+                mRowSelected++;
+
+                titleArr[i] = new TextView(WishPouchFragment.this.getContext());
+                titleArr[i].setText(titles.get(i));
+                titleArr[i].setTextSize(12.0f);
+                titleArr[i].setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                CancelableParams.weight = 0.3f;
+                titleArr[i].setLayoutParams(CancelableParams);
+                titleArr[i].setPadding(20, 20, 0, 0);
+
+                testBack[i].addView(testLinearLayout[i]);
+                testLinearLayout[i].addView(testArr[i]);
+                testLinearLayout[i].addView(titleArr[i]);
+
+            }
+
+            // 나중에 선택된 것의 index를 알기 위해 초기화를했다.
+            mRowSelected = 0;
+
+
+            for (int i = 0; i < titles.size(); i++) {
+                GridItems.addView(testBack[i]);
+            }
         }
-
-        // 나중에 선택된 것의 index를 알기 위해 초기화를했다.
-        mRowSelected = 0;
-
-        GridItems = (GridLayout)rootView.findViewById(R.id.main_brandlist);
-        for(int i =0;i<testArr.length;i++){
-            GridItems.addView(testBack[i]);
-        }
-
         return rootView;
     }
 }

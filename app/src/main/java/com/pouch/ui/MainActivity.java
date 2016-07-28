@@ -8,8 +8,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -99,6 +102,7 @@ public class MainActivity extends AppCompatActivity  {
 
     private PouchDatabase db;
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +112,8 @@ public class MainActivity extends AppCompatActivity  {
 
 
       //  database.execSQL("select * from ")
+        db = PouchDatabase.getInstance(this);
+        db.open();
         int imgID = R.drawable.cream;
         brandName = getResources().getStringArray(R.array.brandlist);
         brandNameGoodKey = getResources().getStringArray(R.array.brandlist_goodKeyword);
@@ -152,9 +158,9 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
-        ActionItem addItem 		= new ActionItem(ID_EVENT, "Event", getResources().getDrawable(R.drawable.event_quickactionbar));
-        ActionItem acceptItem 	= new ActionItem(ID_SEARCH, "Accept", getResources().getDrawable(R.drawable.map_quickactionbar));
-        ActionItem uploadItem 	= new ActionItem(ID_SHOW_PRODUCT, "Upload", getResources().getDrawable(R.drawable.productlist_quickactionbar));
+        ActionItem addItem 		= new ActionItem(ID_EVENT, "Event", getResources().getDrawable(R.drawable.event_quickactionbar,null));
+        ActionItem acceptItem 	= new ActionItem(ID_SEARCH, "Accept", getResources().getDrawable(R.drawable.map_quickactionbar,null));
+        ActionItem uploadItem 	= new ActionItem(ID_SHOW_PRODUCT, "Upload", getResources().getDrawable(R.drawable.productlist_quickactionbar,null));
 
         mQuickAction 	= new QuickAction(this);
 
@@ -289,7 +295,7 @@ public class MainActivity extends AppCompatActivity  {
 
                 BrandShopArr [i] = new ImageView(this);
                 BitmapFactory.Options options = new  BitmapFactory.Options();
-                options.inSampleSize = 4;
+                options.inSampleSize = 3;
 
                 BrandShopArr[i].setImageDrawable(new BitmapDrawable(getResources(),BitmapFactory.decodeResource(getResources(),imgsrc[i],options)));
 
@@ -348,8 +354,6 @@ public class MainActivity extends AppCompatActivity  {
     protected void onDestroy(){
 
         Log.v(TAG,"onDestroy");
-        db= PouchDatabase.getInstance(this);
-        db.close();
         super.onDestroy();
     }
     @Override

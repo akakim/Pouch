@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/framebackground"
+    android:background="#FFFF00CC"
     >
     <RelativeLayout
         android:layout_width="match_parent"
@@ -26,9 +26,9 @@
                     android:id="@+id/main_brandlist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:columnCount="3"
+                    android:columnCount="2"
                     android:useDefaultMargins="true"
-                    android:background="@color/color1"
+                    android:background="@color/white"
                     >
                 </GridLayout>
 

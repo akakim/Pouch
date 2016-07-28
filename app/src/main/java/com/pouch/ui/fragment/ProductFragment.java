@@ -196,6 +196,10 @@ public class ProductFragment extends Fragment {
 
         for(Item i : Items){
             this.Items.add(i);
+            Log.v(TAG+" SetTitle ", i.getTitle());
+            Log.v(TAG+" SetPrice ",i.getPrice());
+
+
         }
     }
 
@@ -292,12 +296,12 @@ public class ProductFragment extends Fragment {
                  *      Title
                  *      Pre Cur
                  */
-          //      GridLayoutRelativeLayout[i].addView(ItemTitle[i]);
+          //
 
                 GridLayoutLinearLayout[i].addView(ItemView[i],0);
                 GridLayoutLinearLayout[i].addView(ItemTitle[i],1);
-                GridLayoutLinearLayout[i].addView(ItemPreValue[i],2);
-                GridLayoutLinearLayout[i].addView(ItemCurValue[i],3);
+//                GridLayoutLinearLayout[i].addView(ItemPreValue[i],2);
+                GridLayoutLinearLayout[i].addView(ItemCurValue[i],2);
 
                 GridLayoutFrameLayout[i].addView(GridLayoutLinearLayout[i]);
 

@@ -88,7 +88,6 @@ public class PouchDatabase {
 
 
         try {
-            Log.d(TAG, "SQL : " + SQL);
             db.execSQL(SQL);
 
         } catch(Exception ex) {
@@ -105,7 +104,6 @@ public class PouchDatabase {
     public Cursor getRowSQL(String tablename){
         Cursor output = null;
         try {
-            Log.v(TAG, "tablename : " + tablename);
             output = db.query(tablename, null, null, null, null, null, null, null);
 
         } catch(Exception ex) {
@@ -142,10 +140,14 @@ public class PouchDatabase {
             String DROP_SQL = "drop table if exists " + TABLE_USER_INFO;
             String DROP_SQL_PRODUCT_INFO = "drop table if exists "+ TABLE_PRODUCT_INFO;
             String DROP_SQL_DETAIL_OF_PRODUCT_INFO = "drop table if exists "+TABLE_DETAIL_OF_PRODUCT_INFO;
+            String DROP_SQL_MY_POUCH = "drop table if exists"+PouchTableList.TABLE_MY_POUCH;
+            String DROP_SQL_DETAIL_OF_MY_POUCH = "drop table if exiets"+PouchTableList.TABLE_DETAIL_OF_MYPOUCH;
             try {
                 db.execSQL(DROP_SQL);
                 db.execSQL(DROP_SQL_PRODUCT_INFO);
                 db.execSQL(DROP_SQL_DETAIL_OF_PRODUCT_INFO);
+                db.execSQL(DROP_SQL_MY_POUCH);
+                db.execSQL(DROP_SQL_DETAIL_OF_MY_POUCH);
             } catch (Exception e) {
                 Log.e(TAG, "Exception DROPTABLE");
             }
@@ -163,23 +165,25 @@ public class PouchDatabase {
             String create_DETAIL_INFO_SQL="create table " + TABLE_DETAIL_OF_PRODUCT_INFO+"("
                     + " GROUP_NO INTEGER NOT NULL,"
                     + " HEAD TEXT,"
-                    + " TAIL TEXT);"
-                    ;
-            try{
-                Log.e(TAG,create_USER_SQL);
-                Log.e(TAG,create_DETAIL_INFO_SQL);
-                Log.e(TAG,create_INFO_SQL);
+                    + " TAIL TEXT);";
+            String create_MY_POUCH_SQL = "create table "+PouchTableList.TABLE_MY_POUCH +"("
+                    + " NUM INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+                    + " TITLE TEXT,"
+                    + " PRICE TEXT,"
+                    + " THUMBNAIL BLOB);";
 
+            String create_DETAIL_MY_POUCH_SQL="create table " + PouchTableList.TABLE_DETAIL_OF_MYPOUCH+"("
+                    + " GROUP_NO INTEGER NOT NULL,"
+                    + " HEAD TEXT,"
+                    + " TAIL TEXT);";
+            try{
                 db.execSQL(create_USER_SQL);
                 db.execSQL(create_INFO_SQL);
                 db.execSQL(create_DETAIL_INFO_SQL);
-                String [] Column = {"tbl_name"};
-                Cursor c = db.query("sqlite_master",Column,null,null,null,null,null);
-                for (int i = 0;i<c.getCount();i++){
-                    Log.v(TAG,"tbl_name" + c.getString(i));
-                }
-            }catch(Exception e){
+                db.execSQL(create_MY_POUCH_SQL);
+                db.execSQL(create_DETAIL_MY_POUCH_SQL);
 
+            }catch(Exception e){
                 e.printStackTrace();
                 Log.e(TAG,"Exception in CREATE_SQL");
             }

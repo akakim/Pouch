@@ -32,8 +32,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ProductDetailActivity extends AppCompatActivity implements View.OnClickListener,
-        ProductDetailFragment.CustomOnClickListener{
+public class ProductDetailActivity extends AppCompatActivity implements View.OnClickListener{
 
 
     private static final String IMAGE_CACHE_DIR = "images";
@@ -64,9 +63,9 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
         db = PouchDatabase.getInstance(this);
-        db.open();
+
         Intent intent=  getIntent();
-        selectedItem = intent.getIntExtra("selectedItem",0);
+        selectedItem = intent.getIntExtra("selectedItem", 0);
         Items = intent.getParcelableArrayListExtra(KEY_ITEM_DATA);
         extraCurrentItem = getIntent().getIntExtra(EXTRA_IMAGE, -1);
         if(isInternetConnected()){
@@ -115,6 +114,22 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
         mPager.setPageMargin(16);
         mPager.setOffscreenPageLimit(2);
 
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                selectedItem = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         // Set up activity to go full screen
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -192,41 +207,7 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
         mImageFetcher.closeCache();
     }
 
-    @Override
-    public void onClicked(int id) {
-        Log.v(TAG,"onClikced");
-        switch (id){
-            case R.id.shared_prereference:
 
-                StringBuilder key = new StringBuilder(Items.get(selectedItem).getImageURL().toString());
-                sharedPreferences = getSharedPreferences(PRODUCT_DATA_SET, Context.MODE_APPEND);
-
-                SharedPreferences.Editor editor =  sharedPreferences.edit();
-                Log.v("onClicked , key value",key.toString());
-
-                editor.putString(PRODUCT_DATA_KEY_SET, key.toString());
-
-                editor.putString(key.toString()+"_TITLE",Items.get(selectedItem).getTitle());
-
-               // editor.putString(key.toString()+"_title",Items.get(selectedItem).);
-                ProductDetailFragment fragment = ( ProductDetailFragment)mAdapter.getItem(selectedItem);
-                ArrayList<String> Head = fragment.getHeadValues();
-                ArrayList<String> Tail = fragment.getTailValues();
-
-                editor.putString(key.toString()+"_SIZE",String.valueOf(Head.size()));
-                for(int i =0; i<Head.size();i++) {
-                    editor.putString(key.toString() + "_HEAD_"+String.valueOf(i),Tail.get(i).toString());
-                    editor.putString(key.toString() + "_TAIL_"+String.valueOf(i), Tail.get(i).toString());
-                }
-
-                editor.commit();
-            break;
-            case R.id.check_path:
-
-                Toast.makeText(getApplicationContext(),"get path" + mImageFetcher.getUri(),Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
 
 
     /**
@@ -240,6 +221,11 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             super.setPrimaryItem(container, position, object);
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return super.getItemPosition(object);
         }
 
         @Override
@@ -260,7 +246,7 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
         @Override
         public Fragment getItem(int position) {
 
-
+        Log.v("getItem",position + "번째임다. ");
          return ProductDetailFragment.newInstance(Items.get(position).getImageURL().toString()
          ,Items.get(position).getProductURL().toString(),Items.get(position));
         }
@@ -273,7 +259,7 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
         return mImageFetcher;
     }
     public Item getItem (int pos) {return Items.get(pos);}
-    public int getCurrentPos(){return extraCurrentItem;}
+    public int getCurrentPos(){return selectedItem;}
     @Override
     public void onClick(View v) {
         final int vis = mPager.getSystemUiVisibility();
