@@ -50,20 +50,13 @@
                 <Button
                     android:id="@+id/navigation_drawer_items_textView_PASS"
                     style="@style/NavDrawerRowItemText"
-                    android:text="NOTIFICATION" />
+                    android:text="공지사항" />
 
 
                 <Button
                     android:id="@+id/navigation_drawer_items_textView_question"
                     style="@style/NavDrawerRowItemText"
                     android:text="질문"
-                    />
-
-123123123
-                <Button
-                    android:id="@+id/navigation_drawer_items_textView_category2"
-                    style="@style/NavDrawerRowItemText"
-                    android:text="category2"
                     />
 
                 <Button

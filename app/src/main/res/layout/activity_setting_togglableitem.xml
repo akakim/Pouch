@@ -4,19 +4,14 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_weight="0.8"
-        android:id="@+id/RegistTitle"
+        android:id="@+id/textTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text = "tornymoly"
-        />
-    <com.dd.morphingbutton.MorphingButton
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:id="@+id/RegistBtn"
+        android:id="@+id/switchable"
+        android:visibility="invisible"
         />
 </LinearLayout>

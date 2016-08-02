@@ -132,7 +132,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
     private static final int ANIMATION_DURATION = 300;
 
     private AnimatedExpandableListAdapter adapter;
-    private boolean isTest= true;
+    private boolean isTest= false;
 
 
     public AnimatedExpandableListView(Context context) {
@@ -346,17 +346,13 @@ public class AnimatedExpandableListView extends ExpandableListView {
             if (info.animating) {
                 // If we are animating this group, then all of it's children
                 // are going to be dummy views which we will say is type 0.
-                // ���� �츮�� �׷쿡 ���ϸ��̼� ȿ���� �شٸ� �װ��� �ڽ��� dummy view
-                // �� �ɰ��̰� �츮�� �װ� type 0�� �θ��ڴ�.
+
 
                 return 0;
             } else {
                 // If we are not animating this group, then we will add 1 to
                 // the type it has so that no type id conflicts will occur
                 // unless getRealChildType() returns MAX_INT
-                // ���� �츮�� �̱׷쿡 ���ϸ��̼��� ���شٸ� �츮�� �� type�� �� ���� 1�� ���Ѵ�.
-                // �׷��� � Ÿ�Ԥ� idrk �浹�� �߻������ʰԵȴ�.
-                // getRealChildType�� MAX_INT���� ��ȯ�ϴ� ���� �����ϰ�.
                 return getRealChildType(groupPosition, childPosition) + 1;
             }
         }
@@ -382,8 +378,6 @@ public class AnimatedExpandableListView extends ExpandableListView {
 
         public final View getChildView(final int groupPosition, int childPosition, boolean isLastChild, View convertView, final ViewGroup parent) {
             final GroupInfo info = getGroupInfo(groupPosition);
-
-            Log.i(TAG, "getChildView");
             if (info.animating) {
                 if (convertView instanceof DummyView == false) {;
                     convertView = new DummyView(parent.getContext());
@@ -393,9 +387,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
 
                 if (childPosition < info.firstChildPosition) {
                     // The reason why we do this is to support the collapse
-                    //�� �̷��� �ϳĸ�, �츮�� Ȯ��� �޴� UI�� ����� ���̴�.
                     // this group when the group view is not visible but the
-                    // �׷��� ������������ �׷��� �ڽ��� �ִ�.
                     // children of this group are. When notifyDataSetChanged is called,
                     // notifyDataSetChanged�� �Ҹ�������
                     // the ExpandableListView tries to keep the list position the same by saving the first visible item
@@ -415,14 +407,10 @@ public class AnimatedExpandableListView extends ExpandableListView {
                     // to restore the scroll position,
                     //
                     // it will try to jump to the second item of the group.
-                    // �װ��� �� �׷��� 2��° ���������� �����Ұ��̴�.
                     // But this group no longer has a second item, so it is forced to jump to the next
-                    // ������ ���̻� 2��° �������� �׷��� �����������ʴ�.
-                    // �׷��� �̰��� ���� �׷����� �ǳʶٰԲ� �Ұ��̴�.
                     // group.
                     //
                     // This will cause a very ugly visual glitch.
-                    // �̰��� ������ ���������̴�.
                     // So the way that we counteract this is by creating as many
                     // dummy views as we need to maintain the scroll position
                     // of the ListView after notifyDataSetChanged has been
@@ -637,6 +625,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
                 Log.v(TAG,"view's name : "+String.valueOf(view.getId()));
                 Log.v(TAG,"groupInfo : "+info.toString());
             }
+
             view.getLayoutParams().height = startHeight;
             view.requestLayout(); // ?? parentlayout ��û ?
         }
@@ -645,8 +634,6 @@ public class AnimatedExpandableListView extends ExpandableListView {
         protected void applyTransformation(float interpolatedTime, Transformation t){
             super.applyTransformation(interpolatedTime,t);
 
-            //��ư �ϳ��� ������. delta�� ��� �ڽ� ����� ��ü����
-            //��ȭ���� �ǹ��Ѵ�.
             if(interpolatedTime<1.0f){
                 int val = baseHeight+(int)(delta * interpolatedTime);
                 view.getLayoutParams().height = val;

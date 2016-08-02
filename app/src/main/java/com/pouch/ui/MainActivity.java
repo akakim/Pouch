@@ -143,12 +143,6 @@ public class MainActivity extends AppCompatActivity  {
         Search.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.search_toolbar,options));
         Pouch.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pouch_toolbar,options));
 
-        //setImageResource(R.drawable.review_toolbar);
-//        Instagram.setImageResource(R.drawable.instagram_toolbar);
-//        Search.setImageResource(R.drawable.search_toolbar);
- //
- //
- //      Pouch.setImageResource(R.drawable.pouch_toolbar);
 
         BrandList = new ArrayList<brandInfo>();
         for(int i =0;i<brandName.length;i++){
@@ -225,8 +219,7 @@ public class MainActivity extends AppCompatActivity  {
             profileUrl = getUserInformation.getExtras().getString("ProfileURL");
             userName = getUserInformation.getExtras().getString("UserName");
         }
-        profileUrl = null;
-        userName = null;
+
        if (profileUrl != null&& Profile_img != null) {
            Picasso.with(getApplicationContext()).load(profileUrl).fit().into(Profile_img);
        }
@@ -405,6 +398,8 @@ public class MainActivity extends AppCompatActivity  {
                     Log.v(TAG,"setting menu clicked");
                 }
                 i = new Intent(this,SettingActivity.class);
+                String name = getUserInformation.getExtras().getString("UserName");
+                i.putExtra("name",name);
                 startActivity(i);
                 break;
         }

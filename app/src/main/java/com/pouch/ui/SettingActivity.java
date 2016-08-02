@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,11 +30,13 @@ import java.util.List;
 
 public class SettingActivity extends AppCompatActivity {
     private static final String TAG="SettingActivity";
-    private boolean isTest=  false;
+    private boolean isTest=  true;
     private AnimatedExpandableListView listView;
     private SettingAdapter adapter;
     DisplayMetrics metrics;
     int width;
+
+    Intent getUserInformation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +47,20 @@ public class SettingActivity extends AppCompatActivity {
 
         GroupItem ID_item = new GroupItem();
         GroupItem Brand_item = new GroupItem();
-        GroupItem Favoriate_item = new GroupItem();
         GroupItem push_Alarm = new GroupItem();
 
-        ID_item.title="ID"; // TODO: 나중에 사용자가 로그인시 처리해야됨.
+        getUserInformation = getIntent();
+        String id = "NICKNAME"; // getUserInformation.getExtras().getString("UserName");
+            id = getUserInformation.getExtras().getString("name");
+        ID_item.title=id; // TODO: 나중에 사용자가 로그인시 처리해야됨.
         Brand_item.title="브랜드 등록";
-        Favoriate_item.title="관심 상품 항목";
         push_Alarm.title = "푸쉬알람설정";
 
         ChildItem id_child = new ChildItem();
         id_child.title = "닉네임 변경";
         ChildItem id_logOut = new ChildItem();
         id_logOut.title = "로그아웃";
+
         ChildItem push_setting = new ChildItem();
         push_setting.title = "토글버튼생성";
 
@@ -64,7 +70,6 @@ public class SettingActivity extends AppCompatActivity {
 
         items.add(ID_item);
         items.add(Brand_item);
-        items.add(Favoriate_item);
         items.add(push_Alarm);
 
         adapter = new SettingAdapter(this);
@@ -93,7 +98,6 @@ public class SettingActivity extends AppCompatActivity {
                     // 자식이 있는 ID와 푸쉬알람설정만을 애니매이션 설정한다.
 
                     case 0:
-                    case 3:
                         if (listView.isGroupExpanded(groupPosition)) {
                             listView.collapseGroupWithAnimation(groupPosition);
                         } else {
@@ -105,9 +109,13 @@ public class SettingActivity extends AppCompatActivity {
                         Intent i = new Intent(getApplicationContext(),RegistBrandActivity.class);
                         startActivity(i);
                         break;
-                    //관심상품 등록
+                    //푸쉬 알람설정
                     case 2:
-
+                        if (listView.isGroupExpanded(groupPosition)) {
+                            listView.collapseGroupWithAnimation(groupPosition);
+                        } else {
+                            listView.expandGroupWithAnimation(groupPosition);
+                        }
                         break;
                 }
 
@@ -141,7 +149,7 @@ public class SettingActivity extends AppCompatActivity {
                         }
                         break;
                     case 3:
-                        Toast.makeText(getApplicationContext(),"토글버튼을 생성. ",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"push 알람 설정. ",Toast.LENGTH_SHORT).show();
                         break;
                 }
                 return true;
@@ -187,17 +195,17 @@ public class SettingActivity extends AppCompatActivity {
     //
     private static class ChildItem {
         String title;
-        String hint;
     }
 
     // 왜 홀더를 만들어야만하는가.
     // title과 자식의 textView를 가르키게도니다.
     private static class ChildHolder {
         TextView title;
-        TextView hint;
+        Switch   aSwitch;
     }
 
     private static class GroupHolder {
+        ImageView header;
         TextView title;
     }
 
@@ -241,17 +249,28 @@ public class SettingActivity extends AppCompatActivity {
         public View getRealChildView(int groupPosition,int childPosition,boolean isLastChild, View convertView, ViewGroup parent){
             ChildHolder holder;
             ChildItem item = getChild(groupPosition,childPosition);
-            Log.v(TAG, "getRealChildView()");
             if(convertView ==null){
-                Log.v(TAG,"makeConvertView");
                 holder = new ChildHolder();
-                convertView = inflater.inflate(R.layout.activity_setting_item,parent,false);
+
+                convertView = inflater.inflate(R.layout.activity_setting_togglableitem, parent, false);
                 holder.title = (TextView) convertView.findViewById(R.id.textTitle);
+                holder.aSwitch = (Switch)convertView.findViewById(R.id.switchable);
+
+
+                if(groupPosition ==2){
+                    holder.aSwitch.setVisibility(View.VISIBLE);
+                }
+
                 convertView.setTag(holder);
             }else {
-                Log.v(TAG,"not make" );
+
                 // getGroupView와 유사하다.
                 holder = (ChildHolder) convertView.getTag();
+                if(groupPosition == 2){
+                    holder.aSwitch.setVisibility(View.VISIBLE);
+                }else{
+                    holder.aSwitch.setVisibility(View.INVISIBLE);
+                }
             }
 
             holder.title.setText(item.title);
@@ -284,11 +303,22 @@ public class SettingActivity extends AppCompatActivity {
             GroupHolder holder;
             GroupItem item = getGroup(groupPosition);
 
-            Log.v(TAG,"getGroupView()" );
             if(convertView == null){
                 holder = new GroupHolder();
                 convertView = inflater.inflate(R.layout.activity_setting_group_item,parent,false);
                 holder.title = (TextView)convertView.findViewById(R.id.textTitle);
+                holder.header = (ImageView)convertView.findViewById(R.id.title_icon);
+                switch(groupPosition){
+                    case 0:
+                        holder.header.setImageResource(R.drawable.person);
+                        break;
+                    case 1:
+                        holder.header.setImageResource(R.drawable.brand);
+                        break;
+                    case 2:
+                        holder.header.setImageResource(R.drawable.alarm);
+                        break;
+                }
                 convertView.setTag(holder);
             }else{
                 holder = (GroupHolder)convertView.getTag();
