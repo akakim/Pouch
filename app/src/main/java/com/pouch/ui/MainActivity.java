@@ -107,13 +107,11 @@ public class MainActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-      //  database = PouchDatabase.getInstance(this);
-        //database.open();
 
-
-      //  database.execSQL("select * from ")
         db = PouchDatabase.getInstance(this);
         db.open();
+
+
         int imgID = R.drawable.cream;
         brandName = getResources().getStringArray(R.array.brandlist);
         brandNameGoodKey = getResources().getStringArray(R.array.brandlist_goodKeyword);

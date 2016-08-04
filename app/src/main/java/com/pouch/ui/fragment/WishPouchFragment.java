@@ -50,12 +50,6 @@ public class WishPouchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate()");
-
-
-
-
-
-//        product_data_set = sharedPreferences.getStringSet()
         super.onCreate(savedInstanceState);
 
         titles = new ArrayList<>();

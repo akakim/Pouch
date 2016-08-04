@@ -121,22 +121,6 @@ public class PouchDatabase {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
             db = getWritableDatabase();
             Log.v(TAG,context.toString());
-        }
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            if (isTest) {
-                Log.v(TAG, "create table [" + TABLE_USER_INFO + "]");
-            }
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-        }
-
-        @Override
-        public void onOpen(SQLiteDatabase db) {
-            super.onOpen(db);
             String DROP_SQL = "drop table if exists " + TABLE_USER_INFO;
             String DROP_SQL_PRODUCT_INFO = "drop table if exists "+ TABLE_PRODUCT_INFO;
             String DROP_SQL_DETAIL_OF_PRODUCT_INFO = "drop table if exists "+TABLE_DETAIL_OF_PRODUCT_INFO;
@@ -187,6 +171,23 @@ public class PouchDatabase {
                 e.printStackTrace();
                 Log.e(TAG,"Exception in CREATE_SQL");
             }
+        }
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            if (isTest) {
+                Log.v(TAG, "create table [" + TABLE_USER_INFO + "]");
+            }
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+        }
+
+        @Override
+        public void onOpen(SQLiteDatabase db) {
+            super.onOpen(db);
+
         }
     }
 }

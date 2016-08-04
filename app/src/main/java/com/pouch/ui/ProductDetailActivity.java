@@ -246,7 +246,6 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
         @Override
         public Fragment getItem(int position) {
 
-        Log.v("getItem",position + "번째임다. ");
          return ProductDetailFragment.newInstance(Items.get(position).getImageURL().toString()
          ,Items.get(position).getProductURL().toString(),Items.get(position));
         }

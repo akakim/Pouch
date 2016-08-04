@@ -138,7 +138,7 @@ public class ProductDetailFragment extends Fragment implements ImageWorker.OnIma
 
                 Values = new ContentValues();
                 myPos = ((ProductDetailActivity) getActivity()).getCurrentPos();
-                Log.v(TAG, "myPos" + myPos);
+
                 tmp = new Item(((ProductDetailActivity) getActivity()).getItem(myPos));
                 if (tmp == null) {
                     Log.e(TAG, "tmp is null");
@@ -151,12 +151,9 @@ public class ProductDetailFragment extends Fragment implements ImageWorker.OnIma
                     Values.put("PRICE", tmp.getPrice());
                     Values.put("THUMBNAIL", image);
 
-                    Log.v(TAG, Values.getAsString("TITLE"));
-                    Log.v(TAG, Values.getAsString("PRICE"));
                     db.InsertRow(TABLE_PRODUCT_INFO, Values);
                     Toast.makeText(getActivity().getApplicationContext(),"Wish List에 "+tmp.getTitle()+" 항목이 추가되었습니다.", Toast.LENGTH_SHORT).show();
                 }
-//                byte arr[] = detailImage.getBitmap().
             }
         });
         this.push_my_pouch = (Button)v.findViewById(R.id.my_pouch_button);
