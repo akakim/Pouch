@@ -101,10 +101,6 @@ public class WishPouchFragment extends Fragment {
             params.weight = 1.0f;
 
             FrameLayout.LayoutParams Frame_params = new FrameLayout.LayoutParams(width_pixel, height_pixel);
-
-            Log.v("width Pixel : " + getResources().getDisplayMetrics().widthPixels / 3, "height Pixel : " + getResources().getDisplayMetrics().heightPixels / 3);
-            Log.v("linear width :" + params.width, "linear height :" + params.height);
-            //Log.v("width : "+width,"height : "+ height);
             params.weight = 1.0f;
 
             LinearLayout.LayoutParams CancelableParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);

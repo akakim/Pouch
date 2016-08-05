@@ -126,6 +126,7 @@ public class MyPouchFragment extends Fragment {
 
                 testBack[i].addView(testLinearLayout[i]);
                 testLinearLayout[i].addView(testArr[i]);
+                testLinearLayout[i].addView(titleArr[i]);
 
 
             }
@@ -143,10 +144,4 @@ public class MyPouchFragment extends Fragment {
     }
 
 
-
-    private void InitGridLayout(){
-
-
-
-    }
 }
